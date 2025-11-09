@@ -1,0 +1,14 @@
+# This project uses pipenv for dependency management
+# To get started:
+#
+# 1. Install pipenv if you haven't already:
+#    pip install pipenv
+#
+# 2. Install dependencies using Pipfile:
+#    pipenv install
+#
+# 3. Activate the virtual environment:
+#    pipenv shell
+#
+# Note: Do not use this requirements.txt file as it is not maintained.
+# Refer to Pipfile for the current dependencies.

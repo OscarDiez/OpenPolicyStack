@@ -1,0 +1,31 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+numpy = "*"
+matplotlib = "*"
+lxml = "*"
+networkx = "*"
+
+jupyterlab = "*"
+tqdm = "*"
+dotenv= "*"
+
+openai = "*"
+schedule = "*"
+fastapi = "*"
+uvicorn = "*"
+python-multipart = "*"
+sqlalchemy = "*"
+rocketry = "*"
+asyncio = "*"
+pyarrow = "*"
+fastparquet = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
