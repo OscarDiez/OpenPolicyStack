@@ -1,8 +1,21 @@
+<<<<<<< HEAD
 ﻿name: ci
 on: [push, pull_request]
+=======
+name: CI
+on: [pull_request]
+>>>>>>> 37a173c (Repo setup: module skeleton, docs, templates, gitignore)
 jobs:
   basic:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+<<<<<<< HEAD
       - run: echo "OK"
+=======
+      - name: Sanity checks
+        run: |
+          test -f README.md
+          test -f api/openapi.yaml
+          test -f docs/STUDENT_MODULE_GUIDE.md
+>>>>>>> 37a173c (Repo setup: module skeleton, docs, templates, gitignore)
