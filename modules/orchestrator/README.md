@@ -103,3 +103,45 @@ Simple healthcheck endpoint.
 - `plan` (what steps were executed)
 - per-module results (JSON + artifact references)
 - paths/pointers to stored logs and artifacts for reproducibility
+
+## 5) Run Storage (Reproducibility)
+
+Every call to `POST /plan_and_execute` creates a **run**.  
+A run is a single execution of a scenario with specific modules + inputs.
+
+To make runs **reproducible and traceable**, the orchestrator saves:
+- The original request (inputs, chosen modules, options like seed),
+- What steps were executed (the “plan”),
+- Each module’s returned results,
+- Basic logs of what happened.
+
+This is stored under a unique `run_id` in a folder like:
+
+
+<pre><code>runs/&lt;run_id&gt;/
+  run.json        # input request + derived plan + timestamps
+  results.json    # merged results (pointers to artifacts)
+  logs.jsonl      # structured logs (one JSON per line)
+  artifacts/
+    &lt;module-name&gt;/
+      ...         # plots, JSONs, briefs, etc.</code></pre>
+
+The API response includes the `run_id` and (optionally) paths/pointers to the saved logs and artifacts.
+
+## 6) How modules are called (assumptions for integration)
+
+For MVP integration, the orchestrator assumes modules are reachable over **HTTP** (Docker-first) and expose a minimal interface so they can be called consistently.
+
+The proposed minimal module contract is documented in the repo Issue:
+**“MVP module interface contract (proposed)”** (see GitHub Issues).
+
+In short, the orchestrator expects:
+- `GET /health` for basic service readiness checks
+- One primary execution endpoint (preferred: `POST /execute`, or a module-specific endpoint such as `/score`, `/risk`, `/run_scenario`)
+- JSON-in / JSON-out
+- A consistent response “envelope” including:
+  - `status`, `module`, `outputs`
+  - Optional `artifacts` and `evidence` fields
+
+> Note: Endpoint naming and exact payload fields may be refined during integration month. The orchestrator will prioritize compatibility with the agreed contract in the Issue and adapt via lightweight adapters if needed.
+
