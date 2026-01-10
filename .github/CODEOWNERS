@@ -2,7 +2,7 @@
 # Only includes users we already have (collaborators or pending invites).
 # Add more owners later when the remaining students share their GitHub usernames.
 
-# Default owners (fallback for everything)
+# Default owners (fallback for everything) 
 * @OscarDiez @Acon3078
 
 # Module ownership (current known users)
