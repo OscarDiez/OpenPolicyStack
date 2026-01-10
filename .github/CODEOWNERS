@@ -1,11 +1,13 @@
-<<<<<<< HEAD
-﻿# Default owner for all files
-=======
-modules/data-layer/        @oscarbaateel
-modules/orchestrator/      @adriancon
-modules/strategy-agent/    @antoniosoto
-modules/dr-anticorruption/ @briancollado
-modules/supplychain-risk/  @karlkohler
-modules/policy-simulator/  @andresgerli
->>>>>>> 37a173c (Repo setup: module skeleton, docs, templates, gitignore)
-* @OscarDiez
+# OpenPolicyStack CODEOWNERS
+# Each module has owners who must review changes.
+
+# Default owners (optional):
+* @OscarDiez @Acon3078
+
+# Module owners
+/modules/data-layer/        @OscarDiez @<OSCAR_BAATEEL_GH> @Acon3078
+/modules/orchestrator/      @OscarDiez @Acon3078
+/modules/strategy-agent/    @OscarDiez @asotogrande @Acon3078
+/modules/dr-anticorruption/ @OscarDiez @Bcollado0310 @Acon3078
+/modules/supplychain-risk/  @OscarDiez @karlmaximilienkohler @Acon3078
+/modules/policy-simulator/  @OscarDiez @<ANDRES_GH> @Acon3078
