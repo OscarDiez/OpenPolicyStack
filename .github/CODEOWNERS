@@ -1,17 +1,18 @@
 # OpenPolicyStack CODEOWNERS
-# NOTE: Only include users who ALREADY have access to the repo.
-# (Pending invites will show as "Unknown owner" until accepted.)
+# NOTE: Only include users who have ALREADY accepted the repo invite
+# (Pending invites show as "Unknown owner" until accepted.)
 
 # Default owner (fallback):
 * @OscarDiez
 
-# Module owners (current collaborators only):
-/modules/monitor/          @OscarDiez @angeliquevd
-/modules/supplychain-risk/ @OscarDiez @karlmaximilenkohler
+# Modules with confirmed collaborators:
+ /modules/monitor/        @OscarDiez @angeliquevd
+ /modules/supplychain-risk/ @OscarDiez @karlmaximilienkohler
 
-# Everything else (until remaining students accept invites):
-/modules/data-layer/       @OscarDiez
-/modules/orchestrator/     @OscarDiez
-/modules/strategy-agent/   @OscarDiez
-/modules/dr-anticorruption/@OscarDiez
-/modules/policy-simulator/ @OscarDiez
+# Everything else for now (until remaining students accept invites):
+ /modules/data-layer/     @OscarDiez
+ /modules/orchestrator/   @OscarDiez
+ /modules/strategy-agent/ @OscarDiez
+ /modules/dr-anticorruption/ @OscarDiez
+ /modules/policy-simulator/  @OscarDiez
+
