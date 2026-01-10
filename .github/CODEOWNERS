@@ -1,13 +1,18 @@
 # OpenPolicyStack CODEOWNERS
-# Each module has owners who must review changes.
+# Only includes users we already have (collaborators or pending invites).
+# Add more owners later when the remaining students share their GitHub usernames.
 
-# Default owners (optional):
+# Default owners (fallback for everything)
 * @OscarDiez @Acon3078
 
-# Module owners
-/modules/data-layer/        @OscarDiez @OSCAR_BAATEEL_GH @Acon3078
-/modules/orchestrator/      @OscarDiez @Acon3078
-/modules/strategy-agent/    @OscarDiez @asotogrande @Acon3078
-/modules/dr-anticorruption/ @OscarDiez @Bcollado0310 @Acon3078
-/modules/supplychain-risk/  @OscarDiez @karlmaximilienkohler @Acon3078
-/modules/policy-simulator/  @OscarDiez @<ANDRES_GH> @Acon3078
+# Module ownership (current known users)
+ /modules/orchestrator/       @Acon3078 @OscarDiez
+ /modules/strategy-agent/     @asotogrande @Acon3078 @OscarDiez
+ /modules/dr-anticorruption/  @Bcollado0310 @Acon3078 @OscarDiez
+ /modules/supplychain-risk/   @karlmaximilienkohler @Acon3078 @OscarDiez
+ /modules/monitor/            @angeliquevd @Acon3078 @OscarDiez
+
+# TODO (add later when you have their GitHub usernames)
+# /modules/data-layer/        @<oscar_baateel_github> @Acon3078 @OscarDiez
+# /modules/policy-simulator/  @<andres_gerli_github> @Acon3078 @OscarDiez
+
