@@ -1,11 +1,18 @@
-<<<<<<< HEAD
-﻿# Default owner for all files
-=======
-modules/data-layer/        @oscarbaateel
-modules/orchestrator/      @adriancon
-modules/strategy-agent/    @antoniosoto
-modules/dr-anticorruption/ @briancollado
-modules/supplychain-risk/  @karlkohler
-modules/policy-simulator/  @andresgerli
->>>>>>> 37a173c (Repo setup: module skeleton, docs, templates, gitignore)
+# OpenPolicyStack CODEOWNERS
+# NOTE: Only include users who have ALREADY accepted the repo invite
+# (Pending invites show as "Unknown owner" until accepted.)
+
+# Default owner (fallback):
 * @OscarDiez
+
+# Modules with confirmed collaborators:
+ /modules/monitor/        @OscarDiez @angeliquevd
+ /modules/supplychain-risk/ @OscarDiez @karlmaximilienkohler
+
+# Everything else for now (until remaining students accept invites):
+ /modules/data-layer/     @OscarDiez
+ /modules/orchestrator/   @OscarDiez
+ /modules/strategy-agent/ @OscarDiez
+ /modules/dr-anticorruption/ @OscarDiez
+ /modules/policy-simulator/  @OscarDiez
+
