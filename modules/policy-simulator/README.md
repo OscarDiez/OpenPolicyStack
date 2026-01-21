@@ -91,6 +91,7 @@ To test the POST /run_scenario endpoint, you can use the Swagger UI or the follo
 ### 4.1 Sample JSON Payload
 Matches the schema defined in Section 2.
 
+
 ```json
 {
   "country": "FR",
