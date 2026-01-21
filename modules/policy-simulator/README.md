@@ -54,14 +54,14 @@ The MVP accepts this object to align with future integration, though it does not
   "tax_source": "dummy",
   "kpi_source": "dummy"
 }
-
+```
 ---
 
 ## 3) How to run
 
 This module is built with **Python 3.10+** and **FastAPI**. It can be run locally for development or as a containerized service.
 
-### 3.1 Docker (Recommended)
+### 3.1 Docker 
 To ensure the environment matches the production target:
 
 ```bash
@@ -70,9 +70,9 @@ docker build -t policy-simulator .
 
 # 2. Run the container (mapping port 8000)
 docker run -p 8000:8000 policy-simulator
-
+```
 ## 3.2) Local Development
-
+```
 # 1. Create a virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
@@ -82,6 +82,7 @@ pip install -r requirements.txt
 
 # 3. Run the server (with hot-reload)
 uvicorn main:app --reload
+```
 
 4) Example Scenario
 
@@ -90,6 +91,7 @@ To test the POST /run_scenario endpoint, you can use the Swagger UI or the follo
 4.1 Sample JSON Payload
 Matches the schema defined in Section 2.
 
+```json
 {
   "country": "FR",
   "sector": "manufacturing",
@@ -106,9 +108,10 @@ Matches the schema defined in Section 2.
     "kpi_source": "dummy_defaults"
   }
 }
-
+```
 4.2 CURL Command
 
+```bash
 curl -X 'POST' \
   'http://localhost:8000/run_scenario' \
   -H 'accept: application/json' \
@@ -124,3 +127,4 @@ curl -X 'POST' \
   "seed": 12345,
   "timesteps": 12
 }'
+```
