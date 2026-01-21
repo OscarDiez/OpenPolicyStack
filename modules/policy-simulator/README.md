@@ -71,8 +71,8 @@ docker build -t policy-simulator .
 # 2. Run the container (mapping port 8000)
 docker run -p 8000:8000 policy-simulator
 ```
-## 3.2) Local Development
-```
+### 3.2 Local Development
+```bash
 # 1. Create a virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
@@ -84,11 +84,11 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-4) Example Scenario
+## 4) Example Scenario
 
 To test the POST /run_scenario endpoint, you can use the Swagger UI or the following curl command.
 
-4.1 Sample JSON Payload
+### 4.1 Sample JSON Payload
 Matches the schema defined in Section 2.
 
 ```json
@@ -109,7 +109,7 @@ Matches the schema defined in Section 2.
   }
 }
 ```
-4.2 CURL Command
+### 4.2 CURL Command
 
 ```bash
 curl -X 'POST' \
