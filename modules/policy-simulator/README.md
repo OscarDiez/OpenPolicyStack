@@ -66,9 +66,61 @@ To ensure the environment matches the production target:
 
 ```bash
 # 1. Build the image
-docker build -t policy-simulator.
+docker build -t policy-simulator .
 
 # 2. Run the container (mapping port 8000)
 docker run -p 8000:8000 policy-simulator
 
 ## 3.2) Local Development
+
+# 1. Create a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the server (with hot-reload)
+uvicorn main:app --reload
+
+4) Example Scenario
+
+To test the POST /run_scenario endpoint, you can use the Swagger UI or the following curl command.
+
+4.1 Sample JSON Payload
+Matches the schema defined in Section 2.
+
+{
+  "country": "FR",
+  "sector": "manufacturing",
+  "start_year": 2024,
+  "end_year": 2026,
+  "employer_payroll_tax_rate": 0.25,
+  "employee_payroll_tax_rate": 0.15,
+  "cit_rate": 0.25,
+  "seed": 12345,
+  "timesteps": 12,
+  "calibration": {
+    "baseline_year": 2023,
+    "tax_source": "dummy_defaults",
+    "kpi_source": "dummy_defaults"
+  }
+}
+
+4.2 CURL Command
+
+curl -X 'POST' \
+  'http://localhost:8000/run_scenario' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "country": "FR",
+  "sector": "manufacturing",
+  "start_year": 2024,
+  "end_year": 2026,
+  "employer_payroll_tax_rate": 0.25,
+  "employee_payroll_tax_rate": 0.15,
+  "cit_rate": 0.25,
+  "seed": 12345,
+  "timesteps": 12
+}'
