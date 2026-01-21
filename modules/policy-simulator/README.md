@@ -54,3 +54,21 @@ The MVP accepts this object to align with future integration, though it does not
   "tax_source": "dummy",
   "kpi_source": "dummy"
 }
+
+---
+
+## 3) How to run
+
+This module is built with **Python 3.10+** and **FastAPI**. It can be run locally for development or as a containerized service.
+
+### 3.1 Docker (Recommended)
+To ensure the environment matches the production target:
+
+```bash
+# 1. Build the image
+docker build -t policy-simulator.
+
+# 2. Run the container (mapping port 8000)
+docker run -p 8000:8000 policy-simulator
+
+## 3.2) Local Development
