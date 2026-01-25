@@ -1,0 +1,189 @@
+data:
+  dir: data
+
+logging:
+  level: INFO
+  file: ingestion.log
+
+dgcp:
+  base_url: https://datosabiertos.dgcp.gob.do/api-dgcp/v1
+  rate_limit_delay: 0.2
+  max_retries: 5
+  timeout_connect: 10
+  timeout_read: 30
+
+risk:
+  thresholds:
+    critical: 75
+    high: 50
+    medium: 25
+  new_company_years: ['2024', '2025', '2026']
+  hub_density_high: 20
+  hub_density_medium: 5
+
+forensics:
+  versatility_threshold: 2
+  activation_concentration: 0.6
+  activation_min_contracts: 10
+  activation_30d_max: 10
+
+keywords:
+  industries:
+    medical:
+      - salud
+      - hospital
+      - medico
+      - farmacia
+      - medicamento
+      - laboratorio
+      - reactivo
+      - clinico
+      - quirurgico
+      - insumo
+      - oxigeno
+      - suero
+      - pastillas
+      - jarabe
+      - sonda
+      - jeringa
+      - hilo
+      - cateter
+      - guante
+      - mascarilla
+      - sutura
+      - antibiotico
+      - analgesico
+    construction:
+      - obra
+      - construc
+      - ingenier
+      - remodelacion
+      - mantenimiento fisico
+      - reparacion
+      - pintura
+      - cemento
+      - varilla
+      - ferreteria
+      - asfalt
+      - acero
+      - edific
+      - tuberia
+      - electrico
+      - plomeria
+    food:
+      - aliment
+      - comida
+      - desayuno
+      - almuerzo
+      - catering
+      - buffet
+      - cocina
+      - bebida
+      - picadera
+      - refrigerio
+      - pan
+      - agua
+      - jugo
+      - cafe
+      - botella
+    it:
+      - computadora
+      - laptop
+      - toner
+      - papel
+      - oficina
+      - software
+      - licencia
+      - informatica
+      - tecnologia
+      - impresora
+      - cartucho
+      - redes
+      - internet
+      - disco duro
+      - ups
+      - monitor
+      - cable
+    transport:
+      - transporte
+      - vehiculo
+      - combustible
+      - taller
+      - repuesto
+      - goma
+      - bateria
+      - neumatico
+      - chofer
+      - camion
+      - guagua
+      - motor
+      - mecanic
+      - aceite
+      - lubricante
+      - freno
+    cleaning:
+      - limpieza
+      - aseo
+      - fumigacion
+      - conserje
+      - desechos
+      - basura
+      - jardineria
+      - desinfeccion
+      - lavado
+      - detergente
+      - escoba
+      - suape
+    event:
+      - evento
+      - publicidad
+      - impresion
+      - montaje
+      - sonido
+      - banner
+      - rotulo
+      - regalo
+      - bono
+  risk_news:
+    - corrupcion
+    - soborno
+    - fraude
+    - peculado
+    - lavado de activos
+    - estafa
+    - investigacion
+    - imputado
+    - acusado
+    - irregularidad
+    - sobrevaluacion
+    - vinculado
+    - testaferro
+    - clonacion
+  investigative:
+    - Nuria
+    - Alicia Ortega
+    - Acento
+    - SIN
+  whistleblowers:
+    - somos pueblo
+    - tolentino
+    - cavada
+    - espresate
+
+api:
+  host: 0.0.0.0
+  port: 8000
+
+news:
+  region: DO
+  language: es-419
+  lookback_years: 5
+
+minio:
+  endpoint: http://localhost:9000
+  access_key: minioadmin
+  secret_key: minioadmin
+  bucket: s3-raw
+
+postgres:
+  dsn: postgresql://postgres:postgres@localhost:5432/datalake
