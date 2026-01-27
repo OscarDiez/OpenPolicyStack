@@ -1,46 +1,61 @@
-﻿# Supply-Chain Risk (Quantum tech)
-Owner: Karl M. Kohler
+# Supply-Chain Risk (Quantum Tech)
+
+**Owner:** Karl M. Kohler
 
 ## Scope
-This module provides a first-order supply-chain risk assessment for quantum-technology components and segments. It is designed as an independent micro-service within OpenPolicyStack, returning a simple risk score, key drivers, and a short policy oriented brief for scenario analysis.
+This module provides a **first-order supply-chain risk assessment** for quantum computing components and segments.  
+It is designed as an **independent microservice** within the OpenPolicyStack ecosystem.
 
-The MVP focuses on reproducibility and a clear interface rather than final data or models.
+Given a region and a quantum component, the service returns:
+- a simple risk score,
+- the main drivers of risk,
+- and a short policy-oriented brief suitable for dashboards or demos.
+
+The MVP deliberately prioritizes **reproducibility, transparency, and a clear interface** over final data completeness or model sophistication.
+
+---
 
 ## Inputs (MVP)
-•⁠  ⁠country_or_region  
+- **country_or_region**  
   Target economy or region (e.g. EU, US, China).
-•⁠  ⁠segment_or_component  
-  Quantum-technology segment or component (e.g. cryogenics, photonics,
-  ion-trap components, control electronics).
-•⁠  ⁠optional: scenario  
-  High-level disruption or policy scenario (e.g. export restriction,
-  supplier disruption).
-•⁠  ⁠optional: year / time window
+
+- **segment_or_component**  
+  Quantum-technology segment or component  
+  (e.g. cryogenics, photonics, ion-trap components, control electronics).
+
+- **optional: scenario**  
+  High-level disruption or policy scenario  
+  (e.g. export restriction, supplier disruption).
+
+- **optional: year / time window**  
+  Included for forward compatibility; not yet used in the MVP logic.
+
+---
 
 ## Outputs (MVP)
-•⁠  ⁠risk_score  
-  Relative risk score (0–100).
-•⁠  ⁠risk_level  
-  Categorical label (Low / Medium / High).
-•⁠  ⁠key_drivers  
-  Main contributing factors (e.g. supplier concentration,
-  geo-exposure, regulatory risk).
-•⁠  ⁠brief  
-  Short text explanation suitable for a policy dashboard or demo.
+- **risk_score**  
+  Relative risk score (0–1 in the current implementation).
 
-## How to run (MVP)
-Preferred interface:I chose API.
+- **confidence / risk_level**  
+  Qualitative indicator (e.g. low / medium).
 
-My MVP will expose a minimal API endpoint that takes (country_or_region, segment_or_component, optional scenario) and returns the outputs bove. Data sources and scoring logic will of course be refined in later phases.
+- **key_drivers**  
+  Main contributing factors  
+  (e.g. supplier concentration, low substitutability, policy exposure).
 
-## Example scenario
-Input:
-•⁠  ⁠country_or_region: EU
-•⁠  ⁠segment_or_component: quantum cryogenic systems
-•⁠  ⁠scenario: export restriction
+- **brief**  
+  Short text explanation suitable for a policy dashboard or demo interface.
 
-Output:
-•⁠  ⁠risk_score: 80
-•⁠  ⁠risk_level: High
-•⁠  ⁠key_drivers: supplier concentration, limited substitution, regulatory exposure
-•⁠  ⁠brief: Short summary of vulnerabilities and potential mitigation options.
+---
+
+## How to Run (MVP)
+
+The MVP exposes a **minimal API**.
+
+### Local setup
+```bash
+cd modules/supplychain-risk
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn src.app:app --reload
