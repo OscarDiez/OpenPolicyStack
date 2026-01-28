@@ -27,7 +27,7 @@ Out of scope for NOW; may be integrated later as separate services.
 
 ---
 
-## 2) Definitions (plain language)
+## 2) Definitions (Plain Language)
 - **Run:** One execution of the system for a given scenario + parameters.
 - **Run ID:** Unique identifier for a run (used to find outputs/logs later).
 - **Plan:** A list of steps the orchestrator will execute (e.g: call policy simulator → call strategy agent).
@@ -128,7 +128,7 @@ This is stored under a unique `run_id` in a folder like:
 
 The API response includes the `run_id` and (optionally) paths/pointers to the saved logs and artifacts.
 
-## 6) How modules are called (assumptions for integration)
+## 6) How Modules Are Called (Assumptions for Integration)
 
 For MVP integration, the orchestrator assumes modules are reachable over **HTTP** (Docker-first) and expose a minimal interface so they can be called consistently.
 
@@ -144,4 +144,43 @@ In short, the orchestrator expects:
   - Optional `artifacts` and `evidence` fields
 
 > Note: Endpoint naming and exact payload fields may be refined during integration month. The orchestrator will prioritize compatibility with the agreed contract in the Issue and adapt via lightweight adapters if needed.
+
+## 7) How To Run (Local / Docker)
+
+> Status: This module is currently in setup phase. The commands below describe the intended MVP run method and will be made runnable as the skeleton is implemented.
+
+### Docker (recommended for reproducibility)
+Planned workflow:
+```bash
+# from modules/orchestrator
+docker build -t openpolicystack-orchestrator:dev .
+docker run --rm -p 8000:8000 \
+  -v $(pwd)/runs:/app/runs \
+  openpolicystack-orchestrator:dev
+```
+
+### Local (for development)
+Planned workflow:
+```bash
+# from modules/orchestrator
+pip install -r requirements.txt
+# example server command (framework to be confirmed)
+python -m src.main
+```
+## 8) Quickstart Demo (Planned)
+
+> Status: This is the intended MVP smoke test once the orchestrator skeleton is implemented.
+
+1) Start the orchestrator (see Section 7)  
+2) Start at least one module service (or a stub) reachable by the orchestrator  
+3) Trigger a run:
+
+```bash
+curl -X POST http://localhost:8000/plan_and_execute \
+  -H "Content-Type: application/json" \
+  -d @examples/plan_and_execute.request.json
+```
+Expected behavior (once implemented):
+- Returns a JSON response containing a `run_id`
+- Creates `runs/<run_id>/` with `run.json`, `results.json`, `logs.jsonl`, and `artifacts/`
 
