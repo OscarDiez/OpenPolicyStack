@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-﻿# Default owner for all files
-=======
-modules/data-layer/        @oscarbaateel
-modules/orchestrator/      @adriancon
-modules/strategy-agent/    @antoniosoto
-modules/dr-anticorruption/ @briancollado
-modules/supplychain-risk/  @karlkohler
+# Module Owners
+# modules/data-layer/        
+modules/orchestrator/      @Acon3078
+modules/strategy-agent/    @asotogrande
+modules/dr-anticorruption/ @Bcollado0310
+modules/supplychain-risk/  @karlmaximilienkohler
 modules/policy-simulator/  @andresgerli
->>>>>>> 37a173c (Repo setup: module skeleton, docs, templates, gitignore)
-* @OscarDiez
+
+# Default Owners 
+* @OscarDiez @Acon3078
