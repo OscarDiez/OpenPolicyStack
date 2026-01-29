@@ -1,0 +1,16 @@
+﻿{
+  "run_id": "demo-001",
+  "scenario_id": "baseline_v1",
+  "objective": "Increase profit without increasing risk",
+  "current_state": {
+    "decision_levers": {"capex": 500000, "hiring": 10}
+  },
+  "feasible_levers": {
+    "capex": {"min": 0, "max": 1000000, "step": 50000},
+    "hiring": {"min": 0, "max": 50, "step": 1}
+  },
+  "upstream_outputs": {
+    "policy_simulator": {"kpis": {"profit": 1.2}},
+    "supplychain_risk": {"risk_score": 0.67}
+  }
+}

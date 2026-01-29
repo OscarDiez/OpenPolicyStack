@@ -1,0 +1,10 @@
+﻿{
+  "run_id": "demo-001",
+  "scenario_id": "baseline_v1",
+  "objective": "Summarize the strategy for leadership",
+  "selected_recommendation_ids": ["rec-1"],
+  "upstream_outputs": {
+    "policy_simulator": {"kpis": {"profit": 1.2}, "kpi_deltas": {"profit": -0.3}},
+    "supplychain_risk": {"risk_score": 0.67}
+  }
+}
