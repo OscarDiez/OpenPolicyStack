@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dr-anticorruption"
+version = "0.2.0"
+description = "Anti-corruption analysis platform for DR procurement data"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.115.0",
+    "uvicorn[standard]==0.32.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.3",
+    "pytest-cov==5.0.0",
+    "black==24.8.0",
+    "isort==5.13.2",
+    "mypy==1.11.2",
+    "types-requests==2.32.0.202409.1",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers --strict-config --cov=src --cov-report=html --cov-report=term-missing"
+testpaths = ["tests"]
+markers = [
+    "slow: Marks tests as slow",
+    "integration: Integration tests"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
