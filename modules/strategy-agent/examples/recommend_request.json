@@ -1,0 +1,16 @@
+﻿{
+  "run_id": "demo-001",
+  "scenario_id": "baseline_v1",
+  "objective": "Improve profitability while keeping risk low",
+  "upstream_outputs": {
+    "policy_simulator": {
+      "kpis": {"profit": 1.2, "revenue": 3.4},
+      "kpi_deltas": {"profit": -0.3, "revenue": -0.1}
+    },
+    "supplychain_risk": {"risk_score": 0.67}
+  },
+  "constraints": {
+    "budget_max": 1000000,
+    "non_actionable": ["inflation_rate", "interest_rate"]
+  }
+}
