@@ -236,5 +236,14 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Monitor module generated outputs
+modules/monitor/data/
+modules/monitor/deliverables/
+modules/monitor/embedding/
+modules/monitor/*.log
+modules/monitor/*.dat
+modules/monitor/**/*.db
+modules/monitor/**/*.db-journal
+
 OpenPolicyStack/
 
