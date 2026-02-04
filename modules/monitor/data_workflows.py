@@ -42,32 +42,31 @@ class MonitorWorkflow(Workflow):
         super().__init__(name, settings_class)
         
     def run(self):
-
-
-
         metadata = dict()
         metadata["DataAnalysisStartDate"] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # 1) Load raw data (always)
+        data_source_ft = FundingAndTenderPortal(
+            sourcing_settings.raw_projects_filename,
+            sourcing_settings.raw_organizations_filename,
+        )
+        project_df, orga_df = data_source_ft.load_saved_data()
+
+        # 2) Always perform keyword-based scoring and filtering
+        match_scorer = KeywordMatchScorer(project_df, orga_df, self.settings.keyword_list)
+        match_scorer.compute_add_match_score()
+        match_scorer.plot_matchscore_histogram(self.settings.matchscore_histogram_filename)
+        project_df, orga_df = match_scorer.get_filtered_data(self.settings.match_score_threshold)
         
-
+        # 3) Optional LLM categorization
         if not self.settings.suppress_llm_categorization:
-            data_source_ft = FundingAndTenderPortal(sourcing_settings.raw_projects_filename, sourcing_settings.raw_organizations_filename)
-            project_df, orga_df = data_source_ft.load_saved_data()
-
-
-            match_scorer = KeywordMatchScorer(project_df, orga_df, self.settings.keyword_list)
-            match_scorer.compute_add_match_score()
-            match_scorer.plot_matchscore_histogram(self.settings.matchscore_histogram_filename)
-            project_df, orga_df = match_scorer.get_filtered_data(self.settings.match_score_threshold)
-            
-
-
             llm_categorizer = LLMCategorizer(project_df, orga_df, self.settings.prompt_instruction)
             llm_categorizer.categorize(model_location=self.settings.llm_location)
             project_df, orga_df = llm_categorizer.get_data()
 
-
-            project_df.to_csv(self.settings.filtered_projects_filename, index=False, sep=";")
-            orga_df.to_csv(self.settings.filtered_organizations_filename, index=False, sep=";")
+        # 4) Persist filtered data (available in both LLM and non-LLM modes)
+        project_df.to_csv(self.settings.filtered_projects_filename, index=False, sep=";")
+        orga_df.to_csv(self.settings.filtered_organizations_filename, index=False, sep=";")
 
         #Load new and old data
         project_df = pd.read_csv(self.settings.filtered_projects_filename, delimiter=";")
@@ -90,19 +89,22 @@ class MonitorWorkflow(Workflow):
 
 
 
-        project_df = split_raw_category(project_df,3,"LLMCategory")
-        project_df_prev = split_raw_category(project_df_prev,3,"LLMCategory")      
+        # If LLM categorization was performed, post-process the LLM output.
+        # In keyword-only mode (suppress_llm_categorization=True), skip this block.
+        if not self.settings.suppress_llm_categorization:
+            project_df = split_raw_category(project_df,3,"LLMCategory")
+            project_df_prev = split_raw_category(project_df_prev,3,"LLMCategory")      
 
-        project_df = remap_dimension(project_df, "LLMCategory1","LLMSubCategory", self.settings.sub_mapping_dict)
-        project_df_prev = remap_dimension(project_df_prev, "LLMCategory1", "LLMSubCategory",self.settings.sub_mapping_dict)
-        project_df = remap_dimension(project_df, "LLMCategory2","LLM_TRL", self.settings.trl_mapping_dict)
-        project_df_prev = remap_dimension(project_df_prev, "LLMCategory2", "LLM_TRL",self.settings.trl_mapping_dict)
+            project_df = remap_dimension(project_df, "LLMCategory1","LLMSubCategory", self.settings.sub_mapping_dict)
+            project_df_prev = remap_dimension(project_df_prev, "LLMCategory1", "LLMSubCategory",self.settings.sub_mapping_dict)
+            project_df = remap_dimension(project_df, "LLMCategory2","LLM_TRL", self.settings.trl_mapping_dict)
+            project_df_prev = remap_dimension(project_df_prev, "LLMCategory2", "LLM_TRL",self.settings.trl_mapping_dict)
 
-        # Throw out irrelevant projects
-        project_df = remap_dimension(project_df, "LLMCategory0", "LLMCategory",self.settings.mapping_dict)
-        project_df, orga_df = strip_by_dimension(project_df, orga_df, "LLMCategory", "nan")
-        project_df_prev = remap_dimension(project_df_prev, "LLMCategory0", "LLMCategory",self.settings.mapping_dict)
-        project_df_prev, __ = strip_by_dimension(project_df_prev, orga_df, "LLMCategory", "nan")
+            # Throw out irrelevant projects
+            project_df = remap_dimension(project_df, "LLMCategory0", "LLMCategory",self.settings.mapping_dict)
+            project_df, orga_df = strip_by_dimension(project_df, orga_df, "LLMCategory", "nan")
+            project_df_prev = remap_dimension(project_df_prev, "LLMCategory0", "LLMCategory",self.settings.mapping_dict)
+            project_df_prev, __ = strip_by_dimension(project_df_prev, orga_df, "LLMCategory", "nan")
 
 
         #Compare new with previous data and create a new dataframe containing all new projects
@@ -132,13 +134,18 @@ class MonitorWorkflow(Workflow):
 
 
         print(project_df.columns)
-        project_df = project_df.drop(columns=['subTypeOfAction', 'language', 'deliverables', 'esST_checksum', 'esST_FileName', 'DATASOURCE', 
+        drop_columns = ['subTypeOfAction', 'language', 'deliverables', 'esST_checksum', 'esST_FileName', 'DATASOURCE', 
                                               'REFERENCE', 'subProgramme', 'participants',
                                               'es_ContentType', 'esST_URL','publications', 'typeOfMGAs', 'pics', 'typeOfActions', 'countries',
                                               'projectObjective', 'publicationsAvailable', 'legalEntityNames', 'programmeDivision', 'cenTagsA', 
                                               'cenTagsB',
-                                              'destinationGroup', 'mission', 'destination', 'missionGroup',
-                                              'LLMCategory0','LLMCategory1','LLMCategory2'])
+                                              'destinationGroup', 'mission', 'destination', 'missionGroup']
+
+        # Only attempt to drop LLM-specific columns if they exist (i.e., in LLM mode).
+        if not self.settings.suppress_llm_categorization:
+            drop_columns.extend(['LLMCategory0','LLMCategory1','LLMCategory2'])
+
+        project_df = project_df.drop(columns=[c for c in drop_columns if c in project_df.columns])
         orga_df = orga_df.drop(columns=['organizationType', 'website'])
         print(project_df.columns)
         #export project_df and orga_df as sqlite databases using sqlalchemy which can then be accessed by metabase
@@ -155,7 +162,12 @@ class MonitorWorkflow(Workflow):
 
 
 
-        for evaluation_name, evaluation_class in self.settings.evaluations.items():
+        # In keyword-only mode, skip evaluations that rely on LLMCategory.
+        effective_evaluations = dict(self.settings.evaluations)
+        if self.settings.suppress_llm_categorization:
+            effective_evaluations.pop("TotalFundingByLLMCategoryOverTime", None)
+
+        for evaluation_name, evaluation_class in effective_evaluations.items():
             evaluation = evaluation_class(project_df, orga_df)
             evaluation.evaluate(2015, current_year)
             evaluation.plot_result(f"deliverables/{self.name}/{evaluation_name}.png")
