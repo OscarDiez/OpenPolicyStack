@@ -1,0 +1,44 @@
+[
+    {
+        "leaf_id": "CRYO.DR.CC.HE3",
+        "component_name": "Helium-3",
+        "suppliers": [
+            {
+                "name": "Air Liquide",
+                "country": "France"
+            },
+            {
+                "name": "Linde",
+                "country": "Germany"
+            }
+        ]
+    },
+    {
+        "leaf_id": "CRYO.DR.PC.PULSE_TUBE",
+        "component_name": "Pulse Tube Cryocooler",
+        "suppliers": [
+            {
+                "name": "Cryomech",
+                "country": "USA"
+            },
+            {
+                "name": "Sumitomo Heavy Industries",
+                "country": "Japan"
+            }
+        ]
+    },
+    {
+        "leaf_id": "CRYO.DR.MAT.NBTI_WIRE",
+        "component_name": "NbTi Superconducting Wire",
+        "suppliers": [
+            {
+                "name": "Bruker",
+                "country": "Germany"
+            },
+            {
+                "name": "Supercon",
+                "country": "USA"
+            }
+        ]
+    }
+]

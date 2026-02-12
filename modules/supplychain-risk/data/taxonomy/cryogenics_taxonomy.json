@@ -1,0 +1,134 @@
+{
+    "technology_domain": "Quantum Technologies",
+    "segment": "Cryogenics",
+    "subsystems": [
+        {
+            "name": "Dilution Refrigerator",
+            "subsystems": [
+                {
+                    "name": "Dilution Unit",
+                    "components": [
+                        {
+                            "name": "Mixing Chamber",
+                            "leaf_id": "CRYO.DR.DU.MIXING_CHAMBER"
+                        },
+                        {
+                            "name": "Still",
+                            "leaf_id": "CRYO.DR.DU.STILL"
+                        },
+                        {
+                            "name": "Heat Exchangers",
+                            "leaf_id": "CRYO.DR.DU.HEAT_EXCHANGER"
+                        },
+                        {
+                            "name": "Phase Separator",
+                            "leaf_id": "CRYO.DR.DU.PHASE_SEPARATOR"
+                        }
+                    ]
+                },
+                {
+                    "name": "Cryogenic Circuit",
+                    "components": [
+                        {
+                            "name": "Helium-3",
+                            "leaf_id": "CRYO.DR.CC.HE3"
+                        },
+                        {
+                            "name": "Helium-4",
+                            "leaf_id": "CRYO.DR.CC.HE4"
+                        },
+                        {
+                            "name": "Circulation Pumps",
+                            "leaf_id": "CRYO.DR.CC.PUMP"
+                        },
+                        {
+                            "name": "Gas Handling System",
+                            "leaf_id": "CRYO.DR.CC.GAS_HANDLING"
+                        }
+                    ]
+                },
+                {
+                    "name": "Pre-Cooling System",
+                    "components": [
+                        {
+                            "name": "Pulse Tube Cryocooler",
+                            "leaf_id": "CRYO.DR.PC.PULSE_TUBE"
+                        },
+                        {
+                            "name": "Compressor Unit",
+                            "leaf_id": "CRYO.DR.PC.COMPRESSOR"
+                        }
+                    ]
+                },
+                {
+                    "name": "Thermal Infrastructure",
+                    "components": [
+                        {
+                            "name": "Thermal Plates (4K/100mK/10mK)",
+                            "leaf_id": "CRYO.DR.TI.THERMAL_PLATES"
+                        },
+                        {
+                            "name": "RF Coaxial Cables",
+                            "leaf_id": "CRYO.DR.TI.RF_CABLES"
+                        },
+                        {
+                            "name": "Wiring Harnesses",
+                            "leaf_id": "CRYO.DR.TI.WIRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "Vacuum & Shielding",
+                    "components": [
+                        {
+                            "name": "Vacuum Chamber",
+                            "leaf_id": "CRYO.DR.VS.VACUUM_CHAMBER"
+                        },
+                        {
+                            "name": "Radiation Shields",
+                            "leaf_id": "CRYO.DR.VS.RADIATION_SHIELD"
+                        },
+                        {
+                            "name": "Vacuum Pumps",
+                            "leaf_id": "CRYO.DR.VS.VACUUM_PUMP"
+                        }
+                    ]
+                },
+                {
+                    "name": "Sensors & Instrumentation",
+                    "components": [
+                        {
+                            "name": "Cryogenic Temperature Sensors",
+                            "leaf_id": "CRYO.DR.SI.TEMP_SENSOR"
+                        },
+                        {
+                            "name": "Pressure Sensors",
+                            "leaf_id": "CRYO.DR.SI.PRESSURE_SENSOR"
+                        },
+                        {
+                            "name": "PID Controllers",
+                            "leaf_id": "CRYO.DR.SI.PID_CONTROLLER"
+                        }
+                    ]
+                },
+                {
+                    "name": "Materials",
+                    "components": [
+                        {
+                            "name": "Oxygen-Free High Conductivity Copper (OFHC)",
+                            "leaf_id": "CRYO.DR.MAT.OFHC_COPPER"
+                        },
+                        {
+                            "name": "Stainless Steel Alloys",
+                            "leaf_id": "CRYO.DR.MAT.STEEL_ALLOY"
+                        },
+                        {
+                            "name": "NbTi Superconducting Wire",
+                            "leaf_id": "CRYO.DR.MAT.NBTI_WIRE"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
