@@ -2,6 +2,11 @@
     {
         "leaf_id": "CRYO.DR.CC.HE3",
         "component_name": "Helium-3",
+        "market_characteristics": {
+            "supplier_count_estimate": "very_low",
+            "substitutability": "very_low",
+            "criticality": "high"
+        },
         "suppliers": [
             {
                 "name": "Air Liquide",
@@ -16,6 +21,11 @@
     {
         "leaf_id": "CRYO.DR.PC.PULSE_TUBE",
         "component_name": "Pulse Tube Cryocooler",
+        "market_characteristics": {
+            "supplier_count_estimate": "low",
+            "substitutability": "low",
+            "criticality": "high"
+        },
         "suppliers": [
             {
                 "name": "Cryomech",
@@ -30,6 +40,11 @@
     {
         "leaf_id": "CRYO.DR.MAT.NBTI_WIRE",
         "component_name": "NbTi Superconducting Wire",
+        "market_characteristics": {
+            "supplier_count_estimate": "low",
+            "substitutability": "low",
+            "criticality": "medium"
+        },
         "suppliers": [
             {
                 "name": "Bruker",
