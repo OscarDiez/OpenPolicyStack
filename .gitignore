@@ -143,11 +143,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-# Make Sure .gitignore Supports the .env.example file.
-.env
-*.env
+# Allow example env templates (must be AFTER any .env / .env.* ignores)
 !.env.example
-!*.env.example
+!**/.env.example
 
 # Spyder project settings
 .spyderproject
