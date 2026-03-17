@@ -143,9 +143,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-# Allow example env templates (must be AFTER any .env / .env.* ignores)
-!.env.example
-!**/.env.example
+
 
 # Spyder project settings
 .spyderproject
@@ -250,3 +248,6 @@ modules/monitor/**/*.db-journal
 
 OpenPolicyStack/
 
+# Allow example env templates (must be AFTER any .env / .env.* ignores)
+!.env.example
+!**/.env.example
