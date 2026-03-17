@@ -257,6 +257,15 @@ Each developer must create:
 cp .env.example .env
 ```
 
+### Important 
+Add the following at the bottom of your .gitignore to allow Git to track your .env.example file. 
+
+```
+# Allow example env templates (must be AFTER any .env / .env.* ignores)
+!.env.example
+!**/.env.example
+```
+
 ### Example env.example
 
 ```
