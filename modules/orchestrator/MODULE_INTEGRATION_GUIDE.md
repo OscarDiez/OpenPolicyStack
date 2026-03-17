@@ -10,39 +10,60 @@
 
 # 1. Overview
 
-This guide explains how to prepare your module so that it can be integrated into the **OpenPolicyStack orchestration system**.
+This guide explains how to prepare your module so that it can be integrated into the **OpenPolicyStack Orchestration System**.
 
-All modules in OpenPolicyStack operate as **independent containerized microservices** coordinated by a central orchestrator.
+All modules in OpenPolicyStack operate as **independent containerized** microservices coordinated by a **central** orchestrator.
 
 Your module will:
 
-- run inside a Docker container
-- expose a lightweight REST API
-- receive execution requests from the orchestrator
-- return structured outputs and artifact references
+- Run inside a Docker container.
+- Expose a lightweight REST API.
+- Receive execution requests from the orchestrator.
+- Return structured outputs and artifact references.
 
-You **do not need to implement orchestration logic**.
+You **do not** need to implement orchestration logic**.**
 
-Your module simply exposes a consistent interface and performs its analysis.
+Your module must simply **conform** to the Integration Contract defined in this guide.
 
 ---
 
-# 2. High-Level Integration Flow
+# 2. Validated Integration Baseline
+
+A working integration baseline has been implemented and validated.
+
+The module:
+```
+modules/integration-pilot
+```
+Serves as the reference implementation for:
+
+- API contract
+- Artifact handling
+- Environment variables
+- Docker container behavior
+- Orchestrator interaction
+
+All modules must align with the integration-pilot pattern.
+If in doubt, follow that implementation exactly.
+
+---
+
+# 3. High-Level Integration Flow
 
 When OpenPolicyStack runs a workflow, the following occurs:
 
 1. The orchestrator generates a **run_id**.
 2. The orchestrator calls your module via HTTP.
 3. Your module performs its computation.
-4. Your module returns structured JSON results.
-5. Any large outputs are saved as artifacts.
+4. Your module returns structured JSON.
+5. Artifacts are written to the shared volume.
 6. The orchestrator records execution metadata.
 
 Your module remains **analytically independent** but participates in the **shared execution environment**.
 
 ---
 
-# 3. Module Repository Structure
+# 4. Module Repository Structure
 
 Your module must follow this directory structure:
 
@@ -59,15 +80,9 @@ modules/<module-name>/
 └── README.md
 ```
 
-Example:
-
-```
-modules/policy-simulator/
-```
-
 ---
 
-# 4. Naming Rules
+# 5. Naming Rules
 
 Module names must follow **lowercase kebab-case**.
 
@@ -90,39 +105,44 @@ policySimulator
 
 Your module name must match:
 
-- folder name
+- Folder name
 - Docker service name
-- container hostname
-- artifact directory name
+- Container hostname
+- Artifact directory name
 
 ---
 
-# 5. Docker Container Requirement
+# 6. Docker Container Requirement
 
 Your module **must run inside a Docker container**.
 
-Minimal example Dockerfile:
+Validated minimal Dockerfile:
 
 ```
 FROM python:3.11-slim
 
 WORKDIR /app
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/ app/
+COPY app ./app
 
-CMD ["python", "app/main.py"]
+EXPOSE 8080
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
 
 The container must start a web server exposing the module API.
 
 ---
 
-# 6. API Interface Requirements
+# 7. API Interface Requirements
 
-Your module must expose three HTTP endpoints.
+Each module must expose three HTTP endpoints.
 
 ### Required endpoints
 
@@ -136,13 +156,18 @@ All endpoints must return JSON.
 
 ---
 
-# 6.1 Health Endpoint
+# 7.1 Health Endpoint
 
 Used by the orchestrator to verify that your service is running.
 
 ```
 GET /health
 ```
+Must:
+- Return HTTP 200.
+- Respond quickly (no heavy logic).
+- Not depend on external services.
+
 
 Example response:
 
@@ -153,10 +178,13 @@ Example response:
   "version":"0.1.0"
 }
 ```
+This endpoint is used for:
+- Container healthchecks
+- Orchestration readiness
 
 ---
 
-# 6.2 Metadata Endpoint
+# 7.2 Metadata Endpoint
 
 Provides module information used for orchestration and debugging.
 
@@ -164,140 +192,120 @@ Provides module information used for orchestration and debugging.
 GET /metadata
 ```
 
-Example:
-
-```
-{
-  "module_name":"policy-simulator",
-  "version":"0.1.0",
-  "supported_tasks": [
-"simulate_policy"
-  ]
-}
-```
-
 ---
 
-# 6.3 Execute Endpoint
+# 7.3 Execute Endpoint
 
 This is the **main entry point** used by the orchestrator.
 
 ```
 POST /execute
 ```
+Your module must:
+- Accept JSON input.
+- Return structured JSON output.
+- Never return raw text or HTML.
 
-Example request:
-
-```
-{
-  "run_id":"123e4567",
-  "parameters": {
-    "country":"DO"
-  },
-  "inputs": [],
-  "metadata": {}
-}
-```
-
-Example response:
+### Required Response Structure
 
 ```
 {
-  "module_name":"policy-simulator",
-  "version":"0.1.0",
-  "status":"success",
-  "output": {
-    "risk_score":0.41
-  },
+  "module_name": "policy-simulator",
+  "version": "0.1.0",
+  "status": "success",
+  "output": {},
   "artifacts": []
 }
 ```
+### Required Response Fields
 
-Required response fields:
-
-| Field | Description |
-| --- | --- |
-| module_name | name of the module |
-| version | module version |
-| status | success or failure |
-| output | structured JSON result |
-| artifacts | list of artifact references |
+| Field       | Description                 |
+| ----------- | --------------------------- |
+| module_name | name of the module          |
+| version     | module version              |
+| status      | success or failure          |
+| output      | structured JSON result      |
+| artifacts   | list of artifact references |
 
 ---
 
-# 7. Service Port
+# 8. Service Port
 
-Your API must listen on:
+All modules must listen on:
 
 ```
 8080
 ```
 
-Example FastAPI server:
-
-```
-uvicorn main:app --host 0.0.0.0 --port 8080
-```
-
 ---
 
-# 8. Environment Variables
+# 9. Environment Variables
 
-All modules use environment variables prefixed with:
-
-```
-OPS_
-```
-
-Example variables:
+Each module must include:
 
 ```
-OPS_MODULE_NAME=policy-simulator
+.env.example
+```
+### Important Rule
+- .env.example → committed to Git
+
+- .env → NOT committed (local runtime only)
+
+Each developer must create:
+
+```
+cp .env.example .env
+```
+
+### Example env.example
+
+```
+OPS_ENV=dev
+OPS_LOG_LEVEL=INFO
 OPS_PORT=8080
 OPS_ARTIFACT_ROOT=/var/openpolicystack/artifacts
-OPS_LOG_LEVEL=INFO
+OPS_MODULE_NAME=policy-simulator
 ```
+### Why This Matters
 
-You must include a `.env.example` file documenting required variables.
+This prevents;
+- Missing environment variables in deployment.
+- Inconsistent runtime configuration.
+- Integration failures on the VM.
 
 ---
 
-# 9. Artifact Storage
+# 10. Artifact Storage (Validated Behavior)
 
-Large outputs should be stored as **artifacts**.
-
-Artifacts are saved in the shared directory:
+Artifacts must be written to:
 
 ```
 /var/openpolicystack/artifacts
 ```
 
-Directory structure:
+Each module must create its own subdirectory:
 
 ```
-artifacts/
-└── runs/
-    └── <run_id>/
-        └── <module-name>/
-            ├── inputs/
-            ├── outputs/
-            └── meta/
+/var/openpolicystack/artifacts/<module-name>/
 ```
 
-Example artifact:
+Example:
 
 ```
-artifacts/runs/abc123/policy-simulator/outputs/report.json
+/var/openpolicystack/artifacts/integration-pilot/<file>.json
 ```
 
-When returning artifacts in your response:
+---
+
+### Artifact Response Format
 
 ```
 {
   "artifacts": [
     {
-      "name":"simulation_report",
-      "path":"artifacts/runs/abc123/policy-simulator/outputs/report.json"
+      "module_name":"policy-simulator",
+      "file_path":"/var/openpolicystack/artifacts/policy-simulator/output.json",
+      "type":"output"
     }
   ]
 }
@@ -305,37 +313,28 @@ When returning artifacts in your response:
 
 ---
 
-# 10. Logging
+### Important
+
+- The orchestrator reads **references**, not raw files.
+- All containers share the same mounted volume.
+- Do not use local paths outside `/var/openpolicystack/artifacts`.
+
+---
+
+# 11. Logging
 
 Modules must log to:
 
 ```
-stdout
-stderr
+stdout / stderr
 ```
-
 Use structured JSON logs.
-
-Example:
-
-```
-{
-  "timestamp":"2026-03-12T11:20:31Z",
-  "level":"INFO",
-  "service":"policy-simulator",
-  "run_id":"abc123",
-  "event":"simulation_started",
-  "message":"Policy simulation initiated"
-}
-```
 
 ---
 
-# 11. Module Manifest
+# 12. Module Manifest
 
 Each module must include a `module.yaml`.
-
-Example:
 
 ```
 module_name: policy-simulator
@@ -349,63 +348,14 @@ interface:
   execute: /execute
 ```
 
-This allows automated module discovery.
-
----
-
-# 12. Example Minimal FastAPI Module
-
-Example `main.py`:
-
-```
-fromfastapiimportFastAPI
-frompydanticimportBaseModel
-
-app=FastAPI()
-
-classExecuteRequest(BaseModel):
-run_id:str
-parameters:dict= {}
-inputs:list= []
-metadata:dict= {}
-
-@app.get("/health")
-defhealth():
-return {
-"status":"ok",
-"module_name":"example-module",
-"version":"0.1.0"
-    }
-
-@app.get("/metadata")
-defmetadata():
-return {
-"module_name":"example-module",
-"version":"0.1.0"
-    }
-
-@app.post("/execute")
-defexecute(req:ExecuteRequest):
-return {
-"module_name":"example-module",
-"version":"0.1.0",
-"status":"success",
-"output": {"example":True},
-"artifacts": []
-    }
-```
-
 ---
 
 # 13. Local Testing
-
-You can test your module locally before integration.
-
-Start your module:
+Before integration:
 
 ```
-docker build -t openpolicystack/example-module .
-docker run -p 8080:8080 openpolicystack/example-module
+docker build -t openpolicystack/<module-name> .
+docker run -p 8080:8080 openpolicystack/<module-name>
 ```
 
 Test endpoint:
@@ -416,54 +366,56 @@ curl http://localhost:8080/health
 
 ---
 
-# 14. Integration Checklist
+# Integration Testing (Validated Workflow)
+Once integrated with the orchestrator:
+
+```
+docker compose build
+docker compose up-d
+docker composeps
+```
+
+Test orchestrator:
+
+```
+curl http://localhost:8100/health
+```
+
+Test execution:
+
+```
+curl-X POST http://localhost:8100/execute \
+-H"Content-Type: application/json" \
+-d'{"test":"hello"}'
+```
+
+---
+
+
+# 15. Integration Checklist
 
 Before submitting your module for integration, verify:
 
-✔ Module resides in `modules/<module-name>`
+✔ Docker builds successfully.
 
-✔ Dockerfile builds successfully
+✔ Service runs on port 8080.
 
-✔ API listens on port `8080`
+✔ /health returns 200.
 
-✔ `/health` endpoint works
+✔ /execute returns valid JSON.
 
-✔ `/metadata` endpoint works
+✔ .env.example included.
 
-✔ `/execute` endpoint works
+✔ artifacts written to shared volume.
 
-✔ module returns JSON response
+✔ response includes artifacts field.
 
-✔ module returns version field
-
-✔ `.env.example` included
-
-✔ `module.yaml` included
-
-✔ artifacts stored in correct directory
+✔ module follows integration-pilot pattern.
 
 ---
 
-# 15. Common Mistakes
-
-Avoid these common integration issues:
-
-**Incorrect port**
-
-```
-5000
-3000
-```
-
-Correct:
-
-```
-8080
-```
-
----
-
-**Using localhost for service calls**
+# 16. Common Mistakes
+### Using localhost for inter-service calls
 
 Wrong:
 
@@ -474,22 +426,38 @@ http://localhost:8080
 Correct:
 
 ```
-http://data-layer:8080
+http://orchestrator:8080
 ```
 
 ---
 
-**Returning non-JSON responses**
+### Missing `.env.example`
 
-All API responses must be JSON.
+This causes deployment failures on the VM.
 
 ---
 
-# 16. Need Help?
+### Health endpoint too slow
 
-If your module fails integration:
+Healthchecks will fail → container marked unhealthy.
 
-1. Check `docker logs`
-2. Verify `/health` endpoint
-3. Confirm port `8080`
-4. Validate JSON responses
+---
+
+### Writing artifacts outside shared volume
+
+Artifacts will not be visible to other services.
+
+# 17. Final Note
+
+The integration-pilot module is the single source of truth for:
+
+- Correct module behavior.
+
+- Correct response structure.
+
+- Correct artifact handling.
+
+- Correct environment configuration.
+
+If your module behaves differently, it will fail integration.
+
