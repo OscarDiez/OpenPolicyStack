@@ -366,7 +366,7 @@ curl http://localhost:8080/health
 
 ---
 
-# Integration Testing (Validated Workflow)
+# 14. Integration Testing (Validated Workflow)
 Once integrated with the orchestrator:
 
 ```
