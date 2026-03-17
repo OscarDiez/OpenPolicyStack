@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Cryogenic Amplifiers",
+  "global_trade_value": 1.23,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.35,
+      "value": 0.4305
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 0.3075
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 0.1845
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 0.123
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 0.0615
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 0.369
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 0.3075
+    },
+    {
+      "country": "Japan",
+      "share": 0.2,
+      "value": 0.246
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 0.123
+    },
+    {
+      "country": "India",
+      "share": 0.05,
+      "value": 0.0615
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

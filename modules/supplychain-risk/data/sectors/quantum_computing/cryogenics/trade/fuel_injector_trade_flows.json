@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "fuel injector",
+  "global_trade_value": 13.3,
+  "exporters": [
+    {
+      "country": "Germany",
+      "share": 0.25,
+      "value": 3.325
+    },
+    {
+      "country": "Japan",
+      "share": 0.2,
+      "value": 2.66
+    },
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 2.66
+    },
+    {
+      "country": "China",
+      "share": 0.15,
+      "value": 1.995
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 1.33
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 3.325
+    },
+    {
+      "country": "China",
+      "share": 0.2,
+      "value": 2.66
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 1.995
+    },
+    {
+      "country": "Japan",
+      "share": 0.1,
+      "value": 1.33
+    },
+    {
+      "country": "India",
+      "share": 0.1,
+      "value": 1.33
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

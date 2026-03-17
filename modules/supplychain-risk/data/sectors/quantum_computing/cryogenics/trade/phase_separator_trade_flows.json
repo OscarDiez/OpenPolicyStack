@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Phase Separator",
+  "global_trade_value": 8.5,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 2.9749999999999996
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 2.125
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 1.275
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 0.8500000000000001
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 0.42500000000000004
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 2.55
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 2.125
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 1.275
+    },
+    {
+      "country": "Japan",
+      "share": 0.1,
+      "value": 0.8500000000000001
+    },
+    {
+      "country": "India",
+      "share": 0.05,
+      "value": 0.42500000000000004
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

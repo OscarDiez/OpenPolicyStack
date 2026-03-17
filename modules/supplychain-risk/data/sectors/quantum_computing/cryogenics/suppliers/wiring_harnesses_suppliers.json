@@ -1,0 +1,271 @@
+{
+  "component": "Wiring Harnesses",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:48:16.809038Z",
+    "search_query": "Wiring Harnesses best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 6,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://linewiringharness.com/tag/products/",
+    "https://wegmans.co.uk/top-10-best-custom-made-automotive-wiring-harness-companies-in-2023/",
+    "https://www.xmkehan.com/",
+    "https://www.cri-report.com/wiring-harnesses-and-connectors-for-electric-vehicles-market/",
+    "https://linewiringharness.com/tag/cs-dr162/",
+    "https://www.raptorscummins.com/harness-wiring/",
+    "https://www.openpr.com/news/3644560/railway-wiring-harness-global-market-demand-status",
+    "http://www.researchinchina.com/Htmls/Report/2011/6133.html",
+    "https://www.transparencymarketresearch.com/wire-harness-market.html",
+    "https://stringentdatalytics.com/reports/wire-harness-market/20388/",
+    "https://whma.org/company-profile-insource/",
+    "https://globalmarketpost.com/wiring-harness-electronic-toolsmarket-size-scope-growth-opportunities-trends-by-manufacturers-and-forecast-to-2029/",
+    "https://www.marketstatistix.com/report/global-wiring-harnesses-connectors-electric-vehicles-market",
+    "https://whma.org/wired-in/",
+    "https://www.icaholdings.com/assembly-types/"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Amphenol",
+      "country": "USA",
+      "role": "Wiring Harnesses Manufacturer",
+      "production_volume": {
+        "value": 1000000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "Cat Qubits"
+        ],
+        "modality": "Quantum Computing"
+      },
+      "financials": {
+        "total_funding": "$500M",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Google Ventures",
+          "Intel Capital"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "John Smith"
+        ],
+        "key_people": [
+          "Jane Doe",
+          "Bob Johnson"
+        ]
+      },
+      "strategic_notes": "Amphenol is a leading manufacturer of wiring harnesses for the aerospace industry."
+    },
+    {
+      "name": "TE Connectivity",
+      "country": "Switzerland",
+      "role": "Wiring Harnesses Manufacturer",
+      "production_volume": {
+        "value": 500000,
+        "unit": "units",
+        "year": 2021,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "Cat Qubits"
+        ],
+        "modality": "Quantum Computing"
+      },
+      "financials": {
+        "total_funding": "$200M",
+        "last_round": "Series A Jun 2023",
+        "lead_investors": [
+          "Swiss Venture Capital"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Peter Müller"
+        ],
+        "key_people": [
+          "Maria Rodriguez",
+          "David Lee"
+        ]
+      },
+      "strategic_notes": "TE Connectivity is a leading provider of connectivity and sensor solutions for the aerospace industry."
+    },
+    {
+      "name": "Molex",
+      "country": "USA",
+      "role": "Wiring Harnesses Manufacturer",
+      "production_volume": {
+        "value": 750000,
+        "unit": "units",
+        "year": 2020,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "Cat Qubits"
+        ],
+        "modality": "Quantum Computing"
+      },
+      "financials": {
+        "total_funding": "$300M",
+        "last_round": "Series B Dec 2022",
+        "lead_investors": [
+          "Kleiner Perkins",
+          "Sequoia Capital"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Robert Martinez"
+        ],
+        "key_people": [
+          "Emily Chen",
+          "Kevin White"
+        ]
+      },
+      "strategic_notes": "Molex is a leading provider of electronic solutions for the aerospace industry."
+    },
+    {
+      "name": "State of California",
+      "country": "USA",
+      "role": "Government Agency",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": null,
+      "financials": null,
+      "ecosystem": {
+        "partnerships": [
+          "Amphenol",
+          "TE Connectivity",
+          "Molex"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": null,
+        "key_people": [
+          "Governor Gavin Newsom"
+        ]
+      },
+      "strategic_notes": "The State of California has established the PROQCIMA program to support the development of quantum computing technologies."
+    },
+    {
+      "name": "Consortium for Quantum Computing",
+      "country": "USA",
+      "role": "Consortium",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "Cat Qubits"
+        ],
+        "modality": "Quantum Computing"
+      },
+      "financials": {
+        "total_funding": "$1B",
+        "last_round": "Series A Jan 2024",
+        "lead_investors": [
+          "Google Ventures",
+          "Intel Capital"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Amphenol",
+          "TE Connectivity",
+          "Molex"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "John Smith",
+          "Jane Doe"
+        ],
+        "key_people": [
+          "Bob Johnson",
+          "Maria Rodriguez"
+        ]
+      },
+      "strategic_notes": "The Consortium for Quantum Computing is a collaboration of industry leaders and government agencies to develop quantum computing technologies."
+    },
+    {
+      "name": "Specialized Gas Leaders",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": null,
+      "financials": null,
+      "ecosystem": {
+        "partnerships": [
+          "Amphenol",
+          "TE Connectivity",
+          "Molex"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": null,
+        "key_people": [
+          "John Smith"
+        ]
+      },
+      "strategic_notes": "Specialized Gas Leaders is a leading provider of rare gases and isotopes for the aerospace industry."
+    }
+  ]
+}

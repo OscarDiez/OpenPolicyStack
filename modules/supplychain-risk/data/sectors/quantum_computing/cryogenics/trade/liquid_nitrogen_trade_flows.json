@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Liquid Nitrogen",
+  "global_trade_value": 20.21,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 5.0525
+    },
+    {
+      "country": "Germany",
+      "share": 0.2,
+      "value": 4.042000000000001
+    },
+    {
+      "country": "China",
+      "share": 0.18,
+      "value": 3.6378
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 3.0315
+    },
+    {
+      "country": "France",
+      "share": 0.12,
+      "value": 2.4252
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.3,
+      "value": 6.063
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 5.0525
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 3.0315
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 2.0210000000000004
+    },
+    {
+      "country": "India",
+      "share": 0.1,
+      "value": 2.0210000000000004
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

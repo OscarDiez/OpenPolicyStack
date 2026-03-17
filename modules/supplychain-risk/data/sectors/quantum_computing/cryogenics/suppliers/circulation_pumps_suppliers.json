@@ -1,0 +1,161 @@
+{
+  "component": "Circulation Pumps",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:00:08.543065Z",
+    "search_query": "Circulation Pumps best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.globalinforesearch.com/reports/1650443/circulator-pumps",
+    "https://www.industrystock.com/en/companies/Pumps/Circulating-Pumps",
+    "https://www.tscentral.com/circulation-pump",
+    "https://us.metoree.com/categories/3779/",
+    "https://www.qyresearch.com/reports/2680894/circulator-pumps",
+    "https://www.globalinsightservices.com/reports/pumps-market/",
+    "https://www.astuteanalytica.com/industry-report/radial-flow-pump-market",
+    "https://www.cri-report.com/industrial-pumps-market-global-analysis-of-market-size-share-trends-for-2019-2020-and-forecasts-to-2030/",
+    "https://www.factmr.com/report/food-and-beverage-industry-pumps-market",
+    "https://www.custommarketinsights.com/report/specialty-pumps-market/",
+    "https://www.directindustry.com/industrial-manufacturer/circulation-pump-72737.html",
+    "https://www.mordorintelligence.com/industry-reports/pumps-market",
+    "https://www.grandviewresearch.com/industry-analysis/industrial-pumps-market",
+    "https://www.grandviewresearch.com/industry-analysis/us-industrial-pump-market"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Grundfos",
+      "country": "Denmark",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 17,
+        "unit": "million",
+        "year": 2022,
+        "source": "Grundfos Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "MG 100",
+          "CR 90"
+        ],
+        "modality": "Centrifugal Pump"
+      },
+      "financials": {
+        "total_funding": "€1.5 billion",
+        "last_round": "Private Equity 2020",
+        "lead_investors": [
+          "Axel Johnson Group"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Danfoss",
+          "Rockwell Automation"
+        ],
+        "programs": [
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Poul Due Jensen"
+        ],
+        "key_people": [
+          "Mads Nipper",
+          "Poul Due Jensen"
+        ]
+      },
+      "strategic_notes": "Leading manufacturer of circulation pumps for heating and cooling systems"
+    },
+    {
+      "name": "Wilo",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 12,
+        "unit": "million",
+        "year": 2022,
+        "source": "Wilo Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Wilo-Stratos",
+          "Wilo-Yonos"
+        ],
+        "modality": "High-Efficiency Pump"
+      },
+      "financials": {
+        "total_funding": "€500 million",
+        "last_round": "Private Equity 2019",
+        "lead_investors": [
+          "KKR"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Siemens",
+          "Schneider Electric"
+        ],
+        "programs": [
+          "German Energy Transition"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Louis Opländer"
+        ],
+        "key_people": [
+          "Oliver Hermes",
+          "Georg Weber"
+        ]
+      },
+      "strategic_notes": "Major player in the European circulation pump market"
+    },
+    {
+      "name": "Xylem",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 10,
+        "unit": "million",
+        "year": 2022,
+        "source": "Xylem Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Lowara",
+          "Goulds"
+        ],
+        "modality": "Centrifugal Pump"
+      },
+      "financials": {
+        "total_funding": "$2.5 billion",
+        "last_round": "IPO 2011",
+        "lead_investors": [
+          "ITW"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Microsoft",
+          "AT&T"
+        ],
+        "programs": [
+          "US EPA WaterSense"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "ITT Corporation"
+        ],
+        "key_people": [
+          "Patrick Decker",
+          "Claudia Toussaint"
+        ]
+      },
+      "strategic_notes": "Global leader in water technology, including circulation pumps"
+    }
+  ]
+}

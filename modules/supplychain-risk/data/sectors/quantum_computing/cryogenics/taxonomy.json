@@ -31,11 +31,13 @@
                     "components": [
                         {
                             "name": "Helium-3",
-                            "leaf_id": "CRYO.DR.CC.HE3"
+                            "leaf_id": "CRYO.DR.CC.HE3",
+                            "hs_code": "284590"
                         },
                         {
                             "name": "Helium-4",
-                            "leaf_id": "CRYO.DR.CC.HE4"
+                            "leaf_id": "CRYO.DR.CC.HE4",
+                            "hs_code": "280429"
                         },
                         {
                             "name": "Circulation Pumps",
@@ -44,6 +46,11 @@
                         {
                             "name": "Gas Handling System",
                             "leaf_id": "CRYO.DR.CC.GAS_HANDLING"
+                        },
+                        {
+                            "name": "Pulse Tube Cryocooler",
+                            "leaf_id": "CRYO.AUTO.PULSE_TUBE_CRYOCOOLER",
+                            "hs_code": "854411"
                         }
                     ]
                 },
@@ -74,6 +81,31 @@
                         {
                             "name": "Wiring Harnesses",
                             "leaf_id": "CRYO.DR.TI.WIRING"
+                        },
+                        {
+                            "name": "Circulation Pumps",
+                            "leaf_id": "CRYO.AUTO.CIRCULATION_PUMPS",
+                            "hs_code": "848410"
+                        },
+                        {
+                            "name": "Compressor Unit",
+                            "leaf_id": "CRYO.AUTO.COMPRESSOR_UNIT",
+                            "hs_code": "684848"
+                        },
+                        {
+                            "name": "Still",
+                            "leaf_id": "CRYO.AUTO.STILL",
+                            "hs_code": "854411"
+                        },
+                        {
+                            "name": "Heat Exchangers",
+                            "leaf_id": "CRYO.AUTO.HEAT_EXCHANGERS",
+                            "hs_code": "847330"
+                        },
+                        {
+                            "name": "Gas Handling System",
+                            "leaf_id": "CRYO.AUTO.GAS_HANDLING_SYSTEM",
+                            "hs_code": "841450"
                         }
                     ]
                 },
@@ -91,6 +123,11 @@
                         {
                             "name": "Vacuum Pumps",
                             "leaf_id": "CRYO.DR.VS.VACUUM_PUMP"
+                        },
+                        {
+                            "name": "RF Coaxial Cables",
+                            "leaf_id": "CRYO.AUTO.RF_COAXIAL_CABLES",
+                            "hs_code": "854420"
                         }
                     ]
                 },
@@ -108,6 +145,11 @@
                         {
                             "name": "PID Controllers",
                             "leaf_id": "CRYO.DR.SI.PID_CONTROLLER"
+                        },
+                        {
+                            "name": "Wiring Harnesses",
+                            "leaf_id": "CRYO.AUTO.WIRING_HARNESSES",
+                            "hs_code": "854430"
                         }
                     ]
                 },
@@ -124,7 +166,13 @@
                         },
                         {
                             "name": "NbTi Superconducting Wire",
-                            "leaf_id": "CRYO.DR.MAT.NBTI_WIRE"
+                            "leaf_id": "CRYO.DR.MAT.NBTI_WIRE",
+                            "hs_code": "854411"
+                        },
+                        {
+                            "name": "Indium Wire",
+                            "leaf_id": "CRYO.AUTO.INDIUM_WIRE",
+                            "hs_code": "811292"
                         }
                     ]
                 }

@@ -1,0 +1,310 @@
+{
+  "component": "UPS Power Supply",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:48:30.563570Z",
+    "search_query": "UPS Power Supply best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 18,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.marketresearchreports.com/blog/2019/08/20/world’s-top-10-uninterrupted-power-supply-ups-manufacturers",
+    "https://www.verifiedmarketresearch.com/blog/worlds-top-uninterruptible-power-supply-manufacturers/",
+    "https://www.verifiedmarketresearch.com/blog/top-ups-companies/",
+    "https://us.metoree.com/categories/2234/",
+    "https://us.metoree.com/categories/4999/",
+    "https://www.databridgemarketresearch.com/reports/global-uninterruptible-power-supply-ups-market/companies",
+    "https://www.fortunebusinessinsights.com/uninterruptible-power-supply-ups-market-105690",
+    "https://www.mordorintelligence.com/industry-reports/uninterruptible-power-supply-market",
+    "https://www.gminsights.com/industry-analysis/ups-market",
+    "https://www.marketresearchfuture.com/reports/uninterruptible-power-supply-ups-market-6623",
+    "https://www.engineersedge.com/engineering/Products_Directory/Electrical__Power_Generation/UPS_Power_Supplies/",
+    "https://www.ricercaalfa.com/publishersDetails/22046/global-industrial-uninterruptible-power-supply-ups-industry-market-res.html",
+    "https://www.openpr.com/news/3492308/uninterrupted-power-supply-ups-system-market-detailed",
+    "https://www.inddist.com/logistics/news/22915912/ups-boosts-us-volume-but-profit-and-revenue-slide",
+    "https://www.exportersindia.com/ahmedabad/ups-uninterrupted-power-supply.htm"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "UPS Power Supply",
+      "global_trade_value": 10.5,
+      "exporters": [
+        {
+          "country": "China",
+          "share": 0.35,
+          "value": 3.675
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 2.625
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 1.575
+        },
+        {
+          "country": "Germany",
+          "share": 0.1,
+          "value": 1.05
+        },
+        {
+          "country": "South Korea",
+          "share": 0.05,
+          "value": 0.525
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.3,
+          "value": 3.15
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 2.625
+        },
+        {
+          "country": "Germany",
+          "share": 0.15,
+          "value": 1.575
+        },
+        {
+          "country": "Japan",
+          "share": 0.1,
+          "value": 1.05
+        },
+        {
+          "country": "India",
+          "share": 0.05,
+          "value": 0.525
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "APC by Schneider Electric",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Formerly known as American Power Conversion Corporation"
+    },
+    {
+      "name": "Eaton Corporation",
+      "country": "Ireland",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in power management solutions"
+    },
+    {
+      "name": "Emerson",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of uninterruptible power supply solutions"
+    },
+    {
+      "name": "Toshiba",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in electronics and power systems"
+    },
+    {
+      "name": "General Electric",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in power generation and distribution"
+    },
+    {
+      "name": "Mitsubishi Electric",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in electrical and electronic equipment"
+    },
+    {
+      "name": "Siemens",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in industrial automation and power systems"
+    },
+    {
+      "name": "Kehua",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of uninterruptible power supply solutions"
+    },
+    {
+      "name": "Socomec",
+      "country": "France",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of uninterruptible power supply solutions"
+    },
+    {
+      "name": "Vertiv",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in critical infrastructure solutions"
+    },
+    {
+      "name": "ABB",
+      "country": "Switzerland",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in industrial automation and power systems"
+    },
+    {
+      "name": "Schneider Electric",
+      "country": "France",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in energy management and automation"
+    },
+    {
+      "name": "Delta Electronics Inc",
+      "country": "Taiwan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of power supply solutions"
+    },
+    {
+      "name": "Huawei Digital Power Technologies Co Ltd",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of digital power solutions"
+    },
+    {
+      "name": "Toshiba International Corporation",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of industrial and power systems"
+    },
+    {
+      "name": "Active Power, Inc.",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of uninterruptible power supply solutions"
+    },
+    {
+      "name": "Staco",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of power quality solutions"
+    },
+    {
+      "name": "Reros",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provider of power supply solutions"
+    }
+  ]
+}

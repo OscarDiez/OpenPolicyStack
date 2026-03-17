@@ -1,0 +1,209 @@
+{
+  "component": "fuel injector",
+  "extraction_metadata": {
+    "timestamp": "2026-02-16T19:18:25.582071Z",
+    "search_query": "fuel injector best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 11,
+    "has_api_data": true
+  },
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "fuel injector",
+      "global_trade_value": 13.3,
+      "exporters": [
+        {
+          "country": "Germany",
+          "share": 0.25,
+          "value": 3.325
+        },
+        {
+          "country": "Japan",
+          "share": 0.2,
+          "value": 2.66
+        },
+        {
+          "country": "United States",
+          "share": 0.2,
+          "value": 2.66
+        },
+        {
+          "country": "China",
+          "share": 0.15,
+          "value": 1.995
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 1.33
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 3.325
+        },
+        {
+          "country": "China",
+          "share": 0.2,
+          "value": 2.66
+        },
+        {
+          "country": "Germany",
+          "share": 0.15,
+          "value": 1.995
+        },
+        {
+          "country": "Japan",
+          "share": 0.1,
+          "value": 1.33
+        },
+        {
+          "country": "India",
+          "share": 0.1,
+          "value": 1.33
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Robert Bosch GmbH",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "A key player in fuel injection systems, integrating technology with automotive applications. Operates with extensive R&D to enhance injector technologies."
+    },
+    {
+      "name": "Denso Corporation",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Recognized for advanced fuel injection systems and automotive electronics globally. Develops precision injectors, integrating advanced manufacturing techniques."
+    },
+    {
+      "name": "Continental AG",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Contributes to the automotive sector with innovative fuel delivery solutions. Focuses on innovative fuel injection systems for diverse vehicle categories."
+    },
+    {
+      "name": "Delphi Technologies (BorgWarner Inc.)",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "A specialist in fuel injection technologies, offering a range of solutions. Offers performance-oriented injectors, catering to global automotive markets."
+    },
+    {
+      "name": "Mikuni American Corporation",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Delivers niche fuel injection products known for performance in specific applications. Manufactures specialty injectors for motorbike and small engine applications."
+    },
+    {
+      "name": "Hitachi Astemo Indiana, Inc.",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Focuses on fuel injection components, catering to specific market segments. Utilizes advanced technologies to improve fuel delivery and efficiency."
+    },
+    {
+      "name": "Infineon Technologies AG",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "A technology leader with specific applications in digital automotive fuel control. Integrates semiconductor technology into fuel injector systems for enhanced performance."
+    },
+    {
+      "name": "GB Remanufacturing, Inc.",
+      "country": "USA",
+      "role": "Remanufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Engaged in remanufacturing fuel injectors, providing sustainability through reuse. Specializes in remanufactured fuel injectors with a focus on sustainability."
+    },
+    {
+      "name": "Valley Fuel Injection & Turbo, Inc.",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Offers specialized fuel injection services and products tailored for performance vehicles. Provides aftermarket fuel injectors and strives for competitive pricing."
+    },
+    {
+      "name": "Stanadyne",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Launched an innovative product in the aftermarket performance space, the Goliath high-pressure gasoline direct injection performance fuel injector."
+    },
+    {
+      "name": "Marelli",
+      "country": "Italy",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Launched its first hydrogen fuel system for hydrogen propulsion engines in December 2023."
+    }
+  ]
+}

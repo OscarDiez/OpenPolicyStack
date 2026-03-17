@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "RF Coaxial Cables",
+  "global_trade_value": 5600000000.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 1959999999.9999998
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 1400000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 840000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 560000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.05,
+      "value": 280000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 1680000000.0
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 1400000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 840000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 560000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.05,
+      "value": 280000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

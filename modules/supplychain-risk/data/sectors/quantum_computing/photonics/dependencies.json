@@ -1,0 +1,64 @@
+{
+  "dependencies": [
+    {
+      "parent": "Photonics",
+      "children": [
+        "Qubit Processor",
+        "Control FPGA",
+        "RF Signal Generator",
+        "Microwave Switch Matrix",
+        "Error Correction ASIC",
+        "Dilution Refrigerator",
+        "Magnetic Shielding Enclosure",
+        "UPS Power Supply",
+        "Vibration Isolation Platform",
+        "Coaxial Cable Harness"
+      ]
+    },
+    {
+      "parent": "Qubit Processor",
+      "children": [
+        "Error Correction ASIC"
+      ]
+    },
+    {
+      "parent": "Dilution Refrigerator",
+      "children": [
+        "Qubit Processor"
+      ]
+    },
+    {
+      "parent": "Magnetic Shielding Enclosure",
+      "children": [
+        "Dilution Refrigerator",
+        "Qubit Processor"
+      ]
+    },
+    {
+      "parent": "Vibration Isolation Platform",
+      "children": [
+        "Dilution Refrigerator"
+      ]
+    },
+    {
+      "parent": "UPS Power Supply",
+      "children": [
+        "Dilution Refrigerator",
+        "Control FPGA",
+        "RF Signal Generator",
+        "Microwave Switch Matrix"
+      ]
+    },
+    {
+      "parent": "Control FPGA",
+      "children": [
+        "Microwave Switch Matrix",
+        "RF Signal Generator"
+      ]
+    },
+    {
+      "parent": "Coaxial Cable Harness",
+      "children": []
+    }
+  ]
+}

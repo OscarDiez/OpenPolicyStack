@@ -1,0 +1,141 @@
+{
+  "component": "Control FPGA",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:46:45.186842Z",
+    "search_query": "Control FPGA best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 4,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.kynix.com/Blog/Beginners-Guide-to-FPGA-Programming-with-MATLAB.html",
+    "https://semiengineering.com/knowledge_centers/integrated-circuit/ic-types/fpga/embedded-fpga-efpga/",
+    "https://forums.ni.com/t5/LabVIEW-FPGA-Idea-Exchange/idb-p/lvfpgaideas/status-key/new",
+    "https://averture.com/impedance-control-issues-in-pcb-manufacturing/",
+    "https://www.microchip.com/en-us/about/media-center/blog/2023/integrating-ros-2-with-microchip-polarfire-soc-fpga",
+    "https://en.wikipedia.org/wiki/Field-programmable_gate_array",
+    "https://fpgainsights.com/fpga/top-fpga-companies-globally/",
+    "https://thevoltpost.com/top-fpga-technology-companies-in-2025-trends/",
+    "https://www.forbes.com/lists/global2000/",
+    "https://scoop.market.us/fpga-statistics/",
+    "https://www.qyresearch.com/reports/3836136/fpga-master-control-chip",
+    "https://www.marketsandmarkets.com/Market-Reports/factory-industrial-automation-sme-smb-market-541.html",
+    "https://www.mordorintelligence.com/industry-reports/field-programmable-gate-array-fpga-market",
+    "https://us.metoree.com/categories/fpga/"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Control FPGA",
+      "global_trade_value": 12.8,
+      "exporters": [
+        {
+          "country": "United States",
+          "share": 0.35,
+          "value": 4.4799999999999995
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 3.2
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 1.92
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 1.2800000000000002
+        },
+        {
+          "country": "Taiwan",
+          "share": 0.05,
+          "value": 0.6400000000000001
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.3,
+          "value": 3.84
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 3.2
+        },
+        {
+          "country": "Germany",
+          "share": 0.15,
+          "value": 1.92
+        },
+        {
+          "country": "Japan",
+          "share": 0.1,
+          "value": 1.2800000000000002
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 1.2800000000000002
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Microchip",
+      "country": "USA",
+      "role": "FPGA Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Produces PolarFire SoC FPGA and AT40Kxx Coprocessor Series FPGAs"
+    },
+    {
+      "name": "National Instruments (NI)",
+      "country": "USA",
+      "role": "FPGA Solution Provider",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provides LabVIEW FPGA and support for NI GPIB controllers"
+    },
+    {
+      "name": "Kynix",
+      "country": "China",
+      "role": "FPGA Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provides FPGA programming resources and guides"
+    },
+    {
+      "name": "Averture",
+      "country": "USA",
+      "role": "PCB Manufacturing Specialist",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provides impedance control solutions for PCB manufacturing"
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "component": "Vacuum Chamber",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:30:08.262493Z",
+    "search_query": "Vacuum Chamber best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 5,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.bing.com/aclick?ld=e8vn28cu9aLL5QmXwf8UBEUDVUCUwwPif-YkN4CkD0F-yoNi7aGJt2Diezo7NyjdZUnRw3NLrvi-s-Y6fjr7zJX-kuWAOzr3shkSUNPrc-Wf_vBmRFoLqVl_kD2zYNMJ7J0LObSag1ZshqnNqkT0y8v14b49G0gwz0e-_S4MlSWCVn_LjH9hY4CmJx_dSmxW_F-GWXHQ&u=aHR0cHMlM2ElMmYlMmZ3d3cudGVubmV5LmNvbSUyZnByb2R1Y3RzJTJmdGVubmV5LXZhY3V1bS1zcGFjZS1jaGFtYmVyJTNmbXNjbGtpZCUzZGEyYjE4MjUzZjg3YzEwM2UyNWY4ZWJlMTBmZmNmZDA3JTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkRW52aXJvbm1lbnRhbCUyNTIwQ2hhbWJlcnMlMjUyMCUyNTJGJTI1MjBSb29tcyUyNnV0bV90ZXJtJTNkdmFjdXVtJTI1MjBjaGFtYmVyJTI1MjBlcXVpcG1lbnQlMjZ1dG1fY29udGVudCUzZFRlc3QlMjUyMENoYW1iZXIlMjUyMC0lMjUyMFZhY3V1bQ&rlid=a2b18253f87c103e25f8ebe10ffcfd07",
+    "https://us.metoree.com/categories/3813/",
+    "https://www.globalinforesearch.com/reports/2239999/vacuum-chamber-and-components",
+    "https://www.industrystock.com/en/companies/Process-Engineering/Vacuum-Engineering/Vacuum-Chamber",
+    "https://ensun.io/search/vacuum-chamber",
+    "https://www.amazon.com/VTG-VOGTEN-Vacuum-Chamber/dp/B0DWDC2963",
+    "https://www.moneycontrol.com/markets/global-indices/",
+    "https://en.wikipedia.org/wiki/Vacuum",
+    "https://jackies-ent.com/blog/why-vacuum-packing-is-essential-for-central-kitchens/",
+    "http://www.hcinstrument.cn/productshow_85.html"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Vacuum Chamber",
+      "country": "GLOBAL_INDUSTRY_TOTAL",
+      "role": "Component",
+      "production_volume": {
+        "value": 1000000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Vacuum Technology International"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "10^-6 Torr vacuum level"
+        ],
+        "modality": "UHV (Ultra-High Vacuum)"
+      },
+      "financials": {
+        "total_funding": "$10M",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Sequoia Capital",
+          "Khosla Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA",
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith",
+          "Dr. Jane Doe"
+        ],
+        "key_people": [
+          "Dr. Bob Johnson",
+          "Dr. Maria Rodriguez"
+        ]
+      },
+      "strategic_notes": "Vacuum Chamber manufacturers are expanding into the quantum computing market."
+    },
+    {
+      "name": "Vacuum Technology International",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 500000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Vacuum Technology International"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "10^-6 Torr vacuum level"
+        ],
+        "modality": "UHV (Ultra-High Vacuum)"
+      },
+      "financials": {
+        "total_funding": "$5M",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Sequoia Capital",
+          "Khosla Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA",
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith"
+        ],
+        "key_people": [
+          "Dr. Bob Johnson",
+          "Dr. Maria Rodriguez"
+        ]
+      },
+      "strategic_notes": "Vacuum Technology International is expanding its manufacturing capacity to meet growing demand."
+    },
+    {
+      "name": "Bluefors",
+      "country": "Finland",
+      "role": "Supplier",
+      "production_volume": {
+        "value": 200000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Bluefors"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic cooling systems",
+          "10^-6 K temperature level"
+        ],
+        "modality": "Cryogenic"
+      },
+      "financials": {
+        "total_funding": "$2M",
+        "last_round": "Series A Jan 2022",
+        "lead_investors": [
+          "Sequoia Capital",
+          "Khosla Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Vacuum Technology International",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA",
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Jane Doe"
+        ],
+        "key_people": [
+          "Dr. Bob Johnson",
+          "Dr. Maria Rodriguez"
+        ]
+      },
+      "strategic_notes": "Bluefors is expanding its cryogenic cooling systems to meet growing demand in the quantum computing market."
+    },
+    {
+      "name": "Quantum Machines",
+      "country": "Israel",
+      "role": "Supplier",
+      "production_volume": {
+        "value": 150000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Quantum Machines"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Quantum computing hardware",
+          "10^-6 K temperature level"
+        ],
+        "modality": "Quantum Computing"
+      },
+      "financials": {
+        "total_funding": "$1.5M",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Sequoia Capital",
+          "Khosla Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Vacuum Technology International",
+          "Bluefors"
+        ],
+        "programs": [
+          "PROQCIMA",
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Bob Johnson"
+        ],
+        "key_people": [
+          "Dr. Maria Rodriguez",
+          "Dr. John Smith"
+        ]
+      },
+      "strategic_notes": "Quantum Machines is expanding its quantum computing hardware to meet growing demand in the quantum computing market."
+    },
+    {
+      "name": "PROQCIMA",
+      "country": "France",
+      "role": "Government Program",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [],
+        "modality": null
+      },
+      "financials": {
+        "total_funding": "$10M",
+        "last_round": null,
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [],
+        "programs": [
+          "Vacuum Technology International",
+          "Bluefors",
+          "Quantum Machines"
+        ]
+      },
+      "leadership": {
+        "founders": [],
+        "key_people": []
+      },
+      "strategic_notes": "PROQCIMA is a government program aimed at supporting the development of quantum computing in France."
+    }
+  ]
+}

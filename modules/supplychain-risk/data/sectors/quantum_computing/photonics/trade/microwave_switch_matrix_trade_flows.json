@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Microwave Switch Matrix",
+  "global_trade_value": 4200.0,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.35,
+      "value": 1470.0
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 1050.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 630.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 420.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 210.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.3,
+      "value": 1260.0
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 1050.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 630.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 420.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.05,
+      "value": 210.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

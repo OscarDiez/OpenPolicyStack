@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Pulse Tube Cryocooler",
+  "global_trade_value": 445.0,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.35,
+      "value": 155.75
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 111.25
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 66.75
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 44.5
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 22.25
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 89.0
+    },
+    {
+      "country": "China",
+      "share": 0.2,
+      "value": 89.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 66.75
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 66.75
+    },
+    {
+      "country": "India",
+      "share": 0.1,
+      "value": 44.5
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Stainless Steel Alloys",
+  "global_trade_value": 448.5,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 112.125
+    },
+    {
+      "country": "Japan",
+      "share": 0.2,
+      "value": 89.7
+    },
+    {
+      "country": "United States",
+      "share": 0.18,
+      "value": 80.73
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 67.27499999999999
+    },
+    {
+      "country": "India",
+      "share": 0.12,
+      "value": 53.82
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 89.7
+    },
+    {
+      "country": "China",
+      "share": 0.18,
+      "value": 80.73
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 67.27499999999999
+    },
+    {
+      "country": "Japan",
+      "share": 0.12,
+      "value": 53.82
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 44.85
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

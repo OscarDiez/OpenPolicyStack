@@ -1,0 +1,245 @@
+{
+  "component": "Liquid Nitrogen",
+  "extraction_metadata": {
+    "timestamp": "2026-02-16T19:16:50.423218Z",
+    "search_query": "Liquid Nitrogen best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 14,
+    "has_api_data": true
+  },
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Liquid Nitrogen",
+      "global_trade_value": 20.21,
+      "exporters": [
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 5.0525
+        },
+        {
+          "country": "Germany",
+          "share": 0.2,
+          "value": 4.042000000000001
+        },
+        {
+          "country": "China",
+          "share": 0.18,
+          "value": 3.6378
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 3.0315
+        },
+        {
+          "country": "France",
+          "share": 0.12,
+          "value": 2.4252
+        }
+      ],
+      "importers": [
+        {
+          "country": "China",
+          "share": 0.3,
+          "value": 6.063
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 5.0525
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 3.0315
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 2.0210000000000004
+        },
+        {
+          "country": "India",
+          "share": 0.1,
+          "value": 2.0210000000000004
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "nexAir LLC",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "nexAir specializes in industrial and medical gases, offering a wide range of cryogenic solutions, including liquid nitrogen for healthcare and research industries."
+    },
+    {
+      "name": "Taiyo Nippon Sanso Corp.",
+      "country": "Japan",
+      "role": "Global Leader in Industrial Gases",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Taiyo Nippon Sanso focuses on advanced applications of liquid nitrogen in electronics and healthcare."
+    },
+    {
+      "name": "Asia Industrial Gases Pte. Ltd",
+      "country": "Singapore",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "This company caters to Southeast Asia’s growing demand for liquid nitrogen in electronics and manufacturing."
+    },
+    {
+      "name": "Statebourne Cryogenics Ltd.",
+      "country": "UK",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Statebourne specializes in cryogenic equipment and storage solutions, delivering high-quality liquid nitrogen systems."
+    },
+    {
+      "name": "Linde plc",
+      "country": "UK",
+      "role": "Global Powerhouse in Industrial Gases",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Linde is a global powerhouse in industrial gases, with extensive expertise in the production and distribution of liquid nitrogen."
+    },
+    {
+      "name": "L'Air Liquide SA",
+      "country": "France",
+      "role": "Global Leader in Industrial Gases",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "This French multinational delivers innovative gas solutions, including liquid nitrogen for medical and industrial applications."
+    },
+    {
+      "name": "Gulf Cryo Holding CSC",
+      "country": "Kuwait",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Gulf Cryo is a key player in the Middle East, serving industries like petrochemicals and healthcare with liquid nitrogen solutions."
+    },
+    {
+      "name": "Air Products and Chemicals Inc.",
+      "country": "USA",
+      "role": "Global Leader in Industrial Gases",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Renowned for its focus on sustainability, Air Products is a major producer of liquid nitrogen and other industrial gases."
+    },
+    {
+      "name": "Messer Group GmbH",
+      "country": "Germany",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Messer specializes in innovative applications of liquid nitrogen, catering to diverse industries worldwide."
+    },
+    {
+      "name": "AMCS Corp",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "AMCS Corp is recognized for its advanced cryogenic systems and liquid nitrogen solutions for niche applications."
+    },
+    {
+      "name": "Infitek",
+      "country": "China/USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Infitek has established itself as a specialized manufacturer of high-performance liquid nitrogen containers, offering the LNC-Y Cryogenic Series with capacities ranging from 350L to 1880L."
+    },
+    {
+      "name": "LabRepCo",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "LabRepCo has built its reputation as a trusted provider of liquid nitrogen containers through strategic partnerships with top manufacturers like Chart Industries."
+    },
+    {
+      "name": "Laboratory-Equipment",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Laboratory-Equipment, a division of Terra Universal, is a premier supplier of high-performance cryogenic storage solutions, including liquid nitrogen containers, dewars, and freezers from top-tier manufacturers."
+    },
+    {
+      "name": "TcCryo",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "TcCryo has cemented its position as a global leader in liquid nitrogen container manufacturing through relentless innovation in cryogenic preservation technology."
+    }
+  ]
+}

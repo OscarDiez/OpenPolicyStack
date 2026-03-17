@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Dilution Refrigerator",
+  "global_trade_value": 120.0,
+  "exporters": [
+    {
+      "country": "United Kingdom",
+      "share": 0.25,
+      "value": 30.0
+    },
+    {
+      "country": "Finland",
+      "share": 0.2,
+      "value": 24.0
+    },
+    {
+      "country": "Netherlands",
+      "share": 0.18,
+      "value": 21.599999999999998
+    },
+    {
+      "country": "United States",
+      "share": 0.17,
+      "value": 20.400000000000002
+    },
+    {
+      "country": "France",
+      "share": 0.1,
+      "value": 12.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 36.0
+    },
+    {
+      "country": "China",
+      "share": 0.2,
+      "value": 24.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 18.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 18.0
+    },
+    {
+      "country": "India",
+      "share": 0.1,
+      "value": 12.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

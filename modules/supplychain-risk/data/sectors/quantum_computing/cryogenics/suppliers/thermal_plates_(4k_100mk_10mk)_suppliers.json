@@ -1,0 +1,145 @@
+{
+  "component": "Thermal Plates (4K/100mK/10mK)",
+  "extraction_metadata": {
+    "timestamp": "2026-02-16T18:03:11.399725Z",
+    "search_query": "Thermal Plates (4K/100mK/10mK) best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 11,
+    "has_api_data": false
+  },
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "BOC Sciences",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of stable isotope labeling materials"
+    },
+    {
+      "name": "Parker Advanced Cooling Systems",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provides advanced cooling systems and components for electronics cooling"
+    },
+    {
+      "name": "Alfa Laval",
+      "country": "Sweden",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "Danfoss",
+      "country": "Denmark",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "GEA",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "Kelvion",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "Mulanix Company",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "SPX Flow",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "Tranter",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "Vicarb",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    },
+    {
+      "name": "Viex",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Manufacturer of plate heat exchangers and other industrial equipment"
+    }
+  ]
+}

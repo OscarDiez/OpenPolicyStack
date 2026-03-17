@@ -1,3 +1,11 @@
 fastapi
 uvicorn[standard]
 pydantic
+duckduckgo-search
+ddgs
+groq
+python-dotenv
+httpx
+beautifulsoup4
+PyPDF2
+jinja2

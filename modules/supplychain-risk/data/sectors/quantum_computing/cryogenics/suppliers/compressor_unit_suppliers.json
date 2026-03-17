@@ -1,0 +1,146 @@
+{
+  "component": "Compressor Unit",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:27:24.805245Z",
+    "search_query": "Compressor Unit best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://bestreviewgeek.com/best-air-compressor-brands-2/",
+    "https://homesthetics.net/best-air-compressors/",
+    "https://digitalmarketingdeal.com/blog/air-compressor-manufacturers-in-india/",
+    "https://www.equipmentcn.com/co2-piston-compressor/",
+    "https://www.1aircompressor.com/air-compressors-philippines/",
+    "https://mncompressor.com/global-top-10-compressor-manufacturers/",
+    "https://www.mordorintelligence.com/industry-reports/compressor-market",
+    "https://ronixtools.com/en/blog/air-compressor-manufacturers/",
+    "https://www.shanghaisollant.com/top-10-air-compressor-manufacturers-in-the-world/",
+    "https://www.grandviewresearch.com/industry-analysis/air-compressor-market",
+    "https://en.wikipedia.org/wiki/Compressor",
+    "https://www.compressedairsystems.com/industrial-air-compressors-for-sale/",
+    "https://www.mordorintelligence.com/industry-reports/industrial-air-compressors-market",
+    "https://www.transparencymarketresearch.com/industrial-air-compressor-market.html"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Atlas Copco",
+      "country": "Sweden",
+      "role": "Compressor Manufacturer",
+      "production_volume": {
+        "value": 15000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "GA 15-22 VSD",
+          "2.2-15 kW"
+        ],
+        "modality": "Variable Speed Drive"
+      },
+      "financials": {
+        "total_funding": "null",
+        "last_round": "null",
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Siemens",
+          "Rockwell Automation"
+        ],
+        "programs": []
+      },
+      "leadership": {
+        "founders": [
+          "Erik Sundström"
+        ],
+        "key_people": [
+          "Mats Rahmström"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial compressors"
+    },
+    {
+      "name": "Ingersoll Rand",
+      "country": "United States",
+      "role": "Compressor Manufacturer",
+      "production_volume": {
+        "value": 20000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Nirvana",
+          "10-50 hp"
+        ],
+        "modality": "Rotary Screw"
+      },
+      "financials": {
+        "total_funding": "null",
+        "last_round": "null",
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Gardner Denver",
+          "Doosan"
+        ],
+        "programs": []
+      },
+      "leadership": {
+        "founders": [
+          "Simon Ingersoll"
+        ],
+        "key_people": [
+          "Vicente Reynal"
+        ]
+      },
+      "strategic_notes": "Global leader in compressor technology"
+    },
+    {
+      "name": "GEA Group",
+      "country": "Germany",
+      "role": "Compressor Manufacturer",
+      "production_volume": {
+        "value": 10000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "GRASSO",
+          "10-500 kW"
+        ],
+        "modality": "Screw Compressor"
+      },
+      "financials": {
+        "total_funding": "null",
+        "last_round": "null",
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bosch",
+          "Siemens"
+        ],
+        "programs": []
+      },
+      "leadership": {
+        "founders": [
+          "Friedrich Wilhelm Sieveking"
+        ],
+        "key_people": [
+          "Stefan Klebert"
+        ]
+      },
+      "strategic_notes": "Specialized in compressor technology for various industries"
+    }
+  ]
+}

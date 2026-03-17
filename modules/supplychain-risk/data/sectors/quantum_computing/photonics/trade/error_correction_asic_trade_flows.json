@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Error Correction ASIC",
+  "global_trade_value": 12800000000.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 4480000000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 3200000000.0
+    },
+    {
+      "country": "Taiwan",
+      "share": 0.15,
+      "value": 1920000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 1280000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.05,
+      "value": 640000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.3,
+      "value": 3840000000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 3200000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 1920000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 1280000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.05,
+      "value": 640000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

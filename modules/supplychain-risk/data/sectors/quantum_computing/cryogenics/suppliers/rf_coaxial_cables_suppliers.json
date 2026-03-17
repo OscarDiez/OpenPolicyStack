@@ -1,0 +1,161 @@
+{
+  "component": "RF Coaxial Cables",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:18:20.948474Z",
+    "search_query": "RF Coaxial Cables best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://thexrds-rf.com/",
+    "https://docplayer.net/21811385-I-pex-mhf4-micro-coaxial-connector.html",
+    "https://www.qed.co.uk/",
+    "https://www.fortunebusinessinsights.com/coaxial-cable-market-105506",
+    "https://www.maximizemarketresearch.com/market-report/rf-coaxial-cable-assemblies-market/11446/",
+    "https://www.futuremarketinsights.com/reports/coaxial-cable-market",
+    "https://www.businessresearchinsights.com/market-reports/rf-coaxial-cable-assemblies-market-105867",
+    "https://www.coherentmarketinsights.com/industry-reports/coaxial-cable-market",
+    "https://www.globalspec.com/industrial-directory/foam_dielectric_coaxial_cables",
+    "https://www.dxzone.com/catalog/Technical_Reference/Coax_Cables_and_Connectors/",
+    "https://www.dolphmicrowave.com/default/what-are-the-5-key-differences-between-waveguides-and-coaxial-cables/"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Times Microwave Systems",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 100000,
+        "unit": "meters",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "TF4 Dielectric",
+          "0.140 inch diameter"
+        ],
+        "modality": "Low Loss Cable"
+      },
+      "financials": {
+        "total_funding": "$10 million",
+        "last_round": "Series A 2020",
+        "lead_investors": [
+          "Private Equity Firm"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "HUBER+SUHNER",
+          "TE Connectivity"
+        ],
+        "programs": [
+          "US Defense Contracts"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Joseph J. Kumstar"
+        ],
+        "key_people": [
+          "Joseph J. Kumstar",
+          "CEO"
+        ]
+      },
+      "strategic_notes": "Leading manufacturer of low-loss coaxial cables"
+    },
+    {
+      "name": "HUBER+SUHNER",
+      "country": "Switzerland",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 50000,
+        "unit": "meters",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "SUCOFEED 1/2\"",
+          "SUCOFORM 1/4\""
+        ],
+        "modality": "High-Performance Cable"
+      },
+      "financials": {
+        "total_funding": "CHF 100 million",
+        "last_round": "IPO 2001",
+        "lead_investors": [
+          "Public Investors"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Times Microwave Systems",
+          "TE Connectivity"
+        ],
+        "programs": [
+          "European Space Agency Contracts"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Leonhard Suhner",
+          "Arnold Huber"
+        ],
+        "key_people": [
+          "Urs Ryffel",
+          "CEO"
+        ]
+      },
+      "strategic_notes": "Global leader in electrical and optical connectivity"
+    },
+    {
+      "name": "TE Connectivity",
+      "country": "Switzerland",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 200000,
+        "unit": "meters",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "RF Coax Connectors",
+          "Antennas"
+        ],
+        "modality": "High-Speed Connectivity"
+      },
+      "financials": {
+        "total_funding": "$10 billion",
+        "last_round": "IPO 2007",
+        "lead_investors": [
+          "Public Investors"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "HUBER+SUHNER",
+          "Times Microwave Systems"
+        ],
+        "programs": [
+          "US Defense Contracts",
+          "European Space Agency Contracts"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Charles E. Smith",
+          "Joseph S. Mullan"
+        ],
+        "key_people": [
+          "Terrence Curtin",
+          "CEO"
+        ]
+      },
+      "strategic_notes": "Global leader in connectivity and sensors"
+    }
+  ]
+}

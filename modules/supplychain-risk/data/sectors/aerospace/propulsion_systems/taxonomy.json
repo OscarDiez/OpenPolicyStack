@@ -1,0 +1,61 @@
+{
+    "technology_domain": "Aerospace",
+    "segment": "Propulsion Systems",
+    "subsystems": [
+        {
+            "name": "Propulsion Systems",
+            "subsystems": [
+                {
+                    "name": "Rocket Engines",
+                    "components": [
+                        {
+                            "name": "Turbopump Assembly",
+                            "leaf_id": "AER.ROC.TURBOP"
+                        },
+                        {
+                            "name": "Thrust Chamber",
+                            "leaf_id": "AER.ROC.THRUST"
+                        },
+                        {
+                            "name": "Nozzle Extension",
+                            "leaf_id": "AER.ROC.NOZZLE"
+                        },
+                        {
+                            "name": "Igniter System",
+                            "leaf_id": "AER.ROC.IGNITE"
+                        },
+                        {
+                            "name": "Propellant Valve",
+                            "leaf_id": "AER.ROC.PROPEL"
+                        }
+                    ]
+                },
+                {
+                    "name": "Propellants",
+                    "components": [
+                        {
+                            "name": "Liquid Oxygen (LOX)",
+                            "leaf_id": "AER.PRO.LIQUID"
+                        },
+                        {
+                            "name": "Liquid Hydrogen (LH2)",
+                            "leaf_id": "AER.PRO.LIQUID"
+                        },
+                        {
+                            "name": "RP-1 Kerosene",
+                            "leaf_id": "AER.PRO.RP-1_K"
+                        },
+                        {
+                            "name": "Hydrazine Monopropellant",
+                            "leaf_id": "AER.PRO.HYDRAZ"
+                        },
+                        {
+                            "name": "Ammonium Perchlorate Oxidizer",
+                            "leaf_id": "AER.PRO.AMMONI"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,227 @@
+{
+  "component": "Mixing Chamber",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T16:45:16.374129Z",
+    "search_query": "Mixing Chamber best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.bing.com/aclick?ld=e8OIeyZYdajcPSnoRBPh5hqjVUCUyLnuyT3id0ICZ0t0HtWIF__xmVu-Dhqcj4B5rixt2auYSXWc0awP-9343C7Cu0NemAiQLp_-laUnmO7-oPtd4hJ6JPnEvYTgNeJigtvUd6su40jBi4wgbdcF1Z2Sh68TTu-VydVMZ4gC46LmsjZuVeql-ylONhTR4_pc9Uwjmpfg&u=aHR0cHMlM2ElMmYlMmZ3d3cuZnVzaW9uZmx1aWQuY29t&rlid=8a84569d65d81b6930613f2f884d2959",
+    "https://www.bing.com/aclick?ld=e8oOF37WGIq6MvPC39xJVeyjVUCUzQUgpjrKjNdP8ccS8bpITZ-j5yMti5lKVlPG2diW26sILm6FIma6LosTERZscMTjc7txYZu7m9HD0cXcGaL3U7elxg2aajZIEC3a9oln0LQ3Dl1wC6xyCgitdMKXHwmYGLQwCsMCW10u5Hj_92tS_afVADnUy5kXRtXf62HvxZKw&u=aHR0cCUzYSUyZiUyZnd3dy5zY3MtdXNhLmNvbSUyZmVudmlyb25tZW50YWwtY2hhbWJlcnMuaHRtbCUzZl92c3JlZmRvbSUzZHBwY2JpbmclMjZleCUzZGU2NDR0OS1lZXA1NDktNjg5bXR4JTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX3Rlcm0lM2RNaXhpbmclMjUyMENoYW1iZXIlMjUyMGJlc3QlMjUyMHByb2R1Y2VycyUyNTIwbWFudWZhY3R1cmVycyUyNTIwbGlzdCUyNTIwMjAyNCUyNnV0bV9jb250ZW50JTNkdGVzdGluZytjaGFtYmVycyttYW51ZmFjdHVyZXIlMjZ1dG1fY2FtcGFpZ24lM2RDaGFtYmVycyUyNm1zY2xraWQlM2Q3OTYwOGQ2MGNiM2IxMTEwZjkxN2U0ZDIyNmFlMzFiMQ&rlid=79608d60cb3b1110f917e4d226ae31b1",
+    "https://www.globalinforesearch.com/reports/1974309/dynamic-mixing-chamber",
+    "https://www.thomasnet.com/suppliers/usa/combustion-chambers-13451000",
+    "https://www.chemeurope.com/en/companies/analytics/mixing-chambers/order_it/",
+    "https://www.marketintellix.com/report/global-single-chamber-grow-tents-industry-278809",
+    "https://www.marketintellix.com/report/report-on-global-dual-chamber-prefilled-syringe-market-234725",
+    "https://www.futuremarketinsights.com/reports/recyclable-packaging-market-share-analysis",
+    "https://straitsresearch.com/report/food-traceability-market",
+    "https://straitsresearch.com/report/hazelnut-market",
+    "https://en.wikipedia.org/wiki/Mixing_(process_engineering)",
+    "https://en.wikipedia.org/wiki/Gas_blending",
+    "https://www.sciencedirect.com/topics/engineering/mixing-chamber",
+    "https://industrialmixers.com/industrial-mixers/",
+    "https://www.mxdprocess.com"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Mixing Chamber",
+      "global_trade_value": 1200.0,
+      "exporters": [
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 300.0
+        },
+        {
+          "country": "China",
+          "share": 0.2,
+          "value": 240.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.18,
+          "value": 216.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 180.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.12,
+          "value": 144.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.3,
+          "value": 360.0
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 300.0
+        },
+        {
+          "country": "India",
+          "share": 0.15,
+          "value": 180.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.1,
+          "value": 120.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.1,
+          "value": 120.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Air Liquide",
+      "country": "France",
+      "role": "Specialized gas leader",
+      "production_volume": {
+        "value": 120000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Air Liquide Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic distillation columns",
+          "High-purity gas production"
+        ],
+        "modality": "Cryogenic distillation"
+      },
+      "financials": {
+        "total_funding": "€23.3 billion",
+        "last_round": "Not applicable",
+        "lead_investors": [
+          "Publicly traded"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines",
+          "Bluefors"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Paul Delorme",
+          "Eugène Delorme"
+        ],
+        "key_people": [
+          "François Jackow",
+          "Pierre Etienne Franc"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial gases, including rare gases and isotopes"
+    },
+    {
+      "name": "Linde plc",
+      "country": "Ireland",
+      "role": "Industrial gas supplier",
+      "production_volume": {
+        "value": 87000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Linde plc Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Hydrogen production facilities",
+          "Oxygen production plants"
+        ],
+        "modality": "Cryogenic distillation"
+      },
+      "financials": {
+        "total_funding": "$14.9 billion",
+        "last_round": "Not applicable",
+        "lead_investors": [
+          "Publicly traded"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Circuits Inc.",
+          "Rigetti Computing"
+        ],
+        "programs": [
+          "US Department of Energy's Advanced Manufacturing Office"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Carl von Linde"
+        ],
+        "key_people": [
+          "Sanjiv Lamba",
+          "Matt White"
+        ]
+      },
+      "strategic_notes": "Global leader in industrial gases, with a strong presence in the quantum computing industry"
+    },
+    {
+      "name": "Praxair, Inc.",
+      "country": "United States",
+      "role": "Industrial gas supplier",
+      "production_volume": {
+        "value": 65000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Praxair, Inc. Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Non-cryogenic air separation units",
+          "Hydrogen production facilities"
+        ],
+        "modality": "Non-cryogenic distillation"
+      },
+      "financials": {
+        "total_funding": "$10.8 billion",
+        "last_round": "Not applicable",
+        "lead_investors": [
+          "Publicly traded"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Google Quantum AI Lab",
+          "Microsoft Quantum"
+        ],
+        "programs": [
+          "US Department of Energy's Advanced Manufacturing Office"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Leonard P. Pool"
+        ],
+        "key_people": [
+          "Stephen Angel",
+          "Scott Telesz"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial gases, with a strong focus on the quantum computing industry"
+    }
+  ]
+}

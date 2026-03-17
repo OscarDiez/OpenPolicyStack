@@ -1,0 +1,76 @@
+{
+    "technology_domain": "Quantum Computing",
+    "segment": "Photonics",
+    "subsystems": [
+        {
+            "name": "Photonics",
+            "subsystems": [
+                {
+                    "name": "Processing Unit",
+                    "components": [
+                        {
+                            "name": "Qubit Processor",
+                            "leaf_id": "QUA.PRO.QUBIT_"
+                        },
+                        {
+                            "name": "Control FPGA",
+                            "leaf_id": "QUA.PRO.CONTRO"
+                        },
+                        {
+                            "name": "RF Signal Generator",
+                            "leaf_id": "QUA.PRO.RF_SIG"
+                        },
+                        {
+                            "name": "Microwave Switch Matrix",
+                            "leaf_id": "QUA.PRO.MICROW"
+                        },
+                        {
+                            "name": "Error Correction ASIC",
+                            "leaf_id": "QUA.PRO.ERROR_"
+                        },
+                        {
+                            "name": "Dilution Refrigerator",
+                            "leaf_id": "CRYO.AUTO.DILUTION_REFRIGERATOR",
+                            "hs_code": "854411"
+                        },
+                        {
+                            "name": "Magnetic Shielding Enclosure",
+                            "leaf_id": "CRYO.AUTO.MAGNETIC_SHIELDING_ENCLOSURE",
+                            "hs_code": "854411"
+                        },
+                        {
+                            "name": "UPS Power Supply",
+                            "leaf_id": "CRYO.AUTO.UPS_POWER_SUPPLY",
+                            "hs_code": "854411"
+                        }
+                    ]
+                },
+                {
+                    "name": "Infrastructure",
+                    "components": [
+                        {
+                            "name": "Dilution Refrigerator",
+                            "leaf_id": "QUA.INF.DILUTI"
+                        },
+                        {
+                            "name": "Vibration Isolation Platform",
+                            "leaf_id": "QUA.INF.VIBRAT"
+                        },
+                        {
+                            "name": "Coaxial Cable Harness",
+                            "leaf_id": "QUA.INF.COAXIA"
+                        },
+                        {
+                            "name": "Magnetic Shielding Enclosure",
+                            "leaf_id": "QUA.INF.MAGNET"
+                        },
+                        {
+                            "name": "UPS Power Supply",
+                            "leaf_id": "QUA.INF.UPS_PO"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

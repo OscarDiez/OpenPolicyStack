@@ -1,0 +1,53 @@
+{
+    "year": 2024,
+    "commodity": "Helium-3",
+    "unit": "USD",
+    "global_trade_value": 55000000,
+    "exporters": [
+        {
+            "country": "Canada",
+            "value": 28000000,
+            "share": 0.509,
+            "notes": "Primary international trade hub"
+        },
+        {
+            "country": "Russia",
+            "value": 16000000,
+            "share": 0.291,
+            "notes": "Key producer via nuclear decay"
+        },
+        {
+            "country": "France",
+            "value": 6560000,
+            "share": 0.119,
+            "notes": "European distribution hub"
+        },
+        {
+            "country": "Qatar",
+            "value": 450000,
+            "share": 0.008,
+            "notes": "Minor exporter"
+        }
+    ],
+    "importers": [
+        {
+            "country": "United States",
+            "value": 22300000,
+            "share": 0.405
+        },
+        {
+            "country": "China",
+            "value": 15200000,
+            "share": 0.276
+        },
+        {
+            "country": "France",
+            "value": 7830000,
+            "share": 0.142
+        }
+    ],
+    "sources": [
+        "OEC (2024)",
+        "UN Comtrade (Search Result Summary)"
+    ]
+}

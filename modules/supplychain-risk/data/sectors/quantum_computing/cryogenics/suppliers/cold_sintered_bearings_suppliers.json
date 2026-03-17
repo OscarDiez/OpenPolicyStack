@@ -1,0 +1,181 @@
+{
+  "component": "Cold Sintered Bearings",
+  "extraction_metadata": {
+    "timestamp": "2026-02-16T19:35:29.783952Z",
+    "search_query": "Cold Sintered Bearings best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 14,
+    "has_api_data": false
+  },
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "SKF",
+      "country": "Sweden",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global bearing manufacturer with a strong presence in the aerospace and automotive sectors."
+    },
+    {
+      "name": "FAG-INA",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "German-based bearing manufacturer with a focus on precision engineering and quality control."
+    },
+    {
+      "name": "Timken",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "US-based bearing manufacturer with a strong presence in the aerospace and industrial sectors."
+    },
+    {
+      "name": "NSK",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Japanese bearing manufacturer with a focus on innovation and quality control."
+    },
+    {
+      "name": "NTN",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Japanese bearing manufacturer with a strong presence in the automotive and industrial sectors."
+    },
+    {
+      "name": "NACHI",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Japanese bearing manufacturer with a focus on precision engineering and quality control."
+    },
+    {
+      "name": "KOYO",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Japanese bearing manufacturer with a strong presence in the automotive and industrial sectors."
+    },
+    {
+      "name": "LYC",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Chinese bearing manufacturer with a focus on quality control and cost-effectiveness."
+    },
+    {
+      "name": "ZWZ",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Chinese bearing manufacturer with a strong presence in the industrial and automotive sectors."
+    },
+    {
+      "name": "HRB bearing",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Chinese bearing manufacturer with a focus on quality control and cost-effectiveness."
+    },
+    {
+      "name": "NMB",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Japanese bearing manufacturer with a strong presence in the automotive and industrial sectors."
+    },
+    {
+      "name": "IKO",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Japanese bearing manufacturer with a focus on precision engineering and quality control."
+    },
+    {
+      "name": "INA",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "German-based bearing manufacturer with a focus on precision engineering and quality control."
+    },
+    {
+      "name": "Thomasnet",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "US-based specialized distributor of sintered bearings made from powdered metal."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Pressure Sensors",
+  "global_trade_value": 4820000000.0,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.35,
+      "value": 1687000000.0
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 1205000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 723000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 482000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 241000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 1205000000.0
+    },
+    {
+      "country": "China",
+      "share": 0.2,
+      "value": 964000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 723000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.1,
+      "value": 482000000.0
+    },
+    {
+      "country": "India",
+      "share": 0.05,
+      "value": 241000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

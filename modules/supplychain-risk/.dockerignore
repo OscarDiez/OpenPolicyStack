@@ -1,0 +1,34 @@
+# Environment variables (IMPORTANT: protects your API key)
+.env
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Runtime state
+data/active_session.json
+
+# Docker files
+Dockerfile
+.dockerignore

@@ -1,0 +1,159 @@
+{
+  "component": "Stainless Steel Alloys",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:54:37.117539Z",
+    "search_query": "Stainless Steel Alloys best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://en.wikipedia.org/wiki/List_of_steel_producers",
+    "https://www.tbkmetal.com/top-10-stainless-steel-manufacturers/",
+    "https://kongfangmetal.com/top-10-stainless-steel-manufacturers-in-the-world-2023/",
+    "https://www.huaxiao-alloy.com/blog/top-10-stainless-steel-manufacturer/",
+    "https://kongfangmetal.com/top-10-stainless-steel-manufacturers-2025/",
+    "https://www.cognitivemarketresearch.com/articles/which-are-the-top-manufacturing-companies-of-stainless-steel-market",
+    "https://www.grandviewresearch.com/industry-analysis/stainless-steel-market",
+    "https://www.reportsanddata.com/blog/top-stainless-steel-manufacturers-in-the-world",
+    "https://en.wikipedia.org/wiki/Stainless_steel",
+    "https://www.globalspec.com/learnmore/materials_chemicals_adhesives/metals_alloys/stainless_steel_alloys",
+    "https://www.marketgrowthreports.com/market-reports/superalloy-master-alloys-market-121865",
+    "https://www.unifiedalloys.com/blog/stainless-grades-families"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Outokumpu",
+      "country": "Finland",
+      "role": "Stainless Steel Producer",
+      "production_volume": {
+        "value": 2.8,
+        "unit": "million metric tons",
+        "year": 2022,
+        "source": "Outokumpu Annual Report 2022"
+      },
+      "technical_capacity": {
+        "specs": [
+          "AOD converters",
+          "Argon-Oxygen Decarburization process"
+        ],
+        "modality": "Advanced Steel Production"
+      },
+      "financials": {
+        "total_funding": "€1.3 billion",
+        "last_round": "Not Applicable",
+        "lead_investors": [
+          "State of Finland"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "ThyssenKrupp",
+          "SSAB"
+        ],
+        "programs": [
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Not Applicable"
+        ],
+        "key_people": [
+          "Heikki Malinen",
+          "Stefan Erdmann"
+        ]
+      },
+      "strategic_notes": "Outokumpu is a global leader in stainless steel production, with a strong focus on sustainability and innovation."
+    },
+    {
+      "name": "Sandvik",
+      "country": "Sweden",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Sanmac 316L/3169",
+          "Sanicro 28"
+        ],
+        "modality": "Advanced Materials"
+      },
+      "financials": {
+        "total_funding": "SEK 12.4 billion",
+        "last_round": "Not Applicable",
+        "lead_investors": [
+          "AB Industrivärden"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Outokumpu",
+          "ThyssenKrupp"
+        ],
+        "programs": [
+          "Swedish Innovation Agency"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Göran Fredrik Göransson"
+        ],
+        "key_people": [
+          "Stefan Widing",
+          "Pär Altan"
+        ]
+      },
+      "strategic_notes": "Sandvik is a leading provider of advanced materials and specialized distribution services for the stainless steel industry."
+    },
+    {
+      "name": "ThyssenKrupp",
+      "country": "Germany",
+      "role": "Stainless Steel Producer",
+      "production_volume": {
+        "value": 3.2,
+        "unit": "million metric tons",
+        "year": 2022,
+        "source": "ThyssenKrupp Annual Report 2022"
+      },
+      "technical_capacity": {
+        "specs": [
+          "AOD converters",
+          "EAF furnaces"
+        ],
+        "modality": "Advanced Steel Production"
+      },
+      "financials": {
+        "total_funding": "€10.6 billion",
+        "last_round": "Not Applicable",
+        "lead_investors": [
+          "Alfried Krupp von Bohlen und Halbach Foundation"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Outokumpu",
+          "Sandvik"
+        ],
+        "programs": [
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Friedrich Krupp"
+        ],
+        "key_people": [
+          "Martina Merz",
+          "Guido Kerkhoff"
+        ]
+      },
+      "strategic_notes": "ThyssenKrupp is a global leader in stainless steel production, with a strong focus on innovation and sustainability."
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "year": 2024,
+  "commodity": "Cryogenic Temperature Sensors",
+  "global_trade_value": 1.58,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 0.474
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 0.395
+    },
+    {
+      "country": "Japan",
+      "share": 0.2,
+      "value": 0.31600000000000006
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 0.237
+    },
+    {
+      "country": "United Kingdom",
+      "share": 0.1,
+      "value": 0.15800000000000003
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 0.395
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 0.395
+    },
+    {
+      "country": "Japan",
+      "share": 0.2,
+      "value": 0.31600000000000006
+    },
+    {
+      "country": "South Korea",
+      "share": 0.15,
+      "value": 0.237
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 0.237
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context",
+    "Cryogenic Equipment Market Study by Global Industry Analysts"
+  ]
+}

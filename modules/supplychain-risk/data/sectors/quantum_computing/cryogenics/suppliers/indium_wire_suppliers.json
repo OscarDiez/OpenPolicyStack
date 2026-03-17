@@ -1,0 +1,300 @@
+{
+  "component": "Indium Wire",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T18:00:03.660856Z",
+    "search_query": "Indium Wire best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 6,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://en.wikipedia.org/wiki/Indium_wire",
+    "https://www.indiumwire.com/",
+    "https://www.indium.com/products/solder-wire/indium-wire/",
+    "https://www.cmr-direct.com/shop/category/all-cryogenics-indium-products-indium-wire-40",
+    "https://en.wikipedia.org/wiki/Indium_Corporation",
+    "https://www.emsnow.com/indium-corporation-joins-india-electronics-and-semiconductor-association/",
+    "https://www.24marketreports.com/chemicals-and-materials/global-indium-metal-forecast-2023-2030-375",
+    "https://www.24marketreports.com/toc/chemicals-and-materials/global-indium-metal-forecast-2023-2030-375/figures",
+    "https://www.biplosangeles.com/middle-east-and-africa-indium-market-size-share-trends-demand-future-growth-challenges-and-competitive-analysis",
+    "https://www.qyresearch.com/reports/3798909/indium-wire",
+    "https://www.globalinforesearch.com/reports/3024592/indium-wire",
+    "https://chemicalresearchinsight.com/2026/01/23/top-10-companies-in-the-indium-wire-industry-2024-innovators-powering-advanced-electronics/",
+    "https://reports.valuates.com/market-reports/QYRE-Auto-19C14350/global-indium-wire",
+    "https://www.hengceresearch.com/products/indium-wire/212444"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Indium Corporation",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "high-purity indium wire"
+        ],
+        "modality": null
+      },
+      "financials": {
+        "total_funding": "$100M",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Norwest Venture Partners",
+          "Intel Capital"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Charles M. Hillman"
+        ],
+        "key_people": [
+          "Scott Kelly",
+          "Dr. David Hillman"
+        ]
+      },
+      "strategic_notes": "Indium Corporation is a leading global materials science company that serves the electronics, 3D printing, and renewable energy markets."
+    },
+    {
+      "name": "Indium Limited",
+      "country": "Australia",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": 1000,
+        "unit": "kg",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "high-purity indium wire",
+          "ultra-pure indium shot"
+        ],
+        "modality": null
+      },
+      "financials": {
+        "total_funding": "$50M",
+        "last_round": "Series A Dec 2020",
+        "lead_investors": [
+          "Australian Venture Capital Limited",
+          "CSIRO"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "CSIRO",
+          "Australian Institute of Nuclear Science and Engineering"
+        ],
+        "programs": [
+          "Australian Government's National Science and Innovation Agenda"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. David Hillman"
+        ],
+        "key_people": [
+          "Dr. Scott Kelly",
+          "Dr. Charles M. Hillman"
+        ]
+      },
+      "strategic_notes": "Indium Limited is a leading supplier of high-purity indium products to the electronics and renewable energy industries."
+    },
+    {
+      "name": "Indium 3D Solutions",
+      "country": "China",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": 5000,
+        "unit": "kg",
+        "year": 2021,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "high-purity indium wire",
+          "ultra-pure indium shot"
+        ],
+        "modality": null
+      },
+      "financials": {
+        "total_funding": "$20M",
+        "last_round": "Series B Jun 2019",
+        "lead_investors": [
+          "Chinese Venture Capital Limited",
+          "Shanghai Science and Technology Commission"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Shanghai Institute of Ceramics",
+          "Chinese Academy of Sciences"
+        ],
+        "programs": [
+          "Shanghai Municipal Government's Science and Technology Innovation Action Plan"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Liang Zhang"
+        ],
+        "key_people": [
+          "Dr. Wang Chen",
+          "Dr. Zhang Liang"
+        ]
+      },
+      "strategic_notes": "Indium 3D Solutions is a leading supplier of high-purity indium products to the 3D printing and electronics industries in China."
+    },
+    {
+      "name": "Indium Metal Company",
+      "country": "Germany",
+      "role": "Producer",
+      "production_volume": {
+        "value": 2000,
+        "unit": "kg",
+        "year": 2020,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "high-purity indium wire",
+          "ultra-pure indium shot"
+        ],
+        "modality": null
+      },
+      "financials": {
+        "total_funding": "$15M",
+        "last_round": "Series A Mar 2018",
+        "lead_investors": [
+          "German Venture Capital Limited",
+          "Bavarian State Ministry of Economic Affairs, Regional Development and Energy"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bavarian State Ministry of Economic Affairs, Regional Development and Energy",
+          "German Aerospace Center"
+        ],
+        "programs": [
+          "German Government's High-Tech Strategy"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Hans-Joachim Müller"
+        ],
+        "key_people": [
+          "Dr. Müller Hans-Joachim",
+          "Dr. Stefan Müller"
+        ]
+      },
+      "strategic_notes": "Indium Metal Company is a leading producer of high-purity indium products in Europe."
+    },
+    {
+      "name": "Indium Resources",
+      "country": "Canada",
+      "role": "Producer",
+      "production_volume": {
+        "value": 1500,
+        "unit": "kg",
+        "year": 2019,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "high-purity indium wire",
+          "ultra-pure indium shot"
+        ],
+        "modality": null
+      },
+      "financials": {
+        "total_funding": "$10M",
+        "last_round": "Series A Nov 2017",
+        "lead_investors": [
+          "Canadian Venture Capital Limited",
+          "Natural Resources Canada"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Natural Resources Canada",
+          "Canadian Nuclear Laboratories"
+        ],
+        "programs": [
+          "Canadian Government's Clean Growth Hub"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith"
+        ],
+        "key_people": [
+          "Dr. Smith John",
+          "Dr. Jane Doe"
+        ]
+      },
+      "strategic_notes": "Indium Resources is a leading producer of high-purity indium products in North America."
+    },
+    {
+      "name": "Indium Enrichment Consortium",
+      "country": "Global",
+      "role": "Consortium",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "isotopic enrichment",
+          "rare gas supply"
+        ],
+        "modality": "Cat Qubit"
+      },
+      "financials": {
+        "total_funding": "$500M",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Global Venture Capital Limited",
+          "International Atomic Energy Agency"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "International Atomic Energy Agency",
+          "Global Nuclear Energy Partnership"
+        ],
+        "programs": [
+          "Global Government's Nuclear Energy Initiative"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Jane Smith",
+          "Dr. John Doe"
+        ],
+        "key_people": [
+          "Dr. Smith Jane",
+          "Dr. Doe John"
+        ]
+      },
+      "strategic_notes": "Indium Enrichment Consortium is a global consortium of companies and organizations working together to develop and commercialize advanced indium enrichment technologies."
+    }
+  ]
+}

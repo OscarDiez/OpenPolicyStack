@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Oxygen-Free High Conductivity Copper (OFHC)",
+  "global_trade_value": 4850000000.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 1697500000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.23,
+      "value": 1115500000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.17,
+      "value": 824500000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.12,
+      "value": 582000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.08,
+      "value": 388000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 1212500000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 970000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 727500000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 485000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.08,
+      "value": 388000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

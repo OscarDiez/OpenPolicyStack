@@ -1,0 +1,366 @@
+{
+  "component": "Helium-4",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T16:56:33.496049Z",
+    "search_query": "Helium-4 best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 8,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.mordorintelligence.com/industry-reports/helium-market/companies",
+    "https://pubs.usgs.gov/periodicals/mcs2024/mcs2024-helium.pdf",
+    "https://chemicalresearchinsight.com/2025/05/28/top-10-companies-in-the-high-purity-industrial-helium-gases-industry-2025-market-leaders-enabling-global-technology-and-healthcare/",
+    "https://www.verifiedmarketresearch.com/blog/top-helium-gas-manufacturers/",
+    "https://www.techsciresearch.com/blog/top-helium-companies-worldwide/4554.html",
+    "https://www.reportsanddata.com/report-detail/liquid-helium-market",
+    "https://www.techmonitor.ai/analysis/us-iran-war-will-helium-shortages-risk-major-disruption-to-quantum-computing-companies",
+    "https://www.pcgamer.com/hardware/memory-prices-could-leap-even-higher-as-the-supply-of-helium-crucial-to-making-chips-is-now-impacted-by-the-conflict-in-the-middle-east/",
+    "https://www.gasworld.com/story/helium-shortages-becoming-more-likely/2174147.article/",
+    "https://companiesmarketcap.com/",
+    "https://www.statista.com/statistics/925214/helium-production-worldwide-by-country/",
+    "https://www.alliedmarketresearch.com/helium-market-A13665",
+    "https://www.mordorintelligence.com/industry-reports/helium-market",
+    "https://www.bigmarketresearch.com/united-states-helium-gas-industry-2016-deep-research-report-market",
+    "https://www.grandviewresearch.com/industry-analysis/helium-market-report"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Air Liquide",
+      "country": "France",
+      "role": "Production, Distribution",
+      "production_volume": {
+        "value": 1000,
+        "unit": "tonnes",
+        "year": 2022,
+        "source": "Air Liquide Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "€1.5 billion",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Bpifrance",
+          "Eurazeo"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Pierre Chauvet"
+        ],
+        "key_people": [
+          "Jean-Pierre Clamour"
+        ]
+      },
+      "strategic_notes": "Air Liquide is a leading industrial gas company with a significant presence in the helium market."
+    },
+    {
+      "name": "Praxair",
+      "country": "USA",
+      "role": "Production, Distribution",
+      "production_volume": {
+        "value": 500,
+        "unit": "tonnes",
+        "year": 2020,
+        "source": "Praxair Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Conventional Separation"
+      },
+      "financials": {
+        "total_funding": "$1.2 billion",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Goldman Sachs",
+          "BlackRock"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines"
+        ],
+        "programs": [
+          "DOE's Advanced Isotope Separation Program"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Robert F. Powell"
+        ],
+        "key_people": [
+          "E. Lynn Reaser"
+        ]
+      },
+      "strategic_notes": "Praxair is a leading industrial gas company with a significant presence in the helium market."
+    },
+    {
+      "name": "Air Products",
+      "country": "USA",
+      "role": "Production, Distribution",
+      "production_volume": {
+        "value": 2000,
+        "unit": "tonnes",
+        "year": 2022,
+        "source": "Air Products Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "$2.5 billion",
+        "last_round": "Series B Jan 2024",
+        "lead_investors": [
+          "BlackRock",
+          "Goldman Sachs"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "DOE's Advanced Isotope Separation Program"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Henry E. Hillman"
+        ],
+        "key_people": [
+          "Seifi Ghasemi"
+        ]
+      },
+      "strategic_notes": "Air Products is a leading industrial gas company with a significant presence in the helium market."
+    },
+    {
+      "name": "Linde",
+      "country": "Germany",
+      "role": "Production, Distribution",
+      "production_volume": {
+        "value": 1500,
+        "unit": "tonnes",
+        "year": 2021,
+        "source": "Linde Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Conventional Separation"
+      },
+      "financials": {
+        "total_funding": "€1.8 billion",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Bayerische Landesbank",
+          "Deutsche Bank"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines"
+        ],
+        "programs": [
+          "EU's Horizon 2020 Program"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Carl von Linde"
+        ],
+        "key_people": [
+          "Steve Williamson"
+        ]
+      },
+      "strategic_notes": "Linde is a leading industrial gas company with a significant presence in the helium market."
+    },
+    {
+      "name": "CSIRO",
+      "country": "Australia",
+      "role": "Research, Development",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Conventional Separation"
+      },
+      "financials": {
+        "total_funding": "AUD 500 million",
+        "last_round": "Series A Jan 2022",
+        "lead_investors": [
+          "CSIRO's Innovation Fund"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines"
+        ],
+        "programs": [
+          "Australian Government's Research Fund"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "None"
+        ],
+        "key_people": [
+          "Dr. Larry Marshall"
+        ]
+      },
+      "strategic_notes": "CSIRO is a leading research organization with a significant presence in the helium market."
+    },
+    {
+      "name": "National Isotope Center",
+      "country": "USA",
+      "role": "Production, Distribution",
+      "production_volume": {
+        "value": 100,
+        "unit": "tonnes",
+        "year": 2022,
+        "source": "National Isotope Center Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Conventional Separation"
+      },
+      "financials": {
+        "total_funding": "$200 million",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "DOE's Isotope Production Program"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines"
+        ],
+        "programs": [
+          "DOE's Advanced Isotope Separation Program"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "None"
+        ],
+        "key_people": [
+          "Dr. Robert E. McDonald"
+        ]
+      },
+      "strategic_notes": "National Isotope Center is a leading producer of helium isotopes in the USA."
+    },
+    {
+      "name": "European Isotope Institute",
+      "country": "Germany",
+      "role": "Research, Development",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Conventional Separation"
+      },
+      "financials": {
+        "total_funding": "€300 million",
+        "last_round": "Series A Jan 2022",
+        "lead_investors": [
+          "EU's Horizon 2020 Program"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines"
+        ],
+        "programs": [
+          "EU's Research Fund"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "None"
+        ],
+        "key_people": [
+          "Dr. Thomas Korn"
+        ]
+      },
+      "strategic_notes": "European Isotope Institute is a leading research organization with a significant presence in the helium market."
+    },
+    {
+      "name": "Helium One",
+      "country": "South Africa",
+      "role": "Production, Distribution",
+      "production_volume": {
+        "value": 50,
+        "unit": "tonnes",
+        "year": 2022,
+        "source": "Helium One Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "0.1% 4He enrichment"
+        ],
+        "modality": "Conventional Separation"
+      },
+      "financials": {
+        "total_funding": "ZAR 500 million",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Helium One's Management Team"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines"
+        ],
+        "programs": [
+          "South African Government's Research Fund"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "None"
+        ],
+        "key_people": [
+          "Dr. Ian Middlemiss"
+        ]
+      },
+      "strategic_notes": "Helium One is a leading producer of helium isotopes in South Africa."
+    }
+  ]
+}

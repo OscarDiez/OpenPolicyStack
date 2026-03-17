@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Wiring Harnesses",
+  "global_trade_value": 125.6,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 43.959999999999994
+    },
+    {
+      "country": "Japan",
+      "share": 0.25,
+      "value": 31.4
+    },
+    {
+      "country": "India",
+      "share": 0.15,
+      "value": 18.84
+    },
+    {
+      "country": "United States",
+      "share": 0.1,
+      "value": 12.56
+    },
+    {
+      "country": "Germany",
+      "share": 0.05,
+      "value": 6.28
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 31.4
+    },
+    {
+      "country": "China",
+      "share": 0.2,
+      "value": 25.12
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 18.84
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 18.84
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 12.56
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

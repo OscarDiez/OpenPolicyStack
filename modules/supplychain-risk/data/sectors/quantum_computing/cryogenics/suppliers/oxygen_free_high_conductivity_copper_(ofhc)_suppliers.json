@@ -1,0 +1,37 @@
+{
+  "component": "Oxygen-Free High Conductivity Copper (OFHC)",
+  "extraction_metadata": {
+    "timestamp": "2026-02-16T18:09:16.586503Z",
+    "search_query": "Oxygen-Free High Conductivity Copper (OFHC) best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 2,
+    "has_api_data": false
+  },
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "MATHESON",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Industrial, Specialty, Medical, and Semiconductor gases supplier"
+    },
+    {
+      "name": "Data Insights Market (DIM)",
+      "country": "USA",
+      "role": "Market Research and Consulting Services",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provides market research reports, consulting services, and analytical information on industries, companies, consumers, trends, countries, and politics"
+    }
+  ]
+}

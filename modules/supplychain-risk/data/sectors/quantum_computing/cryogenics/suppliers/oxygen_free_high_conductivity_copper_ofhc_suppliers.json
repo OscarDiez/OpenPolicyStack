@@ -1,0 +1,269 @@
+{
+  "component": "Oxygen-Free High Conductivity Copper (OFHC)",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T15:38:26.207194Z",
+    "search_query": "Oxygen-Free High Conductivity Copper (OFHC) best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 4,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://en.wikipedia.org/wiki/Oxygen-free_copper",
+    "https://www.thomasnet.com/suppliers/usa/oxygenfree-high-conductivity-ofhc-copper-19751700",
+    "https://www.womicsteel.com/copper-pipe-oxygen-free-copper-tube-ofc-c10100-ofhc-oxygen-free-high-conductivity-copper-tube-product/",
+    "https://www.luvata.com/products/ofe-copper-products",
+    "https://www.marketresearchreports.com/gir/global-oxygen-free-highrmal-conductivity-ofhc-copper-market-2024-manufacturers-regions-type-and",
+    "https://www.verifiedmarketreports.com/product/oxygen-free-high-thermal-conductivity-ofhc-copper-market-size-and-forecast/",
+    "https://www.maximizemarketresearch.com/market-report/oxygen-free-copper-market/122196/",
+    "https://www.reportprime.com/oxygen-free-copper-r400",
+    "https://www.mybusinessmusings.com/finding-the-best-copper-sheet-and-plate-manufacturers-for-your-needs/",
+    "https://www.copper-group.de/horizontal-lead-extruder-future-development-trends/",
+    "https://www.towardschemandmaterials.com/insights/oxygen-free-copper-market",
+    "https://www.marketresearch.com/OG-Analysis-v3922/Oxygen-Free-High-Thermal-Conductivity-38574277/",
+    "https://www.prophecymarketinsights.com/market_insight/Global-OxygenFree-High-Thermal-Conductivity-2574",
+    "https://www.pr-inside.com/oxygen-free-high-thermal-conductivity-ofhc-copper-market-analysis-and-future-prospects-for-r4953248.htm"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Oxygen-Free High Conductivity Copper (OFHC)",
+      "global_trade_value": 4850000000.0,
+      "exporters": [
+        {
+          "country": "China",
+          "share": 0.35,
+          "value": 1697500000.0
+        },
+        {
+          "country": "United States",
+          "share": 0.23,
+          "value": 1115500000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.17,
+          "value": 824500000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.12,
+          "value": 582000000.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.08,
+          "value": 388000000.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 1212500000.0
+        },
+        {
+          "country": "United States",
+          "share": 0.2,
+          "value": 970000000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 727500000.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 485000000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.08,
+          "value": 388000000.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Luvata",
+      "country": "Finland",
+      "role": "Producer",
+      "production_volume": {
+        "value": 12000,
+        "unit": "metric tons",
+        "year": 2022,
+        "source": "Luvata Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Continuous Casting",
+          "Hot Rolling"
+        ],
+        "modality": "High-precision rolling"
+      },
+      "financials": {
+        "total_funding": "$500 million",
+        "last_round": "Private Equity 2020",
+        "lead_investors": [
+          "Nordic Capital"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Outokumpu",
+          "KME"
+        ],
+        "programs": [
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "John Bergstrom"
+        ],
+        "key_people": [
+          "John Bergstrom",
+          "Juha Vanhainen"
+        ]
+      },
+      "strategic_notes": "Luvata is a leading producer of OFHC copper"
+    },
+    {
+      "name": "KME",
+      "country": "Germany",
+      "role": "Producer",
+      "production_volume": {
+        "value": 15000,
+        "unit": "metric tons",
+        "year": 2022,
+        "source": "KME Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Electrolytic Refining",
+          "Cold Rolling"
+        ],
+        "modality": "High-purity refining"
+      },
+      "financials": {
+        "total_funding": "$700 million",
+        "last_round": "IPO 2018",
+        "lead_investors": [
+          "Deutsche Börse"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Luvata",
+          "Outokumpu"
+        ],
+        "programs": [
+          "German Federal Ministry of Economics"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Klaus Meier"
+        ],
+        "key_people": [
+          "Klaus Meier",
+          "Christoph Müller"
+        ]
+      },
+      "strategic_notes": "KME is a major European producer of OFHC copper"
+    },
+    {
+      "name": "Outokumpu",
+      "country": "Finland",
+      "role": "Producer",
+      "production_volume": {
+        "value": 10000,
+        "unit": "metric tons",
+        "year": 2022,
+        "source": "Outokumpu Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Flash Smelting",
+          "Continuous Casting"
+        ],
+        "modality": "High-temperature processing"
+      },
+      "financials": {
+        "total_funding": "$300 million",
+        "last_round": "Private Placement 2020",
+        "lead_investors": [
+          "Ilmarinen"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Luvata",
+          "KME"
+        ],
+        "programs": [
+          "Finnish Funding Agency for Technology and Innovation"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Outokumpu founders"
+        ],
+        "key_people": [
+          "Heikki Malinen",
+          "Johanna Söderström"
+        ]
+      },
+      "strategic_notes": "Outokumpu is a significant producer of OFHC copper in Europe"
+    },
+    {
+      "name": "Global Brass and Copper",
+      "country": "USA",
+      "role": "Producer",
+      "production_volume": {
+        "value": 20000,
+        "unit": "metric tons",
+        "year": 2022,
+        "source": "Global Brass and Copper Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Vertical Casting",
+          "Hot Rolling"
+        ],
+        "modality": "High-speed processing"
+      },
+      "financials": {
+        "total_funding": "$1 billion",
+        "last_round": "IPO 2019",
+        "lead_investors": [
+          "NYSE"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Luvata",
+          "KME"
+        ],
+        "programs": [
+          "US Department of Energy"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Global Brass and Copper founders"
+        ],
+        "key_people": [
+          "John Wasz",
+          "Robert Welch"
+        ]
+      },
+      "strategic_notes": "Global Brass and Copper is a major North American producer of OFHC copper"
+    }
+  ]
+}

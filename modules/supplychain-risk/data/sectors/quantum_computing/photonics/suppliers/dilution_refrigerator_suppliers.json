@@ -1,0 +1,176 @@
+{
+  "component": "Dilution Refrigerator",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:47:57.678747Z",
+    "search_query": "Dilution Refrigerator best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 7,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://en.wikipedia.org/wiki/Dilution_refrigerator",
+    "https://finance.yahoo.com/news/formfactor-introduces-flatiron-dilution-refrigerator-130000753.html",
+    "https://bluefors.com/news/increased-cooling-power-specifications-for-bluefors-dilution-refrigerators/",
+    "https://shoppingmall.homecredit.ph/blog/best-refrigerator-brands-philippines0",
+    "https://reports.valuates.com/market-reports/QYRE-Auto-0M9558/global-dilution-refrigerators",
+    "https://www.intelmarketresearch.com/dilution-refrigerators-market-11582",
+    "https://www.businessresearchinsights.com/market-reports/dilution-refrigerators-market-100834",
+    "https://www.industryarc.com/Report/18092/cryogen-free-dilution-refrigerators-market.html",
+    "https://www.prnewswire.com/news-releases/dilution-refrigerators-market-size-to-grow-usd-177-1-million-by-2029-at-a-cagr-of-7--valuates-reports-302079939.html",
+    "https://www.globalinforesearch.com/reports/1576771/dilution-refrigerators",
+    "https://icvtank.oss-ap-southeast-1.aliyuncs.com/QUANTUM-REPORTS/ICV-Global+Dilution+Refrigerator+Report+2025-Mar.+21,+2025.pdf",
+    "https://www.qyresearch.com/reports/3424203/dilution-refrigerators",
+    "https://www.themarketreports.com/report/global-dilution-refrigerators-market-research-report"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Dilution Refrigerator",
+      "global_trade_value": 120.0,
+      "exporters": [
+        {
+          "country": "United Kingdom",
+          "share": 0.25,
+          "value": 30.0
+        },
+        {
+          "country": "Finland",
+          "share": 0.2,
+          "value": 24.0
+        },
+        {
+          "country": "Netherlands",
+          "share": 0.18,
+          "value": 21.599999999999998
+        },
+        {
+          "country": "United States",
+          "share": 0.17,
+          "value": 20.400000000000002
+        },
+        {
+          "country": "France",
+          "share": 0.1,
+          "value": 12.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.3,
+          "value": 36.0
+        },
+        {
+          "country": "China",
+          "share": 0.2,
+          "value": 24.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 18.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.15,
+          "value": 18.0
+        },
+        {
+          "country": "India",
+          "share": 0.1,
+          "value": 12.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Bluefors Oy",
+      "country": "Finland",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global benchmark for ultra-low temperature cooling systems"
+    },
+    {
+      "name": "Oxford Instruments NanoScience",
+      "country": "United Kingdom",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global key player of Dilution Refrigerators"
+    },
+    {
+      "name": "Leiden Cryogenics BV",
+      "country": "Netherlands",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global key player of Dilution Refrigerators"
+    },
+    {
+      "name": "Air Liquide (Cryoconcept)",
+      "country": "France",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global key player of Dilution Refrigerators"
+    },
+    {
+      "name": "JanisULT",
+      "country": "United States",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global key player of Dilution Refrigerators"
+    },
+    {
+      "name": "FormFactor",
+      "country": "United States",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Introduced Flatiron Dilution Refrigerator for benchtop applications"
+    },
+    {
+      "name": "Leiden University",
+      "country": "Netherlands",
+      "role": "Research Institution",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Experimentally realized the first dilution refrigerator in 1964"
+    }
+  ]
+}

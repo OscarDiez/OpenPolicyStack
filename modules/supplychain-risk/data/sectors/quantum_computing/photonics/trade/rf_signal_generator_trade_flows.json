@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "RF Signal Generator",
+  "global_trade_value": 2500000000.0,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.35,
+      "value": 875000000.0
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 625000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 375000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 250000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 125000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.3,
+      "value": 750000000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 625000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 375000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 250000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.05,
+      "value": 125000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

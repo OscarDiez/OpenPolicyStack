@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Compressor Unit",
+  "global_trade_value": 25000.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 6250.0
+    },
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 5000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.18,
+      "value": 4500.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 3750.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.12,
+      "value": 3000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 5000.0
+    },
+    {
+      "country": "China",
+      "share": 0.18,
+      "value": 4500.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 3750.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.12,
+      "value": 3000.0
+    },
+    {
+      "country": "India",
+      "share": 0.1,
+      "value": 2500.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

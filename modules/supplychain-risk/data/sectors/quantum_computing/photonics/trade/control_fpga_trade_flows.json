@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Control FPGA",
+  "global_trade_value": 12.8,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.35,
+      "value": 4.4799999999999995
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 3.2
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 1.92
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 1.2800000000000002
+    },
+    {
+      "country": "Taiwan",
+      "share": 0.05,
+      "value": 0.6400000000000001
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 3.84
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 3.2
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 1.92
+    },
+    {
+      "country": "Japan",
+      "share": 0.1,
+      "value": 1.2800000000000002
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 1.2800000000000002
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

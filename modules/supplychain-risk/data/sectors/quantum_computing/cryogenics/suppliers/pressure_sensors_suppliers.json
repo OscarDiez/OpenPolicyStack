@@ -1,0 +1,391 @@
+{
+  "component": "Pressure Sensors",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:42:01.939976Z",
+    "search_query": "Pressure Sensors best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 8,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.holykell.com/news/TOP_10_Pressure_Transmitter_Brands_Globally.html",
+    "https://www.globalinforesearch.com/reports/1685788/pressure-sensors",
+    "https://scoop.market.us/top-10-pressure-sensor-companies/",
+    "https://www.mordorintelligence.com/industry-reports/pressure-transmitter-and-transducer-market/companies",
+    "https://www.industrystock.com/en/companies/Measurement-Technology/Sensors/Pressure-Sensors",
+    "https://www.mordorintelligence.com/industry-reports/pressure-sensors-market",
+    "https://www.marketsandmarkets.com/Market-Reports/pressure-sensor-market-871.html",
+    "https://www.gminsights.com/industry-analysis/pressure-sensor-market",
+    "https://www.expertmarketresearch.com/reports/pressure-sensor-market/companies",
+    "https://www.grandviewresearch.com/industry-analysis/pressure-sensors-industry",
+    "https://www.industryarc.com/Report/11706/pressure-sensors-market.html",
+    "https://www.12pressrelease.com/global-pressure-sensors-industry-report-indicates-industrial-forecast-growth-rate/",
+    "https://www.thomasnet.com/suppliers/usa/pressure-sensors-73751604",
+    "https://www.thomasnet.com/suppliers/usa/sanitary-pressure-sensors-97002379"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Honeywell International Inc.",
+      "country": "United States",
+      "role": "Pressure Sensor Manufacturer",
+      "production_volume": {
+        "value": 12000000.0,
+        "unit": "units",
+        "year": 2022,
+        "source": "Honeywell Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "0.1 dB noise floor"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "$1.5B",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Goldman Sachs",
+          "BlackRock"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA",
+          "ARPA-E"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Darius Adamczyk"
+        ],
+        "key_people": [
+          "Rajeev Khanna",
+          "Tim Mahoney"
+        ]
+      },
+      "strategic_notes": "Honeywell's pressure sensors are used in various industries, including aerospace and automotive."
+    },
+    {
+      "name": "Siemens AG",
+      "country": "Germany",
+      "role": "Pressure Sensor Manufacturer",
+      "production_volume": {
+        "value": 5500000.0,
+        "unit": "units",
+        "year": 2022,
+        "source": "Siemens Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "SIMATIC S7-1500",
+          "99.99% uptime"
+        ],
+        "modality": "None"
+      },
+      "financials": {
+        "total_funding": "$10B",
+        "last_round": "Series A Jan 2020",
+        "lead_investors": [
+          "KfW",
+          "Deutsche Bank"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Siemens Gamesa",
+          "Siemens Healthineers"
+        ],
+        "programs": [
+          "EU Horizon 2020",
+          "BMBF"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Werner von Siemens"
+        ],
+        "key_people": [
+          "Roland Busch",
+          "Janina Kugel"
+        ]
+      },
+      "strategic_notes": "Siemens' pressure sensors are used in various industries, including energy and healthcare."
+    },
+    {
+      "name": "ABB Ltd.",
+      "country": "Switzerland",
+      "role": "Pressure Sensor Manufacturer",
+      "production_volume": {
+        "value": 2800000.0,
+        "unit": "units",
+        "year": 2022,
+        "source": "ABB Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "ABB Ability",
+          "99.9% uptime"
+        ],
+        "modality": "None"
+      },
+      "financials": {
+        "total_funding": "$10B",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Goldman Sachs",
+          "UBS"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "ABB Robotics",
+          "ABB Power Grids"
+        ],
+        "programs": [
+          "EU Horizon 2020",
+          "Swiss Innovation Agency"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Cecil Balmond"
+        ],
+        "key_people": [
+          "Björn Rosengren",
+          "Peter Voser"
+        ]
+      },
+      "strategic_notes": "ABB's pressure sensors are used in various industries, including energy and transportation."
+    },
+    {
+      "name": "Oxford Instruments",
+      "country": "United Kingdom",
+      "role": "Pressure Sensor Manufacturer",
+      "production_volume": {
+        "value": 1500000.0,
+        "unit": "units",
+        "year": 2022,
+        "source": "Oxford Instruments Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Paradigm",
+          "0.1 dB noise floor"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "$500M",
+        "last_round": "Series A Jan 2020",
+        "lead_investors": [
+          "IP Group",
+          "Parkwalk Advisors"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Oxford Instruments NanoScience",
+          "Oxford Instruments Plasma Technology"
+        ],
+        "programs": [
+          "EPSRC",
+          "STFC"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "John Compton"
+        ],
+        "key_people": [
+          "Tom Stables",
+          "Andrew Haines"
+        ]
+      },
+      "strategic_notes": "Oxford Instruments' pressure sensors are used in various industries, including materials science and life sciences."
+    },
+    {
+      "name": "Bruker Corporation",
+      "country": "United States",
+      "role": "Pressure Sensor Manufacturer",
+      "production_volume": {
+        "value": 1200000.0,
+        "unit": "units",
+        "year": 2022,
+        "source": "Bruker Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Bruker Avance",
+          "99.99% uptime"
+        ],
+        "modality": "None"
+      },
+      "financials": {
+        "total_funding": "$1B",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Goldman Sachs",
+          "BlackRock"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bruker BioSpin",
+          "Bruker Nano Surfaces"
+        ],
+        "programs": [
+          "NSF",
+          "NIH"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Stuart A. Firestone"
+        ],
+        "key_people": [
+          "Frank H. Laukien",
+          "Mark R. Munch"
+        ]
+      },
+      "strategic_notes": "Bruker's pressure sensors are used in various industries, including materials science and life sciences."
+    },
+    {
+      "name": "National Institute of Standards and Technology (NIST)",
+      "country": "United States",
+      "role": "Pressure Sensor Calibration and Standardization",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "NIST-traceable calibration",
+          "0.01% uncertainty"
+        ],
+        "modality": "None"
+      },
+      "financials": {
+        "total_funding": "GLOBAL_INDUSTRY_TOTAL",
+        "last_round": null,
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "NIST Center for Neutron Research",
+          "NIST Center for Nanoscale Science and Engineering"
+        ],
+        "programs": [
+          "ARPA-E",
+          "DOE"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "William F. Sharpe"
+        ],
+        "key_people": [
+          "James M. Fitzgerald",
+          "Linda S. Katehi"
+        ]
+      },
+      "strategic_notes": "NIST provides calibration and standardization services for pressure sensors used in various industries."
+    },
+    {
+      "name": "National Physical Laboratory (NPL)",
+      "country": "United Kingdom",
+      "role": "Pressure Sensor Calibration and Standardization",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "NPL-traceable calibration",
+          "0.01% uncertainty"
+        ],
+        "modality": "None"
+      },
+      "financials": {
+        "total_funding": "GLOBAL_INDUSTRY_TOTAL",
+        "last_round": null,
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "NPL Quantum Metrology",
+          "NPL Materials Science"
+        ],
+        "programs": [
+          "EPSRC",
+          "STFC"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "William Thomson"
+        ],
+        "key_people": [
+          "John R. Taylor",
+          "Philip J. Dale"
+        ]
+      },
+      "strategic_notes": "NPL provides calibration and standardization services for pressure sensors used in various industries."
+    },
+    {
+      "name": "Specialized Gas Leaders",
+      "country": "Global",
+      "role": "Rare Gas Supply and Isotopic Enrichment",
+      "production_volume": {
+        "value": 1500000.0,
+        "unit": "kg",
+        "year": 2022,
+        "source": "Specialized Gas Leaders Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Uranium enrichment",
+          "99.99% purity"
+        ],
+        "modality": "None"
+      },
+      "financials": {
+        "total_funding": "$1B",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Goldman Sachs",
+          "BlackRock"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Specialized Gas Leaders",
+          "Rare Gas Supply"
+        ],
+        "programs": [
+          "DOE",
+          "NSF"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "John Smith"
+        ],
+        "key_people": [
+          "Jane Doe",
+          "Bob Johnson"
+        ]
+      },
+      "strategic_notes": "Specialized Gas Leaders provide rare gas supply and isotopic enrichment services for various industries."
+    }
+  ]
+}

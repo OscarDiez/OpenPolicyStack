@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupplyTrace — Strategic Risk Intelligence</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030712;
+            --card: rgba(15, 23, 42, 0.85);
+            --accent: #0ea5e9;
+            --accent2: #8b5cf6;
+            --glow: rgba(14, 165, 233, 0.25);
+            --border: rgba(56, 189, 248, 0.18);
+            --text: #f1f5f9;
+            --muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(14, 165, 233, 0.12) 0%, transparent 60%);
+        }
+
+        .hero {
+            text-align: center;
+            max-width: 640px;
+            padding: 2rem 1.5rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            color: #c4b5fd;
+            border-radius: 2rem;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #f1f5f9 30%, #7dd3fc 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 560px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: all 0.2s;
+            margin-bottom: 1.25rem;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow);
+        }
+
+        select option {
+            background: #1e293b;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent) 0%, #0284c7 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.875rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.35);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(14, 165, 233, 0.45);
+        }
+
+        #custom-sector-row {
+            display: none;
+        }
+
+        .sector-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            border-radius: 2rem;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill:hover,
+        .pill.active {
+            background: rgba(14, 165, 233, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .divider {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin: 0.5rem 0 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <div class="badge">⬡ OpenPolicyStack · Supply Trace</div>
+        <h1>Map Any Supply Chain Risk</h1>
+        <p class="subtitle">Select an industry sector and a segment to get started. The tool will build a component
+            taxonomy, extract real supplier intelligence, and score every link in the chain.</p>
+    </div>
+
+    <div class="card">
+        <form id="launch-form" onsubmit="launch(event)">
+            <label>Industry Sector</label>
+            <div class="sector-pills" id="pills">
+                <span class="pill" data-val="Quantum Computing">⚛ Quantum Computing</span>
+                <span class="pill" data-val="Artificial Intelligence">🤖 Artificial Intelligence</span>
+                <span class="pill" data-val="Semiconductors">🔬 Semiconductors</span>
+                <span class="pill" data-val="Aerospace">🚀 Aerospace</span>
+                <span class="pill" data-val="Pharmaceuticals">💊 Pharmaceuticals</span>
+                <span class="pill" data-val="Defence">🛡️ Defence</span>
+                <span class="pill" data-val="custom">✏️ Custom…</span>
+            </div>
+            <div id="custom-sector-row">
+                <label>Custom Sector Name</label>
+                <input type="text" id="custom-sector-input" placeholder="e.g. Electric Vehicles, Renewable Energy…">
+            </div>
+            <input type="hidden" id="sector-val" value="">
+
+            <label>Segment / Sub-domain</label>
+            <input type="text" id="segment-input" placeholder="e.g. Cryogenics, GPU Hardware, Propulsion Systems…"
+                required>
+            <div style="margin:-0.75rem 0 1.25rem; font-size:0.78rem; color:var(--muted);">
+                Not sure what to put? &nbsp;
+                <a href="#" id="all-segments-link" onclick="selectFullSector(event)"
+                    style="color:var(--accent);font-weight:600;text-decoration:none;">↗ Analyse the entire sector
+                    (everything)</a>
+            </div>
+
+            <label>Analysis Region</label>
+            <select id="region-input">
+                <option value="EU">🇪🇺 European Union</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="UK">🇬🇧 United Kingdom</option>
+                <option value="CN">🇨🇳 China</option>
+                <option value="GLOBAL">🌐 Global</option>
+            </select>
+
+            <button type="submit" class="btn" id="launch-btn">Generate Taxonomy &amp; Start →</button>
+        </form>
+    </div>
+
+    <script>
+        const pills = document.querySelectorAll('.pill');
+        const sectorVal = document.getElementById('sector-val');
+        const customRow = document.getElementById('custom-sector-row');
+        const customInput = document.getElementById('custom-sector-input');
+
+        pills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                pills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const val = pill.dataset.val;
+                if (val === 'custom') {
+                    customRow.style.display = 'block';
+                    sectorVal.value = '';
+                } else {
+                    customRow.style.display = 'none';
+                    sectorVal.value = val;
+                }
+            });
+        });
+
+        // Pre-select Quantum Computing
+        document.querySelector('.pill[data-val="Quantum Computing"]').click();
+
+        function selectFullSector(e) {
+            e.preventDefault();
+            const sector = sectorVal.value || customInput.value.trim();
+            if (!sector) { alert('Please select a sector first.'); return; }
+            document.getElementById('segment-input').value = `${sector} - All`;
+        }
+
+        function launch(e) {
+            e.preventDefault();
+            let sector = sectorVal.value || customInput.value.trim();
+            const segment = document.getElementById('segment-input').value.trim();
+            const region = document.getElementById('region-input').value;
+            if (!sector) { alert('Please select or enter a sector.'); return; }
+            if (!segment) { alert('Please enter a segment name.'); return; }
+            window.location.href = `/onboarding?sector=${encodeURIComponent(sector)}&segment=${encodeURIComponent(segment)}&region=${encodeURIComponent(region)}`;
+        }
+    </script>
+</body>
+
+</html>

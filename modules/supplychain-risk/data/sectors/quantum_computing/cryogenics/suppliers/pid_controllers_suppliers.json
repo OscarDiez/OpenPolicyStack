@@ -1,0 +1,249 @@
+{
+  "component": "PID Controllers",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:45:32.766393Z",
+    "search_query": "PID Controllers best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 5,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.globalinforesearch.com/reports/871178/industrial-pid-controller",
+    "https://www.directindustry.com/industrial-manufacturer/pid-controller-79196.html",
+    "https://www.marketresearchreports.com/gir/global-pid-process-temperature-controllers-market-2024-manufacturers-regions-type-and",
+    "https://www.qyresearch.com/reports/2142449/pid-motion-controllers",
+    "https://globalinforesearch.com/reports/746883/pid-controller",
+    "https://www.fortunebusinessinsights.com/pid-controller-market-106844",
+    "https://www.qyresearch.com/reports/3042273/pid-controller",
+    "https://www.globalgrowthinsights.com/market-reports/pid-controller-market-109936",
+    "https://www.themarketreports.com/report/global-pid-controller-market-research-report",
+    "https://en.wikipedia.org/wiki/Proportional–integral–derivative_controller",
+    "https://www.sinny.com/how-pid-temperature-controllers-work-components-applications-and-benefits.html",
+    "https://finance.yahoo.com/news/global-pid-controllers-industry-080700166.html",
+    "https://www.academia.edu/88409832/Fuzzy_PID_Controller_Design_of_4_DOF_Industrial_Arm_Robot_Manipulator?force_claim_to_highlight=true"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "ABB",
+      "country": "Switzerland",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 1200000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "AC800M controller",
+          "System 800xA"
+        ],
+        "modality": "PID Control"
+      },
+      "financials": {
+        "total_funding": "$1.5 billion",
+        "last_round": "Acquisition by Hitachi in 2020",
+        "lead_investors": [
+          "Hitachi"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Hitachi",
+          "Microsoft"
+        ],
+        "programs": [
+          "Industrial Internet Consortium"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Brown, Boveri & Cie"
+        ],
+        "key_people": [
+          "Björn Rosengren",
+          "Peter Voser"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial automation and control systems"
+    },
+    {
+      "name": "Emerson Electric",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 500000,
+        "unit": "units",
+        "year": 2020,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "DeltaV controller",
+          "Ovation control system"
+        ],
+        "modality": "PID Control"
+      },
+      "financials": {
+        "total_funding": "$2.5 billion",
+        "last_round": "Acquisition of Pentair's valves and controls business in 2016",
+        "lead_investors": [
+          "Pentair"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Pentair",
+          "Cisco"
+        ],
+        "programs": [
+          "Industrial Internet Consortium"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "John Wesley Emerson"
+        ],
+        "key_people": [
+          "David N. Farr",
+          "Michael H. Train"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial automation and control systems"
+    },
+    {
+      "name": "Honeywell International",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 800000,
+        "unit": "units",
+        "year": 2019,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Experion PKS controller",
+          "Uniformance PHD"
+        ],
+        "modality": "PID Control"
+      },
+      "financials": {
+        "total_funding": "$3.5 billion",
+        "last_round": "Acquisition of Matrikon in 2018",
+        "lead_investors": [
+          "Matrikon"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Matrikon",
+          "Microsoft"
+        ],
+        "programs": [
+          "Industrial Internet Consortium"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Mark C. Honeywell"
+        ],
+        "key_people": [
+          "Darius Adamczyk",
+          "Vimal Kapur"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial automation and control systems"
+    },
+    {
+      "name": "Rockwell Automation",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 400000,
+        "unit": "units",
+        "year": 2020,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "ControlLogix controller",
+          "FactoryTalk View"
+        ],
+        "modality": "PID Control"
+      },
+      "financials": {
+        "total_funding": "$2.5 billion",
+        "last_round": "Acquisition of ASEM in 2018",
+        "lead_investors": [
+          "ASEM"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "ASEM",
+          "Cisco"
+        ],
+        "programs": [
+          "Industrial Internet Consortium"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Lynde Bradley",
+          "Dr. Lester M. Bircher"
+        ],
+        "key_people": [
+          "Blake D. Moret",
+          "Susan Schmitt"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial automation and control systems"
+    },
+    {
+      "name": "Siemens",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 1000000,
+        "unit": "units",
+        "year": 2020,
+        "source": "Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "SIMATIC controller",
+          "TIA Portal"
+        ],
+        "modality": "PID Control"
+      },
+      "financials": {
+        "total_funding": "$4.5 billion",
+        "last_round": "Acquisition of Mendix in 2018",
+        "lead_investors": [
+          "Mendix"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Mendix",
+          "Microsoft"
+        ],
+        "programs": [
+          "Industrial Internet Consortium"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Werner von Siemens"
+        ],
+        "key_people": [
+          "Roland Busch",
+          "Ralf P. Thomas"
+        ]
+      },
+      "strategic_notes": "Leading provider of industrial automation and control systems"
+    }
+  ]
+}

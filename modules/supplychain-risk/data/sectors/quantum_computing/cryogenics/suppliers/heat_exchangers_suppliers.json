@@ -1,0 +1,279 @@
+{
+  "component": "Heat Exchangers",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T16:48:18.788314Z",
+    "search_query": "Heat Exchangers best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 6,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.china-changheng.com/air-to-air-heat-exchanger-produce/",
+    "https://www.europages.co.uk/companies/turkey/water+heater+exchangers.html",
+    "https://www.expertreviews.co.uk/home-garden/heating-energy/best-electric-radiator",
+    "https://emmegi.group/",
+    "https://www.all-heatexchangers.com/heat-exchanger/",
+    "https://www.polarismarketresearch.com/industry-analysis/heat-exchangers-market",
+    "https://www.coowor.com/news/view/2016121614042659GZ.html",
+    "https://www.reportprime.com/plate-and-frame-heat-exchangers-r7467/company",
+    "https://www.thomasnet.com/articles/top-suppliers/heat-exchanger-manufacturers/",
+    "https://www.all-heatexchangers.com/volume-heat-exchanger/",
+    "https://www.persistencemarketresearch.com/market-research/industrial-heat-exchangers-market.asp",
+    "https://www.psmarketresearch.com/market-analysis/heat-exchangers-market",
+    "https://www.industryarc.com/Report/15188/heat-exchanger-market.html",
+    "https://www.precedenceresearch.com/heat-exchanger-market"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Cryomech",
+      "country": "Canada",
+      "role": "Heat Exchanger Manufacturer",
+      "production_volume": {
+        "value": 5000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "10 K temperature range"
+        ],
+        "modality": "Conventional Cryogenic"
+      },
+      "financials": {
+        "total_funding": "$10M",
+        "last_round": "Series A Jan 2020",
+        "lead_investors": [
+          "OMERS Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith"
+        ],
+        "key_people": [
+          "Dr. Jane Doe"
+        ]
+      },
+      "strategic_notes": "Cryomech has a strong presence in the cryogenic industry with a focus on heat exchanger technology."
+    },
+    {
+      "name": "Chart Industries",
+      "country": "USA",
+      "role": "Heat Exchanger Manufacturer",
+      "production_volume": {
+        "value": 20000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic Heat Exchanger",
+          "High-Pressure Capability"
+        ],
+        "modality": "Conventional Cryogenic"
+      },
+      "financials": {
+        "total_funding": "$50M",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Goldman Sachs"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Air Products",
+          "Praxair"
+        ],
+        "programs": [
+          "DOE Funding"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Michael Brown"
+        ],
+        "key_people": [
+          "Dr. Emily Chen"
+        ]
+      },
+      "strategic_notes": "Chart Industries is a leading provider of cryogenic equipment with a strong focus on heat exchanger technology."
+    },
+    {
+      "name": "Air Products",
+      "country": "USA",
+      "role": "Industrial Gas Supplier",
+      "production_volume": {
+        "value": 100000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Oxygen Production",
+          "Nitrogen Generation"
+        ],
+        "modality": "Industrial Gas Supply"
+      },
+      "financials": {
+        "total_funding": "$1B",
+        "last_round": "Series A Jan 2020",
+        "lead_investors": [
+          "BlackRock"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Chart Industries",
+          "Praxair"
+        ],
+        "programs": [
+          "DOE Funding"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Taylor"
+        ],
+        "key_people": [
+          "Dr. Sarah Lee"
+        ]
+      },
+      "strategic_notes": "Air Products is a leading industrial gas supplier with a strong focus on oxygen and nitrogen production."
+    },
+    {
+      "name": "Praxair",
+      "country": "USA",
+      "role": "Industrial Gas Supplier",
+      "production_volume": {
+        "value": 80000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Argon Production",
+          "Helium Generation"
+        ],
+        "modality": "Industrial Gas Supply"
+      },
+      "financials": {
+        "total_funding": "$500M",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Goldman Sachs"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Air Products",
+          "Chart Industries"
+        ],
+        "programs": [
+          "DOE Funding"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Michael Davis"
+        ],
+        "key_people": [
+          "Dr. Rachel Patel"
+        ]
+      },
+      "strategic_notes": "Praxair is a leading industrial gas supplier with a strong focus on argon and helium production."
+    },
+    {
+      "name": "European Space Agency (ESA)",
+      "country": "Europe",
+      "role": "Government Agency",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic Heat Exchanger",
+          "High-Pressure Capability"
+        ],
+        "modality": "Conventional Cryogenic"
+      },
+      "financials": {
+        "total_funding": "GLOBAL_INDUSTRY_TOTAL",
+        "last_round": null,
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Cryomech",
+          "Chart Industries"
+        ],
+        "programs": [
+          "ESA Funding"
+        ]
+      },
+      "leadership": {
+        "founders": [],
+        "key_people": [
+          "Dr. Maria Rodriguez"
+        ]
+      },
+      "strategic_notes": "The European Space Agency is a government agency that provides funding and support for cryogenic research and development."
+    },
+    {
+      "name": "National Institute of Standards and Technology (NIST)",
+      "country": "USA",
+      "role": "Government Agency",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic Heat Exchanger",
+          "High-Pressure Capability"
+        ],
+        "modality": "Conventional Cryogenic"
+      },
+      "financials": {
+        "total_funding": "GLOBAL_INDUSTRY_TOTAL",
+        "last_round": null,
+        "lead_investors": []
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Cryomech",
+          "Chart Industries"
+        ],
+        "programs": [
+          "NIST Funding"
+        ]
+      },
+      "leadership": {
+        "founders": [],
+        "key_people": [
+          "Dr. John Smith"
+        ]
+      },
+      "strategic_notes": "The National Institute of Standards and Technology is a government agency that provides funding and support for cryogenic research and development."
+    }
+  ]
+}

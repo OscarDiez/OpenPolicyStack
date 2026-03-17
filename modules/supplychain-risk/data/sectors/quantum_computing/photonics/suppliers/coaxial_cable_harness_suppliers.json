@@ -1,0 +1,177 @@
+{
+  "component": "Coaxial Cable Harness",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:48:17.337228Z",
+    "search_query": "Coaxial Cable Harness best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 7,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.theindustryoutlook.com/manufacturing/ranking/top-10-wire-harness-cable-assembly-manufacturer-2024-rid-1082.html",
+    "https://ievpower.com/best-cable-harness-manufacturers-suppliers/",
+    "https://www.globalinforesearch.com/reports/2047350/coaxial-harness",
+    "https://www.sohoify.com/cable-harness-companies/",
+    "https://www.sohoinchina.com/top-10-cable-harness-manufacturers-in-2024/",
+    "https://www.giiresearch.com/report/tbrc1921513-coaxial-cables-global-market-report.html",
+    "https://www.giiresearch.com/report/qyr1496852-microwave-coax-cable-global-market-share-ranking.html",
+    "https://www.giiresearch.com/report/sper1550164-north-america-coaxial-cable-market-size-by-cable.html",
+    "https://www.giiresearch.com/report/bis1484379-europe-coaxial-cable-market-analysis-forecast.html",
+    "https://www.giiresearch.com/report/sky1909006-coaxial-cable-market-size-share-growth-analysis-by.html",
+    "https://vk.com/video-233062569_456239497",
+    "https://wifitalents.com/wire-harness-industry-statistics/",
+    "https://www.vitalconn.com/cableharness/",
+    "https://www.cables-unlimited.com/how-fast-can-custom-cable-assemblies-be-produced-in-the-usa/"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Coaxial Cable Harness",
+      "global_trade_value": 12000.0,
+      "exporters": [
+        {
+          "country": "China",
+          "share": 0.35,
+          "value": 4200.0
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 3000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 1800.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 1200.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.05,
+          "value": 600.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.3,
+          "value": 3600.0
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 3000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.15,
+          "value": 1800.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.1,
+          "value": 1200.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.05,
+          "value": 600.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Sumitomo",
+      "country": "Japan",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in cable harness production"
+    },
+    {
+      "name": "Yazaki",
+      "country": "Japan",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Specialized firm in cable harness solutions"
+    },
+    {
+      "name": "Technical Cable Applications",
+      "country": "USA",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Specialized firm in cable harness solutions"
+    },
+    {
+      "name": "TE Connectivity",
+      "country": "Switzerland",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Global leader in cable harness production"
+    },
+    {
+      "name": "PCA",
+      "country": "USA",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Top 10 cable harness manufacturer in 2024"
+    },
+    {
+      "name": "Carr Manufacturing",
+      "country": "USA",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Top 10 cable harness manufacturer in 2024"
+    },
+    {
+      "name": "Omega Leads",
+      "country": "USA",
+      "role": "Cable Harness Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Top 10 cable harness manufacturer in 2024"
+    }
+  ]
+}

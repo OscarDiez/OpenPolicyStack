@@ -1,0 +1,331 @@
+{
+  "component": "Gas Handling System",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:02:57.406431Z",
+    "search_query": "Gas Handling System best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 7,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.globalinforesearch.com/reports/1788425/industrial-gas-handling-equipment",
+    "https://www.qyresearch.com/reports/2541107/industrial-gas-handling-equipment",
+    "https://www.emergenresearch.com/blog/top-10-companies-in-industrial-gases-market",
+    "https://www.environmental-expert.com/companies/keyword-gas-handling-system-248597",
+    "https://triangledesigngroup.com/2025/06/16/the-gas-giants-who-supplies-the-u-s-with-high-purity-gases-and-onsite-nitrogen-plants/",
+    "https://www.futuremarketinsights.com/reports/commodity-supply-chain-management-solution-market",
+    "https://buyersguide.ohsonline.com/category/industrial-hygiene/samplers-gas",
+    "https://www.transparencymarketresearch.com/gas-detector-equipment.html",
+    "https://www.htfmarketintelligence.com/report/global-high-purity-gas-market",
+    "https://umbrex.com/resources/how-to-analyze-an-upstream-oil-company/gas-handling-and-flaring-minimization-analysis/",
+    "https://www.esders.com/2026/01/effective-implementation-and-documentation-of-gas-system-inspections-in-accordance-with-trgi-using-toni/",
+    "http://www.wincorpenergy.com/en/pd.jsp?id=236",
+    "https://archive.org/stream/gasagevolume00unkngoog/gasagevolume00unkngoog_djvu.txt"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Air Liquide",
+      "country": "France",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": 1000000,
+        "unit": "m³",
+        "year": 2022,
+        "source": "Air Liquide Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "99.995% purity"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "€1.5 billion",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Bpifrance",
+          "TotalEnergies"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Jean-Pierre Clamour"
+        ],
+        "key_people": [
+          "Pierre-Etienne Franc"
+        ]
+      },
+      "strategic_notes": "Air Liquide is a leading industrial gas company with a strong presence in the gas handling system market."
+    },
+    {
+      "name": "Praxair",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": 500000,
+        "unit": "m³",
+        "year": 2022,
+        "source": "Praxair Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "99.995% purity"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "$1.2 billion",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "BlackRock",
+          "Goldman Sachs"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Steve Angel"
+        ],
+        "key_people": [
+          "E. Lynn Reaser"
+        ]
+      },
+      "strategic_notes": "Praxair is a leading industrial gas company with a strong presence in the gas handling system market."
+    },
+    {
+      "name": "Air Products",
+      "country": "USA",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": 750000,
+        "unit": "m³",
+        "year": 2022,
+        "source": "Air Products Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "99.995% purity"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "$2.5 billion",
+        "last_round": "Series B Jan 2024",
+        "lead_investors": [
+          "BlackRock",
+          "Goldman Sachs"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Seifi Ghasemi"
+        ],
+        "key_people": [
+          "Rajeev Gautam"
+        ]
+      },
+      "strategic_notes": "Air Products is a leading industrial gas company with a strong presence in the gas handling system market."
+    },
+    {
+      "name": "Linde",
+      "country": "Germany",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": 1000000,
+        "unit": "m³",
+        "year": 2022,
+        "source": "Linde Annual Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "99.995% purity"
+        ],
+        "modality": "Cat Qubits"
+      },
+      "financials": {
+        "total_funding": "€2.5 billion",
+        "last_round": "Series B Jan 2024",
+        "lead_investors": [
+          "Bpifrance",
+          "TotalEnergies"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Gregory Summe"
+        ],
+        "key_people": [
+          "Sanjiv Lamba"
+        ]
+      },
+      "strategic_notes": "Linde is a leading industrial gas company with a strong presence in the gas handling system market."
+    },
+    {
+      "name": "U.S. Department of Energy",
+      "country": "USA",
+      "role": "Government Agency",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "National Ignition Facility",
+          "100% fusion yield"
+        ],
+        "modality": "Inertial Confinement Fusion"
+      },
+      "financials": {
+        "total_funding": "GLOBAL_INDUSTRY_TOTAL",
+        "last_round": null,
+        "lead_investors": [
+          "U.S. Congress"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "National Laboratories"
+        ],
+        "programs": [
+          "Advanced Research Projects Agency-Energy (ARPA-E)"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Jennifer Granholm"
+        ],
+        "key_people": [
+          "David Turk"
+        ]
+      },
+      "strategic_notes": "The U.S. Department of Energy is a government agency responsible for advancing the nation's energy security and promoting scientific research."
+    },
+    {
+      "name": "European Commission",
+      "country": "Belgium",
+      "role": "Government Agency",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "ITER Tokamak",
+          "100% fusion yield"
+        ],
+        "modality": "Magnetic Confinement Fusion"
+      },
+      "financials": {
+        "total_funding": "GLOBAL_INDUSTRY_TOTAL",
+        "last_round": null,
+        "lead_investors": [
+          "European Parliament"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "ITER Organization"
+        ],
+        "programs": [
+          "Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Ursula von der Leyen"
+        ],
+        "key_people": [
+          "Frans Timmermans"
+        ]
+      },
+      "strategic_notes": "The European Commission is a government agency responsible for promoting the interests of the European Union and advancing its energy security."
+    },
+    {
+      "name": "Consortium for Advanced Simulation of Light Water Reactors (CASL)",
+      "country": "USA",
+      "role": "Consortium",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Sierra-2 supercomputer",
+          "100% simulation accuracy"
+        ],
+        "modality": "High-Performance Computing"
+      },
+      "financials": {
+        "total_funding": "$1.2 billion",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "U.S. Department of Energy",
+          "Oak Ridge National Laboratory"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "National Laboratories"
+        ],
+        "programs": [
+          "Advanced Research Projects Agency-Energy (ARPA-E)"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "William Nutt"
+        ],
+        "key_people": [
+          "Thomas Zacharia"
+        ]
+      },
+      "strategic_notes": "CASL is a consortium of universities and national laboratories working together to advance the simulation of light water reactors."
+    }
+  ]
+}

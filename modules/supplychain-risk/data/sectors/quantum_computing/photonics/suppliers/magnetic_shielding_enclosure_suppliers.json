@@ -1,0 +1,118 @@
+{
+  "component": "Magnetic Shielding Enclosure",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:48:22.914194Z",
+    "search_query": "Magnetic Shielding Enclosure best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 2,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://etcnmachining.com/blog/aluminum-enclosure-machining/",
+    "https://etcnmachining.com/blog/emi-shield/",
+    "https://www.kdmsteel.com/nema-enclosure/",
+    "https://electronics.stackexchange.com/questions/tagged/enclosure",
+    "https://flexautomotive.net/EMCFLEXBLOG/category/Shielding",
+    "https://www.marketsandmarkets.com/ResearchInsight/emi-shielding-market.asp",
+    "https://straitsresearch.com/report/emi-wave-shielding-materials-market",
+    "https://www.transparencymarketresearch.com/emi-shielding-market.html",
+    "https://www.maximizemarketresearch.com/market-report/global-emi-shielding-materials-market/28737/",
+    "https://dohoelectric.com/best-electrical-enclosure-manufacturers/",
+    "https://en.wikipedia.org/wiki/Electromagnetic_shielding",
+    "https://metaletching.com/cutting-through-the-confusion-emi-shielding-manufacturing-methods/",
+    "https://www.hrdjm.com/knowledge-base/sheet-metal-fabrication-electronics-enclosures-design-guide.html",
+    "https://learnemc.com/practical-em-shielding",
+    "https://fotofab.com/products/rfemi-shields/"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Magnetic Shielding Enclosure",
+      "global_trade_value": 5200000000.0,
+      "exporters": [
+        {
+          "country": "China",
+          "share": 0.35,
+          "value": 1820000000.0
+        },
+        {
+          "country": "United States",
+          "share": 0.23,
+          "value": 1196000000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.17,
+          "value": 884000000.0000001
+        },
+        {
+          "country": "Japan",
+          "share": 0.12,
+          "value": 624000000.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.08,
+          "value": 416000000.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "United States",
+          "share": 0.28,
+          "value": 1456000000.0000002
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 1300000000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.15,
+          "value": 780000000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.12,
+          "value": 624000000.0
+        },
+        {
+          "country": "India",
+          "share": 0.08,
+          "value": 416000000.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "KDM Steel",
+      "country": "China",
+      "role": "NEMA Enclosure manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Leading NEMA Enclosure manufacturer in China with experience in producing all designs of electrical enclosures"
+    },
+    {
+      "name": "ETCN Machining",
+      "country": null,
+      "role": "CNC Machined Aluminum Enclosures manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Leverages modern CNC equipment to produce complex structures with tight tolerances for electronics"
+    }
+  ]
+}

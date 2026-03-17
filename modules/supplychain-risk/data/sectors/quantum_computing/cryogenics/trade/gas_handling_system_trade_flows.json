@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Gas Handling System",
+  "global_trade_value": 12.8,
+  "exporters": [
+    {
+      "country": "Germany",
+      "share": 0.25,
+      "value": 3.2
+    },
+    {
+      "country": "United States",
+      "share": 0.23,
+      "value": 2.9440000000000004
+    },
+    {
+      "country": "Japan",
+      "share": 0.18,
+      "value": 2.304
+    },
+    {
+      "country": "China",
+      "share": 0.15,
+      "value": 1.92
+    },
+    {
+      "country": "France",
+      "share": 0.09,
+      "value": 1.152
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.21,
+      "value": 2.688
+    },
+    {
+      "country": "China",
+      "share": 0.2,
+      "value": 2.5600000000000005
+    },
+    {
+      "country": "Germany",
+      "share": 0.16,
+      "value": 2.048
+    },
+    {
+      "country": "Japan",
+      "share": 0.14,
+      "value": 1.7920000000000003
+    },
+    {
+      "country": "India",
+      "share": 0.09,
+      "value": 1.152
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

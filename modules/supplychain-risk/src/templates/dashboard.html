@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <style>
+        :root {
+            --bg: #030712;
+            --card: rgba(15, 23, 42, 0.85);
+            --accent: #0ea5e9;
+            --border: rgba(56, 189, 248, 0.18);
+            --text: #f1f5f9;
+            --muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --row-hover: rgba(56, 189, 248, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.07) 0%, transparent 50%);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0.85rem 2rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.4rem 0.85rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .nav-sep {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-left: auto;
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.75rem 2rem;
+            transition: all 0.3s;
+        }
+
+        .stat:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
+        }
+
+        .stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.4rem;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.5rem 1rem;
+            flex: 1;
+            min-width: 200px;
+            max-width: 360px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text);
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .discovery-form {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .discovery-input {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 0.75rem;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            flex: 1;
+            min-width: 180px;
+            max-width: 300px;
+        }
+
+        .discovery-input:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 0.6rem 1.2rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #0284c7);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .table-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(2, 6, 23, 0.5);
+            padding: 1rem 1.5rem;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: left;
+        }
+
+        td {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(56, 189, 248, 0.08);
+            vertical-align: middle;
+        }
+
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .clickable-row:hover {
+            background: var(--row-hover);
+        }
+
+        .comp-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .risk-bar-bg {
+            width: 90px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 3px;
+            margin-top: 0.4rem;
+            overflow: hidden;
+        }
+
+        .risk-bar {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .score-val {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.3rem 0.65rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .badge-high {
+            background: rgba(239, 68, 68, .12);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, .25);
+        }
+
+        .badge-medium {
+            background: rgba(245, 158, 11, .12);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, .25);
+        }
+
+        .badge-low {
+            background: rgba(16, 185, 129, .12);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, .25);
+        }
+
+        .drivers-list {
+            list-style: none;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .drivers-list li {
+            padding: 0.2rem 0 0.2rem 1rem;
+            position: relative;
+        }
+
+        .drivers-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: .5rem;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .details-row {
+            display: none;
+            background: rgba(2, 6, 23, 0.3);
+        }
+
+        .details-content {
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            max-height: 440px;
+        }
+
+        .supplier-info {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            flex: 1;
+            height: 380px;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .supplier-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 0.85rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .supplier-name {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .supplier-meta {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin: 0.2rem 0 0.4rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .supplier-notes {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .supplier-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-modality {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent2);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .tech-specs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-badge {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            color: var(--accent);
+            font-size: 0.68rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .supplier-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .fin-info,
+        .eco-info,
+        .lead-info {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .lead-info {
+            grid-column: span 2;
+        }
+
+        .no-data {
+            color: var(--muted);
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .leaflet-container {
+            background: #030712 !important;
+        }
+
+        .loader-text {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: .6
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        .empty-table {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--muted);
+        }
+
+        .empty-table h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: .5rem;
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">⬡ SupplyTrace</div>
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/graph-view" class="nav-link">Supply Chain Graph</a>
+        <div class="nav-sep">
+            <form class="discovery-form" onsubmit="triggerDiscovery(event)">
+                <input class="discovery-input" id="discovery-input" placeholder="Discover new component…">
+                <button type="submit" class="btn btn-primary" id="disc-btn">+ Discover</button>
+            </form>
+            <a href="/" class="nav-link">← New Analysis</a>
+        </div>
+    </nav>
+    <div class="loader-text" id="loader" style="text-align:center;padding:.5rem">⏳ Discovering intelligence…</div>
+
+    <div class="main">
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-val">{{ total_components }}</div>
+                <div class="stat-label">Components Tracked</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val" style="color:var(--warning)">{{ avg_risk }}</div>
+                <div class="stat-label">Average Risk Score</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val" style="color:var(--danger)">{{ critical_count }}</div>
+                <div class="stat-label">High-Risk Bottlenecks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-val" style="color:var(--success)">{{ segment }}</div>
+                <div class="stat-label">Active Segment</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <span style="color:var(--muted)">🔍</span>
+                <input type="text" id="search-filter" oninput="filterTable(this.value)"
+                    placeholder="Filter components…">
+            </div>
+        </div>
+
+        <div class="table-card">
+            {% if rows %}
+            <table id="risk-table">
+                <thead>
+                    <tr>
+                        <th style="width:30%">Component</th>
+                        <th style="width:18%">Risk Score</th>
+                        <th style="width:12%">Confidence</th>
+                        <th>Key Drivers</th>
+                    </tr>
+                </thead>
+                <tbody>{{ rows|safe }}</tbody>
+            </table>
+            {% else %}
+            <div class="empty-table">
+                {% if is_extracting %}
+                <div class="loader-text"
+                    style="display:block;font-size:3.5rem;margin-bottom:1rem;color:var(--accent);animation:none;">⏳
+                </div>
+                <h3>Extraction in Progress...</h3>
+                <p style="max-width:420px;margin:0 auto 1.5rem">
+                    The intelligence engine is actively scanning APIs and web sources for <span
+                        style="color:var(--accent)">{{ segment }}</span>.
+                    This will take several minutes. The results will populate soon.
+                </p>
+                <div style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem;">(The page will keep
+                    checking for updates automatically)</div>
+                <script>
+                    setTimeout(() => { window.location.reload(); }, 5000);
+                </script>
+                {% else %}
+                <div style="font-size:3.5rem;margin-bottom:1rem">🔍</div>
+                <h3>No data yet for <span style="color:var(--accent)">{{ segment }}</span></h3>
+                <p style="max-width:420px;margin:0 auto 1.5rem">
+                    Taxonomy saved, but no supplier intelligence has been extracted for this segment yet.
+                    Go back to the onboarding flow and click <strong>"Confirm &amp; Start Extraction"</strong> — or type
+                    a component name in the <strong>Discover</strong> bar above.
+                </p>
+                <a href="/"
+                    style="display:inline-block;background:linear-gradient(135deg,var(--accent),#0284c7);color:white;border-radius:.75rem;padding:.75rem 1.5rem;font-weight:700;text-decoration:none;font-size:.9rem">←
+                    Start Extraction Flow</a>
+                {% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <script>
+        const COORDS = {{ coords_json| safe }};
+        const activeMaps = {};
+        let worldGeoJson = null;
+
+        async function fetchGeoJson() {
+            if (worldGeoJson) return worldGeoJson;
+            try {
+                const r = await fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson');
+                worldGeoJson = await r.json(); return worldGeoJson;
+            } catch (e) { return null; }
+        }
+
+        function toggleDetails(id) {
+            const row = document.getElementById(`details-${id}`);
+            const visible = row.style.display === 'table-row';
+            document.querySelectorAll('.details-row').forEach(r => r.style.display = 'none');
+            if (!visible) { row.style.display = 'table-row'; initMap(id); }
+        }
+
+        async function initMap(id) {
+            if (activeMaps[id]) { setTimeout(() => activeMaps[id].invalidateSize(), 150); return; }
+            const el = document.getElementById(`map-${id}`); if (!el) return;
+            const suppliers = JSON.parse(el.dataset.suppliers);
+            const map = L.map(`map-${id}`, { zoomControl: false, attributionControl: false }).setView([20, 0], 2);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+            const geo = await fetchGeoJson();
+            const active = new Set(suppliers.map(s => (s.country || '').toUpperCase()));
+            if (geo) {
+                L.geoJson(geo, {
+                    style: f => {
+                        const n = f.properties.name.toUpperCase();
+                        const match = active.has(n) || active.has((f.properties.iso_a3 || '').toUpperCase()) || (n === 'UNITED STATES' && active.has('USA'));
+                        return { fillColor: match ? '#0ea5e9' : 'transparent', weight: match ? 1 : 0.4, opacity: match ? .9 : .1, color: match ? '#0ea5e9' : '#1e293b', fillOpacity: match ? .3 : 0 };
+                    }
+                }).addTo(map);
+            }
+            const bounds = suppliers.map(s => COORDS[(s.country || '').toUpperCase()]).filter(Boolean);
+            if (bounds.length) map.fitBounds(bounds, { padding: [50, 50] }); else map.setView([20, 0], 2);
+            activeMaps[id] = map;
+        }
+
+        function filterTable(query) {
+            const q = query.toLowerCase();
+            document.querySelectorAll('#risk-table tbody .clickable-row').forEach(row => {
+                const name = row.querySelector('.comp-name')?.textContent.toLowerCase() || '';
+                const next = row.nextElementSibling;
+                const show = name.includes(q);
+                row.style.display = show ? '' : 'none';
+                if (next?.classList.contains('details-row')) next.style.display = show ? next.style.display : 'none';
+            });
+        }
+
+        async function triggerDiscovery(e) {
+            e.preventDefault();
+            const input = document.getElementById('discovery-input');
+            const btn = document.getElementById('disc-btn');
+            const loader = document.getElementById('loader');
+            const val = input.value.trim(); if (!val) return;
+            btn.disabled = true; loader.style.display = 'block';
+            try {
+                const res = await fetch(`/api/v1/discovery/${encodeURIComponent(val)}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    loader.textContent = `[+] Intelligence secured! Refreshing…`;
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    alert('Discovery failed: ' + (data.error || 'Unknown error'));
+                    btn.disabled = false; loader.style.display = 'none';
+                }
+            } catch (err) {
+                alert('Connection error.'); btn.disabled = false; loader.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

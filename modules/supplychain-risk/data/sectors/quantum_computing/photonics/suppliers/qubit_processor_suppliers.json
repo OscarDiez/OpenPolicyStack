@@ -1,0 +1,142 @@
+{
+  "component": "Qubit Processor",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:46:36.980115Z",
+    "search_query": "Qubit Processor best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 4,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.spinquanta.com/news-detail/quantum-computing-companies",
+    "https://arxiv.org/html/2506.03567v1",
+    "https://arxiv.org/html/2603.08883v1",
+    "https://patents.google.com/patent/US9710758B2/en",
+    "https://patents.google.com/patent/US20160335558A1/en",
+    "https://thequantuminsider.com/2025/09/23/top-quantum-computing-companies/",
+    "https://www.bluequbit.io/quantum-computing-companies",
+    "https://www.spinquanta.com/news-detail/companies-in-quantum-computing-global-leaders-innovators-and-market-outlook",
+    "https://www.gminsights.com/industry-analysis/superconducting-quantum-chip-market",
+    "https://www.marketsandmarkets.com/ResearchInsight/quantum-computing-market.asp",
+    "https://postquantum.com/industry-news/origin-quantum-wukong/",
+    "https://spectrum.ieee.org/ibm-edges-closer-to-quantum-supremacy-with-50qubit-processor",
+    "https://quantumzeitgeist.com/quantum-annealing-breakthrough-d-waves-5000-qubit-processor-shows-faster-coherent-dynamics-than-classical-computing/",
+    "https://www.nextbigfuture.com/2021/11/ibm-unveils-127-qubit-processor.html",
+    "https://thenextweb.com/news/ibm-claims-quantum-supremacy-over-google-with-50-qubit-processor"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Qubit Processor",
+      "global_trade_value": 1230000000.0,
+      "exporters": [
+        {
+          "country": "United States",
+          "share": 0.45,
+          "value": 553500000.0
+        },
+        {
+          "country": "Canada",
+          "share": 0.2,
+          "value": 246000000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 184500000.0
+        },
+        {
+          "country": "United Kingdom",
+          "share": 0.1,
+          "value": 123000000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.1,
+          "value": 123000000.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "China",
+          "share": 0.3,
+          "value": 369000000.0
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 307500000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.2,
+          "value": 246000000.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.15,
+          "value": 184500000.0
+        },
+        {
+          "country": "India",
+          "share": 0.1,
+          "value": 123000000.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Spinquanta",
+      "country": "Unknown",
+      "role": "Quantum Computing Company",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Goal to exceed 4,000 qubits by interconnecting multiple processor chips"
+    },
+    {
+      "name": "Arxiv",
+      "country": "Unknown",
+      "role": "Research Institution",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Reported a precision-placed 11-qubit atom processor in isotopically purified silicon-28"
+    },
+    {
+      "name": "Fugaku",
+      "country": "Japan",
+      "role": "Supercomputer Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Used in conjunction with a quantum processor to tackle electronic-structure problems up to 77 qubits"
+    },
+    {
+      "name": "US Patent Office",
+      "country": "USA",
+      "role": "Government Agency",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Issued patents related to quantum processors and components for manipulating qubits"
+    }
+  ]
+}

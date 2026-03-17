@@ -1,0 +1,176 @@
+{
+  "component": "Error Correction ASIC",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:47:23.993474Z",
+    "search_query": "Error Correction ASIC best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 7,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.pcbaaa.com/top-10-asic-manufacturers-in-the-world/",
+    "https://www.mordorintelligence.com/industry-reports/programmable-application-specific-integrated-circuit-asic-market/companies",
+    "https://anysilicon.com/asic-manufacturers/",
+    "https://www.asicminervalue.com/manufacturers",
+    "https://us.metoree.com/categories/asic/",
+    "https://www.databridgemarketresearch.com/reports/global-application-specific-integrated-circuit-asic-market/companies",
+    "https://www.globalinforesearch.com/reports/1450992/asic-chip",
+    "https://www.gminsights.com/industry-analysis/application-specific-integrated-circuit-market",
+    "https://www.accio.com/supplier/top_asic_chip_manufacturers",
+    "https://uobdv.github.io/Design-Verification/WilsonResearchGroupFunctionalVerificationStudy/2020-WRGFV-Study/ic-asic-trend-report_2020-wilson-research-verification-study_hfoster.pdf",
+    "https://www.sciencedirect.com/science/article/abs/pii/S0920410520306367",
+    "https://datacalculus.com/en/blog/computer-hardware-manufacturing/asic-design-engineer/asic-design-engineer-implementing-error-correction-codes",
+    "https://www.atlascopco.com/content/dam/atlas-copco/industrial-technique/products/error-proofing/documents/Errorproofing_Whitepaper+EN+Web.pdf"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Error Correction ASIC",
+      "global_trade_value": 12800000000.0,
+      "exporters": [
+        {
+          "country": "China",
+          "share": 0.35,
+          "value": 4480000000.0
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 3200000000.0
+        },
+        {
+          "country": "Taiwan",
+          "share": 0.15,
+          "value": 1920000000.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 1280000000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.05,
+          "value": 640000000.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "China",
+          "share": 0.3,
+          "value": 3840000000.0
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 3200000000.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 1920000000.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 1280000000.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.05,
+          "value": 640000000.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "Analog Devices, Inc.",
+      "country": "USA",
+      "role": "ASIC manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Leader in Programmable ASIC industry"
+    },
+    {
+      "name": "Texas Instruments Inc.",
+      "country": "USA",
+      "role": "ASIC manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Leader in Programmable ASIC industry"
+    },
+    {
+      "name": "Sofics",
+      "country": null,
+      "role": "IP provider for ASIC",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Improves reliability of ICs through innovative designs"
+    },
+    {
+      "name": "Acme Chip Technology Co. Ltd.",
+      "country": "China",
+      "role": "Distributor of electronic components",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "ISO 9001 certified, sources products from several manufacturers"
+    },
+    {
+      "name": "Advanced Linear Devices Inc.",
+      "country": null,
+      "role": "Manufacturer of electronic components",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Supplies products to Acme Chip Technology Co. Ltd."
+    },
+    {
+      "name": "Central Semiconductor Corp.",
+      "country": null,
+      "role": "Manufacturer of electronic components",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Supplies products to Acme Chip Technology Co. Ltd."
+    },
+    {
+      "name": "Fluke",
+      "country": null,
+      "role": "Manufacturer of electronic components",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Supplies products to Acme Chip Technology Co. Ltd."
+    }
+  ]
+}

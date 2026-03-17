@@ -1,0 +1,74 @@
+{
+  "dependencies": [
+    {
+      "parent": "Cryogenics",
+      "children": [
+        "Mixing Chamber",
+        "Still",
+        "Heat Exchangers",
+        "Phase Separator",
+        "Gas Handling System",
+        "Pulse Tube Cryocooler",
+        "Compressor Unit",
+        "Vacuum Chamber",
+        "Radiation Shields",
+        "Cryogenic Temperature Sensors",
+        "Pressure Sensors",
+        "PID Controllers"
+      ]
+    },
+    {
+      "parent": "Mixing Chamber",
+      "children": [
+        "Helium-3",
+        "Helium-4",
+        "Circulation Pumps"
+      ]
+    },
+    {
+      "parent": "Pulse Tube Cryocooler",
+      "children": [
+        "Compressor Unit",
+        "Thermal Plates (4K/100mK/10mK)"
+      ]
+    },
+    {
+      "parent": "Gas Handling System",
+      "children": [
+        "Circulation Pumps",
+        "Valves"
+      ]
+    },
+    {
+      "parent": "Vacuum Chamber",
+      "children": [
+        "Radiation Shields",
+        "Vacuum Pumps",
+        "Cryogenic Temperature Sensors",
+        "Pressure Sensors"
+      ]
+    },
+    {
+      "parent": "Compressor Unit",
+      "children": []
+    },
+    {
+      "parent": "Thermal Plates (4K/100mK/10mK)",
+      "children": [
+        "Oxygen-Free High Conductivity Copper (OFHC)",
+        "Stainless Steel Alloys"
+      ]
+    },
+    {
+      "parent": "RF Coaxial Cables",
+      "children": [
+        "NbTi Superconducting Wire",
+        "Indium Wire"
+      ]
+    },
+    {
+      "parent": "Wiring Harnesses",
+      "children": []
+    }
+  ]
+}

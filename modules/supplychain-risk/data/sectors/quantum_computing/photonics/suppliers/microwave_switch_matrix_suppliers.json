@@ -1,0 +1,118 @@
+{
+  "component": "Microwave Switch Matrix",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T13:47:09.318496Z",
+    "search_query": "Microwave Switch Matrix best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 2,
+    "has_api_data": true
+  },
+  "sources": [
+    "https://www.dbcontrol.com/db-control-exhibits-new-line-of-custom-rf-microwave-components-and-assemblies-at-ims-booth-5102/",
+    "https://patents.google.com/patent/US20120119844A1/en",
+    "https://patents.google.com/patent/US6453083B1/en",
+    "https://www.microwavejournal.com/articles/38039-united-in-microwaves-eumw-2021",
+    "https://www.ecbasis.org/blog/2026/03/capacitors-global-buyers-list-comprehensive-market-analysis-key-importers-and-procurement-strategies/",
+    "https://semiconductorinsight.com/report/rf-microwave-switches-market/",
+    "https://www.wiseguyreports.com/reports/digital-signal-matrix-switcher-market",
+    "https://www.wiseguyreports.com/reports/gaas-rf-chip-market",
+    "https://www.futuremarketinsights.com/reports/food-grade-tremella-polysaccharide-market",
+    "https://www.futuremarketinsights.com/reports/embedded-universal-integrated-circuit-card-euicc-market",
+    "https://www.microwavejournal.com/blogs/5-keysight-expert-to-expert/post/23032-rf-microwave-switches-selecting-the-right-switch-technology-for-your-application",
+    "https://www.etesters.com/see/1552/Coaxial_Switches/",
+    "https://www.WirelessandRF.com/company/154443/microwave-solutions-inc",
+    "https://electronics360.globalspec.com/article/21175/new-high-channel-count-microwave-mux-modules-from-pickering-interfaces-on-show-at-ims-2024",
+    "https://www.hzbeat.com/industry-news/difference-between-isolator-and-circulator-in-microwave.html"
+  ],
+  "official_trade_stats": {
+    "estimated": true,
+    "data": {
+      "year": 2024,
+      "commodity": "Microwave Switch Matrix",
+      "global_trade_value": 4200.0,
+      "exporters": [
+        {
+          "country": "United States",
+          "share": 0.35,
+          "value": 1470.0
+        },
+        {
+          "country": "China",
+          "share": 0.25,
+          "value": 1050.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 630.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.1,
+          "value": 420.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.05,
+          "value": 210.0
+        }
+      ],
+      "importers": [
+        {
+          "country": "China",
+          "share": 0.3,
+          "value": 1260.0
+        },
+        {
+          "country": "United States",
+          "share": 0.25,
+          "value": 1050.0
+        },
+        {
+          "country": "Japan",
+          "share": 0.15,
+          "value": 630.0
+        },
+        {
+          "country": "South Korea",
+          "share": 0.1,
+          "value": 420.0
+        },
+        {
+          "country": "Germany",
+          "share": 0.05,
+          "value": 210.0
+        }
+      ],
+      "sources": [
+        "AI-Estimated based on search context"
+      ]
+    }
+  },
+  "suppliers": [
+    {
+      "name": "dB Control",
+      "country": "United States",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "International defense electronics manufacturer"
+    },
+    {
+      "name": "AFT Microwave",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "strategic_notes": "Provides microwave components manufactured with thin film technology"
+    }
+  ]
+}

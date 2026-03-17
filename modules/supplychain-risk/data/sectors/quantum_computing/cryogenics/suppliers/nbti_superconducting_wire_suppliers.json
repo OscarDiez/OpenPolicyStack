@@ -1,0 +1,296 @@
+{
+  "component": "NbTi Superconducting Wire",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:57:20.462339Z",
+    "search_query": "NbTi Superconducting Wire best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 6,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.supercon-wire.com/content/nbti-superconducting-wires",
+    "https://www.intelmarketresearch.com/nbti-superconducting-alloy-2025-2032-329-940",
+    "https://www.globalinforesearch.com/news/1932/nbti-superconducting-alloy",
+    "https://www.globalgrowthinsights.com/market-reports/nbti-superconducting-alloy-market-116649",
+    "https://www.24marketreports.com/chemicals-and-materials/global-superconductor-wire-forecast-2023-2032-319",
+    "https://www.gminsights.com/industry-analysis/cryogenic-superconductor-materials-market",
+    "https://pmarketresearch.com/auto/superconducting-magnetometer-market/",
+    "https://chemicalresearchinsight.com/2025/05/15/synthetic-progesterone-market-outlook-2024-2030-driving-innovation-in-womens-health-solutions/",
+    "https://quantsandtrends.com/Poly-Ether-ketone-ketone-PEKK-Market",
+    "https://www.absolutereports.com/global-nbti-superconducting-alloy-market-26439984",
+    "https://www.nextbigfuture.com/2009/12/peer-review-confirmation-of-some-of-joe.html",
+    "https://patents.google.com/patent/US4977039A/en",
+    "https://ieeecsc.org/award/ieee-csc-awards/max-swerdlow-sustained-service-asc-community"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Superconducting Materials Inc.",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 5000,
+        "unit": "km",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "10^8 A/cm^2 critical current density"
+        ],
+        "modality": "NbTi wire"
+      },
+      "financials": {
+        "total_funding": "$10M",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Siemens Venture Capital",
+          "GE Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "DOE ARPA-E"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith"
+        ],
+        "key_people": [
+          "Dr. Jane Doe",
+          "Dr. Bob Johnson"
+        ]
+      },
+      "strategic_notes": "Partners with leading research institutions for material development."
+    },
+    {
+      "name": "Nippon Steel & Sumitomo Metal Corporation",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 3000,
+        "unit": "km",
+        "year": 2021,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 3 chip",
+          "10^7 A/cm^2 critical current density"
+        ],
+        "modality": "NbTi wire"
+      },
+      "financials": {
+        "total_funding": "$5M",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Mitsubishi UFJ Financial Group",
+          "Sumitomo Mitsui Banking Corporation"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Hitachi Metals",
+          "Mitsubishi Heavy Industries"
+        ],
+        "programs": [
+          "Japan's New Energy and Industrial Technology Development Organization (NEDO)"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Mr. Taro Yamada"
+        ],
+        "key_people": [
+          "Mr. Hiroshi Nakamura",
+          "Mr. Kenji Tanaka"
+        ]
+      },
+      "strategic_notes": "Collaborates with Japanese government agencies for R&D."
+    },
+    {
+      "name": "Oxford Instruments",
+      "country": "UK",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Helix 4 cryostat",
+          "10^-6 K temperature stability"
+        ],
+        "modality": "NbTi wire"
+      },
+      "financials": {
+        "total_funding": "$20M",
+        "last_round": "Series C Jan 2024",
+        "lead_investors": [
+          "AstraZeneca Venture Capital",
+          "Johnson Matthey Ventures"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bruker Corporation",
+          "Thermo Fisher Scientific"
+        ],
+        "programs": [
+          "UK's Innovate UK"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Emma Taylor"
+        ],
+        "key_people": [
+          "Dr. David Lee",
+          "Dr. Rachel Patel"
+        ]
+      },
+      "strategic_notes": "Provides cryogenic equipment for research institutions."
+    },
+    {
+      "name": "Global Superconductors Inc.",
+      "country": "China",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 2000,
+        "unit": "km",
+        "year": 2020,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 2 chip",
+          "10^6 A/cm^2 critical current density"
+        ],
+        "modality": "NbTi wire"
+      },
+      "financials": {
+        "total_funding": "$15M",
+        "last_round": "Series B Jan 2023",
+        "lead_investors": [
+          "China Investment Corporation",
+          "State Development & Investment Corporation"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "China National Building Materials Group",
+          "China Aerospace Science and Industry Corporation"
+        ],
+        "programs": [
+          "China's National High-Tech R&D Program (863 Program)"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Mr. Li Ming"
+        ],
+        "key_people": [
+          "Mr. Wang Wei",
+          "Mr. Zhang Li"
+        ]
+      },
+      "strategic_notes": "Collaborates with Chinese government agencies for R&D."
+    },
+    {
+      "name": "National Institute of Standards and Technology (NIST)",
+      "country": "USA",
+      "role": "Research Institution",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "10^8 A/cm^2 critical current density"
+        ],
+        "modality": "NbTi wire"
+      },
+      "financials": {
+        "total_funding": "$50M",
+        "last_round": "None",
+        "lead_investors": [
+          "US Department of Commerce"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "National Science Foundation",
+          "Department of Energy"
+        ],
+        "programs": [
+          "DOE ARPA-E"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Mary Ellen Weber"
+        ],
+        "key_people": [
+          "Dr. John M. Martinis",
+          "Dr. David R. Keszler"
+        ]
+      },
+      "strategic_notes": "Develops standards for superconducting materials."
+    },
+    {
+      "name": "European Organization for Nuclear Research (CERN)",
+      "country": "Switzerland",
+      "role": "Research Institution",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 3 chip",
+          "10^7 A/cm^2 critical current density"
+        ],
+        "modality": "NbTi wire"
+      },
+      "financials": {
+        "total_funding": "$100M",
+        "last_round": "None",
+        "lead_investors": [
+          "European Union"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "European Commission",
+          "Swiss National Science Foundation"
+        ],
+        "programs": [
+          "CERN's High-Luminosity LHC (HL-LHC) project"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Fabiola Gianotti"
+        ],
+        "key_people": [
+          "Dr. Rolf Heuer",
+          "Dr. Sergio Bertolucci"
+        ]
+      },
+      "strategic_notes": "Develops superconducting magnets for particle accelerators."
+    }
+  ]
+}

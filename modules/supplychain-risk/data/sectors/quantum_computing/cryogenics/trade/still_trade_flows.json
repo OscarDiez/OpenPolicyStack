@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Still",
+  "global_trade_value": 1500.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 375.0
+    },
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 300.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.18,
+      "value": 270.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 225.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.12,
+      "value": 180.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.3,
+      "value": 450.0
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 375.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 225.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.1,
+      "value": 150.0
+    },
+    {
+      "country": "India",
+      "share": 0.05,
+      "value": 75.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

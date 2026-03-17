@@ -1,0 +1,161 @@
+{
+  "component": "Phase Separator",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T16:51:04.033306Z",
+    "search_query": "Phase Separator best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://cryoworks.net/phase-separator/",
+    "https://www.directindustry.com/industrial-manufacturer/3-phase-separator-95757.html",
+    "https://www.visiongain.com/report/three-phase-separators-in-the-oil-and-gas-industry-market-report-2020-2030/",
+    "https://www.smithindustriestx.com/post/3-phase-separators-streamlining-oil-water-and-gas-processing",
+    "https://ergil.com/separation-systems/3-phase-separator/",
+    "https://en.wikipedia.org/wiki/Ford_Motor_Company",
+    "https://in.tradingview.com/",
+    "https://www.gartner.com/en/articles/top-technology-trends-2026",
+    "https://en.wikipedia.org/wiki/Separator_(oil_production)",
+    "https://www.honiron.com/basic-operation-three-phase-separators/",
+    "https://www.goranbrelih.com/how-to-double-or-triple-the-volume-of-your-industrial-facility/",
+    "https://www.tech-fab.com/service/3-phase-separators",
+    "https://ifsolutions.com/two-phase-separator-vs-three-phase-separator-differences/"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Air Liquide",
+      "country": "France",
+      "role": "Specialized gas leader and industrial isotope provider",
+      "production_volume": {
+        "value": 100000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Air Liquide Annual Report 2022"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic distillation columns",
+          "Advanced gas analysis systems"
+        ],
+        "modality": "Cryogenic distillation"
+      },
+      "financials": {
+        "total_funding": "€15 billion",
+        "last_round": "Not applicable",
+        "lead_investors": [
+          "Not applicable"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Machines",
+          "Bluefors"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Paul Delorme",
+          "Eugène Delorme"
+        ],
+        "key_people": [
+          "François Jackow",
+          "Pierre Etienne Franc"
+        ]
+      },
+      "strategic_notes": "Air Liquide is a leading provider of industrial gases and has a strong presence in the quantum computing industry."
+    },
+    {
+      "name": "Linde",
+      "country": "Germany",
+      "role": "Specialized gas leader and industrial isotope provider",
+      "production_volume": {
+        "value": 50000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Linde Annual Report 2022"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Advanced gas separation systems",
+          "High-purity gas production facilities"
+        ],
+        "modality": "Gas separation"
+      },
+      "financials": {
+        "total_funding": "€10 billion",
+        "last_round": "Not applicable",
+        "lead_investors": [
+          "Not applicable"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Quantum Circuits Inc.",
+          "Rigetti Computing"
+        ],
+        "programs": [
+          "German Federal Ministry of Education and Research"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Carl von Linde"
+        ],
+        "key_people": [
+          "Sanjiv Lamba",
+          "Juan Pelaez"
+        ]
+      },
+      "strategic_notes": "Linde is a leading provider of industrial gases and has a strong presence in the quantum computing industry."
+    },
+    {
+      "name": "Praxair",
+      "country": "United States",
+      "role": "Specialized gas leader and industrial isotope provider",
+      "production_volume": {
+        "value": 200000,
+        "unit": "tons",
+        "year": 2022,
+        "source": "Praxair Annual Report 2022"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic storage systems",
+          "Advanced gas analysis systems"
+        ],
+        "modality": "Cryogenic storage"
+      },
+      "financials": {
+        "total_funding": "€5 billion",
+        "last_round": "Not applicable",
+        "lead_investors": [
+          "Not applicable"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Google Quantum AI Lab",
+          "Microsoft Quantum"
+        ],
+        "programs": [
+          "US Department of Energy"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Leonard P. Pool"
+        ],
+        "key_people": [
+          "Stephen Angel",
+          "Scott Telesz"
+        ]
+      },
+      "strategic_notes": "Praxair is a leading provider of industrial gases and has a strong presence in the quantum computing industry."
+    }
+  ]
+}

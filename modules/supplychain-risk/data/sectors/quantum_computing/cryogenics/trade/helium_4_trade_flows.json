@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Helium-4",
+  "global_trade_value": 6500000000.0,
+  "exporters": [
+    {
+      "country": "United States",
+      "share": 0.4,
+      "value": 2600000000.0
+    },
+    {
+      "country": "Qatar",
+      "share": 0.3,
+      "value": 1950000000.0
+    },
+    {
+      "country": "Russia",
+      "share": 0.2,
+      "value": 1300000000.0
+    },
+    {
+      "country": "China",
+      "share": 0.05,
+      "value": 325000000.0
+    },
+    {
+      "country": "Algeria",
+      "share": 0.05,
+      "value": 325000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.3,
+      "value": 1950000000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.2,
+      "value": 1300000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.2,
+      "value": 1300000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.15,
+      "value": 975000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 975000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

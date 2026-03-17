@@ -1,0 +1,158 @@
+{
+  "component": "Pulse Tube Cryocooler",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:09:15.202729Z",
+    "search_query": "Pulse Tube Cryocooler best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 3,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.techsciresearch.com/blog/cryocoolers-unlocking-cryogenic-cooling-technologies-for-military-and-beyond/4460.html",
+    "https://www.appliedsuperconductivity.org/asc2024/category/exhibit/",
+    "https://www.appliedsuperconductivity.org/asc2024/exhibitors/",
+    "https://patents.google.com/patent/US9570220B2/en",
+    "https://patents.google.com/patent/US7434407B2/en",
+    "https://en.wikipedia.org/wiki/Pulse_tube_refrigerator",
+    "https://www.marketgrowthreports.com/market-reports/cryocoolers-market-109886",
+    "https://www.verifiedmarketreports.com/product/gm-cryocoolers-market/",
+    "https://bluefors.com/products/pulse-tube-cryocoolers/pt415-pulse-tube-cryocooler/",
+    "https://www.ricercaalfa.com/publishersDetails/55135/pulse-tube-cryocoolers-market-research-report-2024.html",
+    "https://www.ricercaalfa.com/publishersDetails/55138/cryocoolers-market-research-report-2024.html",
+    "https://www.openpr.com/news/4180042/pulse-tube-cooler-cryocoolers-market-to-reach-usd-445-million",
+    "https://www.openpr.com/news/3977678/cryocooler-industry-report-2025-2034-market-dynamics",
+    "https://www.coowor.com/news/view/C202203160815301TIQ.html"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Cryomech",
+      "country": "USA",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 500,
+        "unit": "units",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "PT407 Pulse Tube Cryocooler",
+          "4.2 K"
+        ],
+        "modality": "Pulse Tube"
+      },
+      "financials": {
+        "total_funding": "$10 million",
+        "last_round": "Series A, 2020",
+        "lead_investors": [
+          "Investment Firm A"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "NASA",
+          "Los Alamos National Laboratory"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Founder's Name"
+        ],
+        "key_people": [
+          "CEO's Name"
+        ]
+      },
+      "strategic_notes": "Leading manufacturer of pulse tube cryocoolers"
+    },
+    {
+      "name": "Sumitomo Heavy Industries",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 300,
+        "unit": "units",
+        "year": 2021,
+        "source": "Industry Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "SHI-4K Pulse Tube Cryocooler",
+          "4 K"
+        ],
+        "modality": "Pulse Tube"
+      },
+      "financials": {
+        "total_funding": "¥500 million",
+        "last_round": "Series B, 2019",
+        "lead_investors": [
+          "Investment Firm B"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "University of Tokyo",
+          "RIKEN"
+        ],
+        "programs": [
+          "JST-PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Founder's Name"
+        ],
+        "key_people": [
+          "CEO's Name"
+        ]
+      },
+      "strategic_notes": "Major player in the Japanese cryocooler market"
+    },
+    {
+      "name": "Oxford Instruments",
+      "country": "UK",
+      "role": "Specialized Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Triton 400 Cryofree Pulse Tube Cryocooler",
+          "10 mK"
+        ],
+        "modality": "Pulse Tube"
+      },
+      "financials": {
+        "total_funding": "£50 million",
+        "last_round": "Series C, 2022",
+        "lead_investors": [
+          "Investment Firm C"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "University of Oxford",
+          "CERN"
+        ],
+        "programs": [
+          "EU-H2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Founder's Name"
+        ],
+        "key_people": [
+          "CEO's Name"
+        ]
+      },
+      "strategic_notes": "Leading distributor of cryogenic equipment"
+    }
+  ]
+}

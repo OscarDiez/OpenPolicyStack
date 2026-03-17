@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Graph — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --bg: #030712;
+            --card: rgba(15, 23, 42, 0.9);
+            --accent: #0ea5e9;
+            --border: rgba(56, 189, 248, 0.18);
+            --text: #f1f5f9;
+            --muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0.85rem 2rem;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.4rem 0.85rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .nav-spacer {
+            flex: 1;
+        }
+
+        .main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #graph-area {
+            flex: 1;
+            position: relative;
+            cursor: grab;
+        }
+
+        #graph-area:active {
+            cursor: grabbing;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .side-panel {
+            width: 320px;
+            flex-shrink: 0;
+            background: var(--card);
+            border-left: 1px solid var(--border);
+            padding: 1.5rem;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .side-panel.open {
+            transform: translateX(0);
+        }
+
+        .panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .panel-sub {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-big {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.25rem;
+        }
+
+        .pillar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .pillar-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            width: 110px;
+            flex-shrink: 0;
+        }
+
+        .pillar-bar-bg {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .pillar-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .pillar-val {
+            font-size: 0.75rem;
+            color: var(--muted);
+            width: 30px;
+            text-align: right;
+        }
+
+        .driver-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.85rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin: 1.25rem 0 0.6rem;
+        }
+
+        .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.85rem 1.1rem;
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .tip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 0.6rem;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.8rem;
+            pointer-events: none;
+            display: none;
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        .controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .ctrl-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ctrl-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty-state h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">⬡ SupplyTrace</div>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/graph-view" class="nav-link active">Supply Chain Graph</a>
+        <div class="nav-spacer"></div>
+        <a href="/" class="nav-link">← New Analysis</a>
+    </nav>
+    <div class="main">
+        <div id="graph-area">
+            <svg id="graph-svg"></svg>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#10b981"></div>Low Risk
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#f59e0b"></div>Medium
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#ef4444"></div>High Risk
+                </div>
+            </div>
+            <div class="controls">
+                <button class="ctrl-btn" title="Zoom In" onclick="zoomIn()">+</button>
+                <button class="ctrl-btn" title="Zoom Out" onclick="zoomOut()">−</button>
+                <button class="ctrl-btn" title="Reset" onclick="resetZoom()">⊙</button>
+            </div>
+            <div class="tip" id="tooltip"></div>
+            <div class="empty-state" id="empty-state" style="display:none">
+                <div style="font-size:3rem; margin-bottom: 1rem;">🔗</div>
+                <h3>No dependency graph yet</h3>
+                <p>Run extraction from the <a href="/" style="color:var(--accent)">onboarding flow</a> first.</p>
+            </div>
+        </div>
+        <div class="side-panel" id="side-panel">
+            <button class="close-btn" onclick="closePanel()">×</button>
+            <div id="panel-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const graphData = {{ graph_json| safe }};
+        const scoresData = {{ scores_json| safe }};
+
+        function riskColor(score) {
+            if (score >= 0.55) return '#ef4444';
+            if (score >= 0.35) return '#f59e0b';
+            return '#10b981';
+        }
+
+        const pillarLabels = { hhi: 'Concentration', geopolitics: 'Geopolitics', shelf_life: 'Shelf Life', substitutability: 'Substitutability', lead_time: 'Lead Time', regulatory: 'Regulatory', impact: 'Strategic Impact' };
+
+        function openPanel(node) {
+            const panel = document.getElementById('side-panel');
+            const info = scoresData[node.id] || {};
+            const score = info.score || 0;
+            const pillars = info.pillar_scores || {};
+            const drivers = info.drivers || [];
+            const color = riskColor(score);
+
+            let pillarsHtml = '';
+            Object.entries(pillarLabels).forEach(([key, label]) => {
+                const val = pillars[key] || 0;
+                pillarsHtml += `<div class="pillar-row"><div class="pillar-label">${label}</div><div class="pillar-bar-bg"><div class="pillar-bar" style="width:${val * 100}%;background:${riskColor(val)}"></div></div><div class="pillar-val">${val.toFixed(2)}</div></div>`;
+            });
+            let driversHtml = drivers.map(d => `<div class="driver-item">📎 ${d}</div>`).join('') || '<div class="driver-item">No risk drivers detected.</div>';
+
+            document.getElementById('panel-content').innerHTML = `
+        <div class="panel-title">${node.id}</div>
+        <div class="panel-sub">${node.group || ''}</div>
+        <div class="score-big" style="color:${color}">${score.toFixed(2)}</div>
+        <div style="color:var(--muted);font-size:0.8rem;margin-bottom:1.5rem">Composite Risk Score</div>
+        <div class="section-label">7-Pillar Breakdown</div>
+        ${pillarsHtml}
+        <div class="section-label">Risk Drivers</div>
+        ${driversHtml}
+    `;
+            panel.classList.add('open');
+        }
+
+        function closePanel() { document.getElementById('side-panel').classList.remove('open'); }
+
+        if (!graphData || graphData.length === 0) {
+            document.getElementById('empty-state').style.display = 'block';
+        } else {
+            const svg = d3.select('#graph-svg');
+            const container = document.getElementById('graph-area');
+            const W = container.clientWidth, H = container.clientHeight;
+
+            // Build nodes + links from dependency list
+            const nodeMap = {};
+            const links = [];
+            graphData.forEach(dep => {
+                if (!nodeMap[dep.parent]) nodeMap[dep.parent] = { id: dep.parent, group: 'parent' };
+                dep.children.forEach(child => {
+                    if (!nodeMap[child]) nodeMap[child] = { id: child, group: 'child' };
+                    links.push({ source: dep.parent, target: child });
+                });
+            });
+            const nodes = Object.values(nodeMap);
+
+            const zoom = d3.zoom().scaleExtent([0.2, 3]).on('zoom', e => g.attr('transform', e.transform));
+            svg.call(zoom);
+            const g = svg.append('g');
+
+            svg.append('defs').append('marker').attr('id', 'arrow').attr('viewBox', '0 -5 10 10').attr('refX', 18).attr('refY', 0).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto').append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', 'rgba(100,116,139,0.5)');
+
+            const sim = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(130))
+                .force('charge', d3.forceManyBody().strength(-400))
+                .force('center', d3.forceCenter(W / 2, H / 2))
+                .force('collision', d3.forceCollide(40));
+
+            const link = g.append('g').selectAll('line').data(links).join('line')
+                .attr('stroke', 'rgba(100,116,139,0.35)').attr('stroke-width', 1.5).attr('marker-end', 'url(#arrow)');
+
+            const node = g.append('g').selectAll('g').data(nodes).join('g')
+                .attr('cursor', 'pointer')
+                .call(d3.drag().on('start', (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }).on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; }).on('end', (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }))
+                .on('click', (e, d) => openPanel(d))
+                .on('mouseover', (e, d) => {
+                    const tip = document.getElementById('tooltip');
+                    const score = (scoresData[d.id]?.score || 0).toFixed(2);
+                    tip.style.display = 'block';
+                    tip.style.left = (e.clientX + 12) + 'px';
+                    tip.style.top = (e.clientY - 28) + 'px';
+                    tip.innerHTML = `<strong>${d.id}</strong> — Risk: ${score}`;
+                })
+                .on('mouseout', () => { document.getElementById('tooltip').style.display = 'none'; });
+
+            node.append('circle').attr('r', d => {
+                const score = scoresData[d.id]?.score || 0.3;
+                return 12 + score * 16;
+            }).attr('fill', d => {
+                const s = scoresData[d.id]?.score || 0.3;
+                return riskColor(s) + '33';
+            }).attr('stroke', d => riskColor(scoresData[d.id]?.score || 0.3)).attr('stroke-width', 2);
+
+            node.append('text').text(d => d.id.length > 18 ? d.id.slice(0, 16) + '…' : d.id)
+                .attr('text-anchor', 'middle').attr('dy', '0.35em').attr('fill', '#e2e8f0').attr('font-size', '11px').attr('pointer-events', 'none');
+
+            sim.on('tick', () => {
+                link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            window._zoom = zoom; window._svg = svg;
+            function zoomIn() { svg.transition().call(zoom.scaleBy, 1.3); }
+            function zoomOut() { svg.transition().call(zoom.scaleBy, 0.75); }
+            function resetZoom() { svg.transition().call(zoom.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(1)); }
+        }
+    </script>
+</body>
+
+</html>

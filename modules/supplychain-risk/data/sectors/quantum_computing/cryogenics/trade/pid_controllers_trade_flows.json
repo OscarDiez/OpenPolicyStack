@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "PID Controllers",
+  "global_trade_value": 1.73,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 0.6054999999999999
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 0.4325
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 0.2595
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 0.17300000000000001
+    },
+    {
+      "country": "South Korea",
+      "share": 0.05,
+      "value": 0.08650000000000001
+    }
+  ],
+  "importers": [
+    {
+      "country": "China",
+      "share": 0.3,
+      "value": 0.519
+    },
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 0.4325
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 0.2595
+    },
+    {
+      "country": "Germany",
+      "share": 0.1,
+      "value": 0.17300000000000001
+    },
+    {
+      "country": "India",
+      "share": 0.05,
+      "value": 0.08650000000000001
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

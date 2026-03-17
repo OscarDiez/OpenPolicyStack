@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Heat Exchangers",
+  "global_trade_value": 12800000000.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 4480000000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.23,
+      "value": 2944000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.17,
+      "value": 2176000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.12,
+      "value": 1536000000.0
+    },
+    {
+      "country": "Italy",
+      "share": 0.08,
+      "value": 1024000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.25,
+      "value": 3200000000.0
+    },
+    {
+      "country": "China",
+      "share": 0.22,
+      "value": 2816000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.18,
+      "value": 2304000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.15,
+      "value": 1920000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.1,
+      "value": 1280000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

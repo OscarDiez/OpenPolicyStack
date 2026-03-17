@@ -1,0 +1,62 @@
+{
+  "year": 2024,
+  "commodity": "Magnetic Shielding Enclosure",
+  "global_trade_value": 5200000000.0,
+  "exporters": [
+    {
+      "country": "China",
+      "share": 0.35,
+      "value": 1820000000.0
+    },
+    {
+      "country": "United States",
+      "share": 0.23,
+      "value": 1196000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.17,
+      "value": 884000000.0000001
+    },
+    {
+      "country": "Japan",
+      "share": 0.12,
+      "value": 624000000.0
+    },
+    {
+      "country": "South Korea",
+      "share": 0.08,
+      "value": 416000000.0
+    }
+  ],
+  "importers": [
+    {
+      "country": "United States",
+      "share": 0.28,
+      "value": 1456000000.0000002
+    },
+    {
+      "country": "China",
+      "share": 0.25,
+      "value": 1300000000.0
+    },
+    {
+      "country": "Germany",
+      "share": 0.15,
+      "value": 780000000.0
+    },
+    {
+      "country": "Japan",
+      "share": 0.12,
+      "value": 624000000.0
+    },
+    {
+      "country": "India",
+      "share": 0.08,
+      "value": 416000000.0
+    }
+  ],
+  "sources": [
+    "AI-Estimated based on search context"
+  ]
+}

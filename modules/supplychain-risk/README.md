@@ -48,6 +48,34 @@ The MVP deliberately prioritizes **reproducibility, transparency, and a clear in
 
 ---
 
+## Geopolitical Configuration
+
+The risk engine is designed to be **Perspective-Driven**. The risk score depends on who is asking.
+
+### 1. Changing your Region
+The `region` parameter (e.g., `US`, `EU`, `Russia`) in the API directs the engine to look at the market through that specific lens.
+
+### 2. Customizing Adversaries
+You can explicitly define which countries are considered "strategic rivals" for your analysis.
+- **Location:** `src/analytics.py`
+- **Variable:** `adversaries = ["RUSSIA", "CHINA", "IRAN", ...]`
+- **Effect:** If your selected region is US/EU and the part is sourced from an adversary, the **Geopolitical Dependency** driver will trigger, increasing the risk score.
+
+This allows the tool to be used by any nation or group by simply updating the local security policy in the code.
+
+---
+
+This module includes an **automated extraction tool** that uses LLMs to discover supply-chain intelligence from the web.
+
+See [EXTRACTOR_USAGE.md](./EXTRACTOR_USAGE.md) for complete documentation.
+
+**Quick example:**
+```bash
+python src/extractor.py --component "Helium-3"
+```
+
+---
+
 ## How to Run (MVP)
 
 The MVP exposes a **minimal API**.

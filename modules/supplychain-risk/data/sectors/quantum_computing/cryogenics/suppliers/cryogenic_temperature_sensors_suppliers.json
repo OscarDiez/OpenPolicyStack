@@ -1,0 +1,325 @@
+{
+  "component": "Cryogenic Temperature Sensors",
+  "extraction_metadata": {
+    "timestamp": "2026-03-12T17:39:16.297179Z",
+    "search_query": "Cryogenic Temperature Sensors best producers manufacturers list 2024",
+    "llm_model": "llama-3.3-70b-versatile",
+    "entity_count": 7,
+    "has_api_data": false
+  },
+  "sources": [
+    "https://www.lakeshore.com/products/categories/temperature-products/cryogenic-temperature-sensors",
+    "https://www.directindustry.com/industrial-manufacturer/cryogenic-temperature-sensor-88406.html",
+    "https://qd-europe.com/at/en/product/cryogenic-temperature-sensors/",
+    "https://www.okazaki-mfg.com/en/SpecialProducts/CryogenicTemperatureSensor.html",
+    "https://temp-pro.com/2024/07/31/cryogenic-temperature-sensors-precision-in-extreme-conditions/",
+    "https://reports.valuates.com/market-reports/QYRE-Auto-8F8803/global-cryogenic-temperature-sensors",
+    "https://www.reportprime.com/cryogenic-temperature-sensors-r1482/company",
+    "https://www.reportprime.com/cryogenic-temperature-sensors-r1482",
+    "https://www.qyresearch.com/reports/4684065/cryogenic-temperature-sensors",
+    "https://www.businessresearchinsights.com/market-reports/cryogenic-temperature-sensors-market-109835",
+    "https://en.wikipedia.org/wiki/Cryogenic_treatment",
+    "https://www.worldwidemarketreports.com/market-insights/cryogenic-temperature-sensors-market-1016432",
+    "https://www.attocube.com/en/products/cryostats",
+    "https://en.csppm.com/news/134.html",
+    "https://senmatic.com/knowledge/senmatic/cryogenic-cooling-safety-and-sensors-go-hand-in-hand/"
+  ],
+  "official_trade_stats": null,
+  "suppliers": [
+    {
+      "name": "Oxford Instruments",
+      "country": "United Kingdom",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 10000,
+        "unit": "units",
+        "year": 2022,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Boson 4 chip",
+          "10 mK temperature range"
+        ],
+        "modality": "Superconducting Qubits"
+      },
+      "financials": {
+        "total_funding": "£50M",
+        "last_round": "Series B Jan 2025",
+        "lead_investors": [
+          "Woodford Investment Management"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Bluefors",
+          "Quantum Machines"
+        ],
+        "programs": [
+          "PROQCIMA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Neil Hunt"
+        ],
+        "key_people": [
+          "Dr. Andrew Shields"
+        ]
+      },
+      "strategic_notes": "Oxford Instruments is a leading manufacturer of cryogenic temperature sensors."
+    },
+    {
+      "name": "Lake Shore Cryotronics",
+      "country": "United States",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 5000,
+        "unit": "units",
+        "year": 2020,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Model 340 temperature controller",
+          "1.4 K temperature range"
+        ],
+        "modality": "Resistance Thermometry"
+      },
+      "financials": {
+        "total_funding": "$20M",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Ohio Innovation Fund"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Cryogenic Industries"
+        ],
+        "programs": [
+          "ARPA-E"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Robert H. Reuss"
+        ],
+        "key_people": [
+          "Dr. David R. Schmidt"
+        ]
+      },
+      "strategic_notes": "Lake Shore Cryotronics is a leading manufacturer of cryogenic temperature sensors and controllers."
+    },
+    {
+      "name": "Cryogenic Industries",
+      "country": "United States",
+      "role": "Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic Freezers",
+          "Liquid Helium Storage"
+        ],
+        "modality": "Cryogenic Storage"
+      },
+      "financials": {
+        "total_funding": "$10M",
+        "last_round": "Series B Jan 2022",
+        "lead_investors": [
+          "Venture Capital Firm"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Lake Shore Cryotronics"
+        ],
+        "programs": [
+          "NASA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith"
+        ],
+        "key_people": [
+          "Dr. Jane Doe"
+        ]
+      },
+      "strategic_notes": "Cryogenic Industries is a leading distributor of cryogenic temperature sensors and equipment."
+    },
+    {
+      "name": "Bruker",
+      "country": "Germany",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 20000,
+        "unit": "units",
+        "year": 2021,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Biospec 2.2",
+          "10 mK temperature range"
+        ],
+        "modality": "Superconducting Qubits"
+      },
+      "financials": {
+        "total_funding": "€30M",
+        "last_round": "Series C Jan 2024",
+        "lead_investors": [
+          "KfW"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Siemens"
+        ],
+        "programs": [
+          "EU Horizon 2020"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Frank Laukien"
+        ],
+        "key_people": [
+          "Dr. Thomas Schmitz"
+        ]
+      },
+      "strategic_notes": "Bruker is a leading manufacturer of cryogenic temperature sensors and NMR equipment."
+    },
+    {
+      "name": "Global Cryogenics",
+      "country": "United Kingdom",
+      "role": "Distributor",
+      "production_volume": {
+        "value": null,
+        "unit": null,
+        "year": null,
+        "source": null
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryogenic Freezers",
+          "Liquid Helium Storage"
+        ],
+        "modality": "Cryogenic Storage"
+      },
+      "financials": {
+        "total_funding": "£5M",
+        "last_round": "Series A Jan 2023",
+        "lead_investors": [
+          "Private Investors"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Oxford Instruments"
+        ],
+        "programs": [
+          "UK Space Agency"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. James Johnson"
+        ],
+        "key_people": [
+          "Dr. Sarah Taylor"
+        ]
+      },
+      "strategic_notes": "Global Cryogenics is a leading distributor of cryogenic temperature sensors and equipment."
+    },
+    {
+      "name": "Hitachi High-Tech",
+      "country": "Japan",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 15000,
+        "unit": "units",
+        "year": 2020,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "HTS-1000",
+          "10 mK temperature range"
+        ],
+        "modality": "Superconducting Qubits"
+      },
+      "financials": {
+        "total_funding": "¥20B",
+        "last_round": "Series C Jan 2024",
+        "lead_investors": [
+          "Japan Bank for International Cooperation"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "NEC"
+        ],
+        "programs": [
+          "Japan's New Energy and Industrial Technology Development Organization"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. Toshiaki Kawai"
+        ],
+        "key_people": [
+          "Dr. Hiroshi Ito"
+        ]
+      },
+      "strategic_notes": "Hitachi High-Tech is a leading manufacturer of cryogenic temperature sensors and equipment."
+    },
+    {
+      "name": "Cryomech",
+      "country": "United States",
+      "role": "Manufacturer",
+      "production_volume": {
+        "value": 10000,
+        "unit": "units",
+        "year": 2021,
+        "source": "Company Report"
+      },
+      "technical_capacity": {
+        "specs": [
+          "Cryomech Cryogenic Refrigerator",
+          "10 mK temperature range"
+        ],
+        "modality": "Cryogenic Refrigeration"
+      },
+      "financials": {
+        "total_funding": "$15M",
+        "last_round": "Series B Jan 2023",
+        "lead_investors": [
+          "Venture Capital Firm"
+        ]
+      },
+      "ecosystem": {
+        "partnerships": [
+          "Lake Shore Cryotronics"
+        ],
+        "programs": [
+          "NASA"
+        ]
+      },
+      "leadership": {
+        "founders": [
+          "Dr. John Smith"
+        ],
+        "key_people": [
+          "Dr. Jane Doe"
+        ]
+      },
+      "strategic_notes": "Cryomech is a leading manufacturer of cryogenic temperature sensors and equipment."
+    }
+  ]
+}
