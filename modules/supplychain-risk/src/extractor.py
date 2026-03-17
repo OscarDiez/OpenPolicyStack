@@ -926,10 +926,11 @@ Your task is to generate a structured component taxonomy for this exact segment.
 
 RULES:
 1. Return ONLY a valid JSON object, no explanation text.
-2. Group components into 3-6 logical subsystems.
-3. Each subsystem should have 3-8 leaf components.
-4. Components should be SPECIFIC and REAL items that can be sourced/traded (not vague categories).
-5. Use the exact JSON schema below.
+2. Group components into 4-8 logical high-level assemblies.
+3. For each high-level assembly, you MUST break it down into multiple specific sub-groups (Tier-2 and Tier-3).
+4. Each sub-group should have 5-12 highly intricate leaf components, going all the way down to raw materials, highly specialized chemicals, specific hardware naming, and intricate micro-parts.
+5. Components should be SPECIFIC and REAL items that can be sourced/traded (e.g. "Oxygen-Free High-Conductivity Copper" instead of "Copper"). Expand on intricate dependencies!
+6. Use the exact JSON schema below.
 
 JSON SCHEMA:
 {{
@@ -1010,11 +1011,12 @@ RETURN ONLY THE JSON. NO EXPLANATION.
                 for comp in sub.get("components", []):
                     components.append(comp.get("name"))
                     
-        prompt = f"""You are a supply chain analyst mapping the bill of materials for {segment} in {sector}.
+        prompt = f"""You are a supply chain analyst mapping the highly complex, multi-tier bill of materials for {segment} in {sector}.
 I have the following components: {', '.join(components)}.
 
-Identify the parent-child relationships between these components. Which components depend on which others? 
-Create a dependency graph. If a component is a top-level component, its parent is "{segment}".
+Identify the deep n-tier parent-child relationships between these components. Which components depend on which others? 
+Create an intricate, recursive dependency graph. If a component is a top-level end-product or primary assembly, its parent is "{segment}".
+If a component is a sub-component of another, list it as a child of that specific component. Push to build multi-level chains (e.g., A depends on B, B depends on C, C depends on D).
 
 Return ONLY valid JSON matching this exact schema:
 {{
