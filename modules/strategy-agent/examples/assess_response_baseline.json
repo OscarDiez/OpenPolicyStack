@@ -1,0 +1,287 @@
+{
+  "run_id": "quantum-act-001",
+  "scenario_id": "baseline_v1",
+  "option_scores": [
+    {
+      "option_id": "opt-2",
+      "option_name": "Light regulation — standardisation and certification",
+      "criteria_scores": [
+        {
+          "criterion": "economic",
+          "score": 1.0,
+          "rationale": "Standardisation reduces fragmentation costs; builds on ~1200M EUR quantum investment base.",
+          "evidence_ids": ["gerd_pct_gdp", "cordis_quantum_funding_meur"],
+          "assumption": null
+        },
+        {
+          "criterion": "social",
+          "score": 1.0,
+          "rationale": "Certification requirements create skilled workforce demand; high-tech employment at ~4.8% provides labour base.",
+          "evidence_ids": ["hightech_employment_pct"],
+          "assumption": null
+        },
+        {
+          "criterion": "environmental",
+          "score": 1.0,
+          "rationale": "Energy-efficiency standards for quantum hardware reduce footprint.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "competitiveness",
+          "score": 2.0,
+          "rationale": "Mandatory standards position EU as global norm-setter in quantum, leveraging ~320 active projects.",
+          "evidence_ids": ["cordis_quantum_projects", "cordis_quantum_funding_meur"],
+          "assumption": null
+        },
+        {
+          "criterion": "feasibility",
+          "score": 1.0,
+          "rationale": "Manageable compliance burden; existing ETSI/CEN structures can absorb.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "coherence",
+          "score": 2.0,
+          "rationale": "Fully coherent with NIS2, Cyber Resilience Act, and Digital Decade targets.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        }
+      ],
+      "weighted_total": 1.425,
+      "rank": 1,
+      "status": "preferred"
+    },
+    {
+      "option_id": "opt-3",
+      "option_name": "Comprehensive regulation — EU Quantum Agency",
+      "criteria_scores": [
+        {
+          "criterion": "economic",
+          "score": 2.0,
+          "rationale": "Dedicated agency and procurement rules expected to significantly increase GERD above 2.22% GDP in quantum-specific sectors.",
+          "evidence_ids": ["gerd_pct_gdp", "cordis_quantum_funding_meur"],
+          "assumption": null
+        },
+        {
+          "criterion": "social",
+          "score": 2.0,
+          "rationale": "Mandatory training and certification boosts skilled employment; R&D personnel ratio (1.43%) projected to rise.",
+          "evidence_ids": ["rd_personnel_pct", "hightech_employment_pct"],
+          "assumption": null
+        },
+        {
+          "criterion": "environmental",
+          "score": 1.0,
+          "rationale": "Comprehensive framework includes sustainability criteria for quantum hardware.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "competitiveness",
+          "score": 2.0,
+          "rationale": "Strongest intervention; ~320 quantum projects brought under single governance with mandatory certification and EU procurement preference.",
+          "evidence_ids": ["cordis_quantum_projects", "cordis_quantum_funding_meur"],
+          "assumption": null
+        },
+        {
+          "criterion": "feasibility",
+          "score": -1.0,
+          "rationale": "High implementation complexity; agency setup requires 2-4 years and significant institutional coordination.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "coherence",
+          "score": 1.0,
+          "rationale": "Coherent with EU strategic autonomy agenda but creates new regulatory layer.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        }
+      ],
+      "weighted_total": 1.275,
+      "rank": 2,
+      "status": "alternative"
+    },
+    {
+      "option_id": "opt-1",
+      "option_name": "Coordination only — voluntary frameworks",
+      "criteria_scores": [
+        {
+          "criterion": "economic",
+          "score": 1.0,
+          "rationale": "Soft coordination expected to modestly increase GERD above 2.22% GDP via improved funding alignment.",
+          "evidence_ids": ["gerd_pct_gdp"],
+          "assumption": null
+        },
+        {
+          "criterion": "social",
+          "score": 1.0,
+          "rationale": "Voluntary talent pipelines could raise R&D personnel (currently 1.43% active pop) through mobility schemes.",
+          "evidence_ids": ["rd_personnel_pct"],
+          "assumption": null
+        },
+        {
+          "criterion": "environmental",
+          "score": 0.0,
+          "rationale": "Coordination option has negligible direct environmental impact.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "competitiveness",
+          "score": 1.0,
+          "rationale": "Aligning ~320 existing CORDIS quantum projects under a voluntary framework improves visibility but lacks enforcement.",
+          "evidence_ids": ["cordis_quantum_projects"],
+          "assumption": null
+        },
+        {
+          "criterion": "feasibility",
+          "score": 2.0,
+          "rationale": "Voluntary framework is low-risk and fast to implement.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "coherence",
+          "score": 1.0,
+          "rationale": "Consistent with existing EU open-coordination method.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        }
+      ],
+      "weighted_total": 1.0,
+      "rank": 3,
+      "status": "alternative"
+    },
+    {
+      "option_id": "opt-0",
+      "option_name": "Baseline — no new intervention",
+      "criteria_scores": [
+        {
+          "criterion": "economic",
+          "score": 0.0,
+          "rationale": "No new spending; GERD at 2.22% GDP continues on current trajectory.",
+          "evidence_ids": ["gerd_pct_gdp"],
+          "assumption": null
+        },
+        {
+          "criterion": "social",
+          "score": 0.0,
+          "rationale": "R&D personnel at 1.43% active pop; no structural change expected.",
+          "evidence_ids": ["rd_personnel_pct"],
+          "assumption": null
+        },
+        {
+          "criterion": "environmental",
+          "score": 0.0,
+          "rationale": "No regulatory change; environmental impact remains as-is.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "competitiveness",
+          "score": -1.0,
+          "rationale": "With ~320 quantum projects and ~1200M EUR funded, absence of dedicated framework risks falling behind US/China.",
+          "evidence_ids": ["cordis_quantum_projects", "cordis_quantum_funding_meur"],
+          "assumption": null
+        },
+        {
+          "criterion": "feasibility",
+          "score": 2.0,
+          "rationale": "Baseline requires no implementation effort.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        },
+        {
+          "criterion": "coherence",
+          "score": 0.0,
+          "rationale": "Consistent with existing EU policy but misses Quantum Flagship ambition.",
+          "evidence_ids": [],
+          "assumption": "No direct indicator available; score based on domain knowledge."
+        }
+      ],
+      "weighted_total": 0.05,
+      "rank": 4,
+      "status": "baseline"
+    }
+  ],
+  "drivers": [
+    {
+      "criterion": "competitiveness",
+      "direction": "positive",
+      "contribution": 0.5,
+      "source_ref": "cordis_quantum_projects, cordis_quantum_funding_meur"
+    },
+    {
+      "criterion": "coherence",
+      "direction": "positive",
+      "contribution": 0.2,
+      "source_ref": null
+    },
+    {
+      "criterion": "economic",
+      "direction": "positive",
+      "contribution": 0.25,
+      "source_ref": "gerd_pct_gdp, cordis_quantum_funding_meur"
+    }
+  ],
+  "assumptions": [
+    "[Light regulation — standardisation and certification / environmental] No direct indicator available; score based on domain knowledge.",
+    "[Light regulation — standardisation and certification / feasibility] No direct indicator available; score based on domain knowledge.",
+    "[Light regulation — standardisation and certification / coherence] No direct indicator available; score based on domain knowledge."
+  ],
+  "evidence": [
+    {
+      "indicator_id": "cordis_quantum_funding_meur",
+      "source_type": "cordis",
+      "source_ref": "cordis:search?q=quantum",
+      "field_path": "cordis_quantum_funding_meur.latest",
+      "value": 1200.0,
+      "unit": "M EUR",
+      "quality_flag": "proxy",
+      "note": "Sum of ecMaxContribution for top-100 CORDIS results. Proxy for total EU quantum R&D investment signal."
+    },
+    {
+      "indicator_id": "cordis_quantum_projects",
+      "source_type": "cordis",
+      "source_ref": "cordis:search?q=quantum",
+      "field_path": "cordis_quantum_projects.latest",
+      "value": 320.0,
+      "unit": "projects",
+      "quality_flag": "verified",
+      "note": "Total CORDIS project hits for keyword 'quantum'."
+    },
+    {
+      "indicator_id": "gerd_pct_gdp",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:rd_e_gerdtot",
+      "field_path": "gerd_pct_gdp.latest",
+      "value": 2.22,
+      "unit": "% of GDP",
+      "quality_flag": "verified",
+      "note": "Total R&D expenditure, EU27_2020, latest available year."
+    },
+    {
+      "indicator_id": "hightech_employment_pct",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:htec_emp_nat2",
+      "field_path": "hightech_employment_pct.latest",
+      "value": 4.8,
+      "unit": "% of total employment",
+      "quality_flag": "verified",
+      "note": "High-tech sectors, EU27_2020, latest available."
+    },
+    {
+      "indicator_id": "rd_personnel_pct",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:rd_p_persocc",
+      "field_path": "rd_personnel_pct.latest",
+      "value": 1.43,
+      "unit": "% active population",
+      "quality_flag": "verified",
+      "note": "All sectors, both sexes, EU27_2020, latest available."
+    }
+  ]
+}

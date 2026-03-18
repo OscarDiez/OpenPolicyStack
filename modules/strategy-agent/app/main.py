@@ -1,175 +1,204 @@
-﻿from fastapi import FastAPI
-from pydantic import BaseModel, Field
-from typing import Any, Dict, List, Optional
+﻿"""
+main.py — Strategy & Feedback Agent (SFA) — IA edition.
 
-app = FastAPI(title="Strategy & Feedback Agent", version="0.1.0")
+Endpoints:
+  GET  /health          liveness check
+  POST /assess          score policy options against IA criteria (MCDA)
+  POST /sensitivity     weight sensitivity analysis on option rankings
+  POST /brief           generate evidence-linked markdown brief
+  POST /indicators      fetch live Eurostat + CORDIS indicators (utility)
+"""
 
-class Driver(BaseModel):
-    name: str
-    direction: str
-    value: Optional[float] = None
-    source: Optional[str] = None
+from fastapi import FastAPI, HTTPException
+from app.schemas import (
+    AssessRequest, AssessResponse,
+    SensitivityRequest, SensitivityResponse,
+    BriefRequest, BriefResponse,
+    IndicatorValue,
+)
+from app.scoring import score_options
+from app.sensitivity import run_sensitivity
+from app.explain import generate_drivers
+from app.evidence import build_evidence, collect_assumptions
+from app.indicator_catalogue import fetch_all_indicators
 
-class EvidenceItem(BaseModel):
-    type: str
-    ref: Optional[str] = None
-    path: Optional[str] = None
-    note: Optional[str] = None
+app = FastAPI(
+    title="Strategy & Feedback Agent — IA Edition",
+    version="0.2.0",
+    description=(
+        "AI microservice for EU Impact Assessment option comparison. "
+        "Implements MCDA scoring, sensitivity analysis, and evidence-linked "
+        "brief generation aligned with the EU Better Regulation framework."
+    ),
+)
 
-class Recommendation(BaseModel):
-    id: str
-    title: str
-    priority: str
-    rationale: str
-    expected_impact: Dict[str, Any] = Field(default_factory=dict)
 
-class Counterfactual(BaseModel):
-    id: str
-    changes: Dict[str, Any]
-    predicted_kpi_delta: Dict[str, Any] = Field(default_factory=dict)
-    predicted_risk_delta: Dict[str, Any] = Field(default_factory=dict)
-    feasibility_checks: Dict[str, Any] = Field(default_factory=dict)
-    explanation: str
-
-class BaseRequest(BaseModel):
-    run_id: str
-    scenario_id: str
-    objective: Optional[str] = None
-    upstream_outputs: Dict[str, Any] = Field(default_factory=dict)
-    constraints: Dict[str, Any] = Field(default_factory=dict)
-
-class RecommendResponse(BaseModel):
-    run_id: str
-    scenario_id: str
-    recommendations: List[Recommendation]
-    drivers: List[Driver]
-    assumptions: List[str]
-    evidence: List[EvidenceItem]
-
-class CounterfactualRequest(BaseRequest):
-    current_state: Dict[str, Any] = Field(default_factory=dict)
-    feasible_levers: Dict[str, Any] = Field(default_factory=dict)
-
-class CounterfactualResponse(BaseModel):
-    run_id: str
-    scenario_id: str
-    counterfactuals: List[Counterfactual]
-    drivers: List[Driver]
-    assumptions: List[str]
-    evidence: List[EvidenceItem]
-
-class BriefRequest(BaseModel):
-    run_id: str
-    scenario_id: str
-    objective: Optional[str] = None
-    selected_recommendation_ids: List[str] = Field(default_factory=list)
-    upstream_outputs: Dict[str, Any] = Field(default_factory=dict)
-    constraints: Dict[str, Any] = Field(default_factory=dict)
-
-class BriefResponse(BaseModel):
-    run_id: str
-    scenario_id: str
-    brief_markdown: str
-    recommendations: List[Recommendation]
-    drivers: List[Driver]
-    assumptions: List[str]
-    evidence: List[EvidenceItem]
+# ─── Health ───────────────────────────────────────────────────────────────────
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok", "version": "0.2.0"}
 
-@app.post("/recommend", response_model=RecommendResponse)
-def recommend(req: BaseRequest):
-    seen = list(req.upstream_outputs.keys())
-    recs = [
-        Recommendation(
-            id="rec-1",
-            title="Prioritize resilient actions aligned with objective",
-            priority="high",
-            rationale="MVP stub. Replace with logic using simulator + risk outputs.",
-            expected_impact={"note": "stub"},
+
+# ─── Indicators (utility endpoint) ───────────────────────────────────────────
+
+@app.get("/indicators", response_model=list[IndicatorValue])
+def get_indicators(geo: str = "EU27_2020"):
+    """
+    Fetch all live Quantum Act pilot indicators from Eurostat and CORDIS.
+    Useful for inspecting the data layer independently.
+    """
+    return fetch_all_indicators(geo=geo)
+
+
+# ─── Assess ───────────────────────────────────────────────────────────────────
+
+@app.post("/assess", response_model=AssessResponse)
+def assess(req: AssessRequest):
+    """
+    Score all policy options in the IA blueprint against IA criteria.
+    Returns ranked option scores, top drivers, assumptions, and evidence.
+
+    If req.indicators is empty, live indicators are fetched automatically.
+    """
+    indicators = req.indicators
+    if not indicators:
+        indicators = fetch_all_indicators()
+
+    if not req.blueprint.policy_options:
+        raise HTTPException(
+            status_code=422,
+            detail="blueprint.policy_options must contain at least one option.",
         )
-    ]
-    drivers = [Driver(name="upstream_keys_seen", direction="unknown", value=float(len(seen)), source="upstream_outputs")]
-    assumptions = [
-        f"Scenario '{req.scenario_id}' treated as fixed exogenous conditions for this run.",
-        "This response is an MVP stub.",
-    ]
-    evidence = [EvidenceItem(type="upstream_output", ref="upstream_outputs", path="keys", note=str(seen))]
-    return RecommendResponse(
+
+    option_scores = score_options(
+        blueprint=req.blueprint,
+        indicators=indicators,
+    )
+
+    preferred = next((os for os in option_scores if os.rank == 1), option_scores[0])
+    drivers   = generate_drivers(preferred)
+    evidence  = build_evidence(option_scores, indicators)
+    assumptions = collect_assumptions(option_scores)
+
+    return AssessResponse(
         run_id=req.run_id,
         scenario_id=req.scenario_id,
-        recommendations=recs,
+        option_scores=option_scores,
         drivers=drivers,
         assumptions=assumptions,
         evidence=evidence,
     )
 
-@app.post("/counterfactual", response_model=CounterfactualResponse)
-def counterfactual(req: CounterfactualRequest):
-    levers = list(req.feasible_levers.keys())
-    changes = {}
-    if levers:
-        first = levers[0]
-        spec = req.feasible_levers.get(first, {})
-        if isinstance(spec, dict) and "max" in spec:
-            changes[first] = spec["max"]
-        else:
-            changes[first] = "adjust"
 
-    cfs = [
-        Counterfactual(
-            id="cf-1",
-            changes=changes,
-            predicted_kpi_delta={"note": "stub"},
-            predicted_risk_delta={"note": "stub"},
-            feasibility_checks={"within_bounds": True},
-            explanation="MVP stub counterfactual based on feasible_levers.",
+# ─── Sensitivity ──────────────────────────────────────────────────────────────
+
+@app.post("/sensitivity", response_model=SensitivityResponse)
+def sensitivity(req: SensitivityRequest):
+    """
+    Run weight sensitivity analysis on already-scored options.
+    Tests ranking stability across multiple weight scenarios.
+    """
+    if not req.option_scores:
+        raise HTTPException(
+            status_code=422,
+            detail="option_scores must not be empty.",
         )
-    ]
-    drivers = [Driver(name="feasible_levers_count", direction="unknown", value=float(len(levers)), source="feasible_levers")]
-    assumptions = [
-        "Counterfactuals modify only actionable levers defined in feasible_levers.",
-        "Scenario toggles (exogenous shocks) are handled upstream.",
-    ]
-    evidence = [EvidenceItem(type="note", note=f"feasible_levers={levers}")]
-    return CounterfactualResponse(
-        run_id=req.run_id,
-        scenario_id=req.scenario_id,
-        counterfactuals=cfs,
-        drivers=drivers,
-        assumptions=assumptions,
-        evidence=evidence,
+
+    response = run_sensitivity(
+        option_scores=req.option_scores,
+        weight_grid=req.weight_grid,
     )
+    response.run_id      = req.run_id
+    response.scenario_id = req.scenario_id
+    return response
+
+
+# ─── Brief ────────────────────────────────────────────────────────────────────
 
 @app.post("/brief", response_model=BriefResponse)
 def brief(req: BriefRequest):
-    seen = list(req.upstream_outputs.keys())
-    recs = [
-        Recommendation(
-            id="rec-1",
-            title="Prioritize resilient actions aligned with objective",
-            priority="high",
-            rationale="Stub recommendation used for brief generation.",
-            expected_impact={"note": "stub"},
+    """
+    Generate a short markdown brief from structured scoring outputs.
+    The brief is generated ONLY from structured fields — no new facts
+    are introduced (no hallucination risk).
+    """
+    if not req.option_scores:
+        raise HTTPException(
+            status_code=422,
+            detail="option_scores must not be empty.",
         )
-    ]
-    drivers = [Driver(name="upstream_keys_seen", direction="unknown", value=float(len(seen)), source="upstream_outputs")]
-    assumptions = [f"Scenario '{req.scenario_id}' treated as fixed exogenous conditions for this run."]
-    evidence = [EvidenceItem(type="upstream_output", ref="upstream_outputs", path="keys", note=str(seen))]
-    brief_md = (
-        "## Executive brief (MVP)\n\n"
-        f"**Objective:** {req.objective or 'N/A'}\n\n"
-        f"**Scenario:** {req.scenario_id}\n\n"
-        "Stub brief. Will be generated from structured outputs in later iterations.\n"
+
+    preferred = next(
+        (os for os in req.option_scores if os.rank == 1),
+        req.option_scores[0],
     )
+
+    # Evidence quality summary
+    proxy_count = sum(
+        1 for e in req.evidence
+        if e.quality_flag in ("proxy", "assumption")
+    )
+    total_evidence = len(req.evidence)
+    quality_note = (
+        f"{total_evidence - proxy_count}/{total_evidence} indicators verified from official sources."
+        if total_evidence > 0 else "No indicators attached."
+    )
+
+    # Top drivers summary
+    driver_lines = "\n".join(
+        f"- **{d.criterion}** ({d.direction}, contribution: {d.contribution:.3f})"
+        + (f" — {d.source_ref}" if d.source_ref else "")
+        for d in req.drivers
+    ) or "_No drivers computed._"
+
+    # Option ranking table
+    ranking_lines = "\n".join(
+        f"| {os.rank} | {os.option_name} | {os.weighted_total:+.3f} | {os.status} |"
+        for os in sorted(req.option_scores, key=lambda x: x.rank)
+    )
+
+    # Assumptions summary
+    assumption_lines = "\n".join(
+        f"- {a}" for a in req.assumptions
+    ) or "_No explicit assumptions recorded._"
+
+    brief_md = f"""## Impact Assessment Brief — {req.scenario_id}
+
+**Objective:** {req.objective or "EU Quantum Act option comparison"}
+**Run ID:** {req.run_id}
+
+---
+
+### Preferred Option
+**{preferred.option_name}** (weighted score: {preferred.weighted_total:+.3f})
+
+### Option Ranking
+
+| Rank | Option | Score | Status |
+|------|--------|-------|--------|
+{ranking_lines}
+
+### Key Drivers (preferred option)
+
+{driver_lines}
+
+### Evidence Quality
+{quality_note}
+
+### Assumptions
+{assumption_lines}
+
+---
+_Brief generated from structured scoring outputs only. All claims are traceable to the evidence payload._
+"""
+
     return BriefResponse(
         run_id=req.run_id,
         scenario_id=req.scenario_id,
         brief_markdown=brief_md,
-        recommendations=recs,
-        drivers=drivers,
-        assumptions=assumptions,
-        evidence=evidence,
+        option_scores=req.option_scores,
+        drivers=req.drivers,
+        assumptions=req.assumptions,
+        evidence=req.evidence,
     )

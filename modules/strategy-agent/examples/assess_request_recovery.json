@@ -1,0 +1,124 @@
+{
+  "run_id": "quantum-act-003",
+  "scenario_id": "recovery_v1",
+  "blueprint": {
+    "legislation_name": "EU Quantum Act",
+    "problem_statement": "The EU lacks a dedicated regulatory framework for quantum technologies, resulting in fragmented investment, unclear standardisation, and insufficient coordination to compete with US and Chinese quantum programmes.",
+    "baseline_description": "Recovery scenario: EU GERD recovering post-shock, Horizon Europe quantum calls oversubscribed, Member States increasing national quantum budgets. Window of opportunity to lock in governance before market matures.",
+    "objectives": [
+      {
+        "id": "go-1",
+        "level": "general",
+        "description": "Capitalise on recovery momentum to establish durable quantum governance",
+        "indicators": ["gerd_pct_gdp", "cordis_quantum_projects"]
+      },
+      {
+        "id": "so-1",
+        "level": "specific",
+        "description": "Lock in investment trajectory with binding governance before market fragmentation",
+        "indicators": ["gerd_pct_gdp", "cordis_quantum_funding_meur"]
+      },
+      {
+        "id": "so-2",
+        "level": "specific",
+        "description": "Scale quantum workforce rapidly during recovery window",
+        "indicators": ["rd_personnel_pct", "hightech_employment_pct"]
+      }
+    ],
+    "policy_options": [
+      {
+        "id": "opt-0",
+        "name": "Baseline — no new intervention",
+        "description": "Allow recovery to proceed organically without new regulation.",
+        "status": "baseline"
+      },
+      {
+        "id": "opt-1",
+        "name": "Coordination only — voluntary frameworks",
+        "description": "Use recovery momentum for voluntary coordination and roadmap alignment.",
+        "status": "alternative"
+      },
+      {
+        "id": "opt-2",
+        "name": "Light regulation — standardisation and certification",
+        "description": "Establish standards and certification to channel recovery investment into interoperable EU quantum infrastructure.",
+        "status": "alternative"
+      },
+      {
+        "id": "opt-3",
+        "name": "Comprehensive regulation — EU Quantum Agency",
+        "description": "Leverage recovery window to establish EU Quantum Agency with full governance powers.",
+        "status": "alternative"
+      }
+    ],
+    "monitoring_indicators": [
+      "gerd_pct_gdp",
+      "cordis_quantum_projects",
+      "cordis_quantum_funding_meur",
+      "rd_personnel_pct",
+      "hightech_employment_pct"
+    ]
+  },
+  "indicators": [
+    {
+      "indicator_id": "gerd_pct_gdp",
+      "name": "EU GERD as % of GDP",
+      "value": 2.45,
+      "unit": "% of GDP",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:rd_e_gerdtot",
+      "quality_flag": "proxy",
+      "year": 2025,
+      "note": "Recovery scenario: GERD recovering above 3% target trajectory (proxy estimate)"
+    },
+    {
+      "indicator_id": "rd_personnel_pct",
+      "name": "EU R&D personnel as % of active population",
+      "value": 1.62,
+      "unit": "% active population",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:rd_p_persocc",
+      "quality_flag": "proxy",
+      "year": 2025,
+      "note": "Recovery scenario: R&D headcount expanding with new Horizon Europe cohort (proxy estimate)"
+    },
+    {
+      "indicator_id": "hightech_employment_pct",
+      "name": "EU high-tech employment as % of total employment",
+      "value": 5.3,
+      "unit": "% of total employment",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:htec_emp_nat2",
+      "quality_flag": "proxy",
+      "year": 2025,
+      "note": "Recovery scenario: high-tech employment growing above trend (proxy estimate)"
+    },
+    {
+      "indicator_id": "cordis_quantum_projects",
+      "name": "EU-funded quantum research projects (CORDIS)",
+      "value": 410.0,
+      "unit": "projects",
+      "source_type": "cordis",
+      "source_ref": "cordis:search?q=quantum",
+      "quality_flag": "proxy",
+      "year": 2025,
+      "note": "Recovery scenario: oversubscribed Horizon Europe quantum calls (proxy estimate)"
+    },
+    {
+      "indicator_id": "cordis_quantum_funding_meur",
+      "name": "EU quantum project funding — sample total (M EUR)",
+      "value": 1650.0,
+      "unit": "M EUR",
+      "source_type": "cordis",
+      "source_ref": "cordis:search?q=quantum",
+      "quality_flag": "proxy",
+      "year": 2025,
+      "note": "Recovery scenario: increased EC quantum budget allocation (proxy estimate)"
+    }
+  ],
+  "constraints": {
+    "geo": "EU27_2020",
+    "fetch_live_data": false,
+    "note": "Indicators provided explicitly for recovery scenario — no live fetch"
+  }
+}
