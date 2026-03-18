@@ -9,7 +9,7 @@ from fastapi import FastAPI
 app = FastAPI(title="OpenPolicyStack Integration Pilot", version="0.1.0")
 
 MODULE_NAME = os.getenv("OPS_MODULE_NAME", "integration-pilot")
-MODULE_VERSION = os.getenv("PILOT_MODULE_VERSION", "0.1.1")
+MODULE_VERSION = os.getenv("PILOT_MODULE_VERSION", "0.1.0")
 ARTIFACT_ROOT = Path(os.getenv("OPS_ARTIFACT_ROOT", "/var/openpolicystack/artifacts"))
 
 
@@ -50,7 +50,6 @@ def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
         "message": "integration pilot executed successfully",
         "module_name": MODULE_NAME,
         "module_version": MODULE_VERSION,
-        "processing_profile": "normalized-v2",
     }
 
     serialized_artifact = json.dumps(
@@ -73,7 +72,6 @@ def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
             "received_keys": sorted(list(stable_input.keys()))
             if isinstance(stable_input, dict)
             else [],
-            "processing_profile": "normalized-v2",
         },
         "artifacts": [
             {
