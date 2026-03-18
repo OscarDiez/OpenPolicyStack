@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import sqlite3
@@ -42,6 +43,36 @@ def get_conn() -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
+
+
+def canonical_json(value: Any) -> str:
+    """
+    Deterministic JSON serialization for hashing and storage consistency.
+    """
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def hash_payload(payload: Optional[Dict[str, Any]]) -> Optional[str]:
+    if payload is None:
+        return None
+    return sha256_text(canonical_json(payload))
+
+
+def hash_file(file_path: Path) -> str:
+    digest = hashlib.sha256()
+    with file_path.open("rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def column_exists(conn: sqlite3.Connection, table_name: str, column_name: str) -> bool:
+    rows = conn.execute(f"PRAGMA table_info({table_name})").fetchall()
+    return any(row[1] == column_name for row in rows)
 
 
 def init_db() -> None:
@@ -97,6 +128,19 @@ def init_db() -> None:
             """
         )
 
+        # Safe additive migration for hashing support
+        if not column_exists(conn, "runs", "request_payload_hash"):
+            conn.execute("ALTER TABLE runs ADD COLUMN request_payload_hash TEXT")
+
+        if not column_exists(conn, "runs", "response_payload_hash"):
+            conn.execute("ALTER TABLE runs ADD COLUMN response_payload_hash TEXT")
+
+        if not column_exists(conn, "module_calls", "request_payload_hash"):
+            conn.execute("ALTER TABLE module_calls ADD COLUMN request_payload_hash TEXT")
+
+        if not column_exists(conn, "module_calls", "response_payload_hash"):
+            conn.execute("ALTER TABLE module_calls ADD COLUMN response_payload_hash TEXT")
+
         conn.commit()
 
 
@@ -107,6 +151,9 @@ def insert_run(
     created_at: str,
     request_payload: Dict[str, Any],
 ) -> None:
+    request_payload_json = canonical_json(request_payload)
+    request_payload_hash = sha256_text(request_payload_json)
+
     with get_conn() as conn:
         conn.execute(
             """
@@ -116,15 +163,19 @@ def insert_run(
                 overall_status,
                 created_at,
                 request_payload,
-                response_payload
-            ) VALUES (?, ?, ?, ?, ?, ?)
+                response_payload,
+                request_payload_hash,
+                response_payload_hash
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 run_id,
                 workflow_template,
                 overall_status,
                 created_at,
-                json.dumps(request_payload),
+                request_payload_json,
+                None,
+                request_payload_hash,
                 None,
             ),
         )
@@ -137,19 +188,24 @@ def update_run(
     response_payload: Dict[str, Any],
     completed_at: Optional[str] = None,
 ) -> None:
+    response_payload_json = canonical_json(response_payload)
+    response_payload_hash = sha256_text(response_payload_json)
+
     with get_conn() as conn:
         conn.execute(
             """
             UPDATE runs
             SET overall_status = ?,
                 completed_at = ?,
-                response_payload = ?
+                response_payload = ?,
+                response_payload_hash = ?
             WHERE run_id = ?
             """,
             (
                 overall_status,
                 completed_at,
-                json.dumps(response_payload),
+                response_payload_json,
+                response_payload_hash,
                 run_id,
             ),
         )
@@ -165,6 +221,9 @@ def insert_module_call(
     started_at: str,
     request_payload: Dict[str, Any],
 ) -> None:
+    request_payload_json = canonical_json(request_payload)
+    request_payload_hash = sha256_text(request_payload_json)
+
     with get_conn() as conn:
         conn.execute(
             """
@@ -180,8 +239,10 @@ def insert_module_call(
                 execution_time_ms,
                 request_payload,
                 response_payload,
-                error_message
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                error_message,
+                request_payload_hash,
+                response_payload_hash
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 call_id,
@@ -193,8 +254,10 @@ def insert_module_call(
                 started_at,
                 None,
                 None,
-                json.dumps(request_payload),
+                request_payload_json,
                 None,
+                None,
+                request_payload_hash,
                 None,
             ),
         )
@@ -210,6 +273,13 @@ def update_module_call(
     response_payload: Optional[Dict[str, Any]] = None,
     error_message: Optional[str] = None,
 ) -> None:
+    response_payload_json = (
+        canonical_json(response_payload) if response_payload is not None else None
+    )
+    response_payload_hash = (
+        sha256_text(response_payload_json) if response_payload_json is not None else None
+    )
+
     with get_conn() as conn:
         conn.execute(
             """
@@ -219,7 +289,8 @@ def update_module_call(
                 completed_at = ?,
                 execution_time_ms = ?,
                 response_payload = ?,
-                error_message = ?
+                error_message = ?,
+                response_payload_hash = ?
             WHERE call_id = ?
             """,
             (
@@ -227,8 +298,9 @@ def update_module_call(
                 status,
                 completed_at,
                 execution_time_ms,
-                json.dumps(response_payload) if response_payload is not None else None,
+                response_payload_json,
                 error_message,
+                response_payload_hash,
                 call_id,
             ),
         )
@@ -345,7 +417,11 @@ async def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
         )
 
     except Exception as exc:
-        execution_time_ms = int((time.perf_counter() - start_perf) * 1000) if "start_perf" in locals() else 0
+        execution_time_ms = (
+            int((time.perf_counter() - start_perf) * 1000)
+            if "start_perf" in locals()
+            else 0
+        )
         call_completed_at = now_iso()
         run_completed_at = now_iso()
 
@@ -398,7 +474,9 @@ async def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
         "orchestrator": MODULE_NAME,
         "pilot_response": pilot_result,
     }
-    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    summary_serialized = json.dumps(summary, indent=2, ensure_ascii=False)
+    summary_path.write_text(summary_serialized, encoding="utf-8")
+    summary_hash = hash_file(summary_path)
 
     insert_artifact(
         artifact_id=str(uuid.uuid4()),
@@ -407,7 +485,7 @@ async def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
         module_name=MODULE_NAME,
         artifact_type="run_summary",
         file_path=str(summary_path),
-        hash_value=None,
+        hash_value=summary_hash,
         created_at=now_iso(),
     )
 
@@ -424,6 +502,7 @@ async def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
             {
                 "module_name": MODULE_NAME,
                 "file_path": str(summary_path),
+                "hash": summary_hash,
                 "type": "run_summary",
             }
         ],
