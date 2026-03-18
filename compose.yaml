@@ -52,7 +52,7 @@ services:
       OPS_LOG_LEVEL: INFO
       OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
       OPS_ORCHESTRATOR_URL: http://orchestrator:8080
-      PILOT_MODULE_VERSION: 0.1.0
+      PILOT_MODULE_VERSION: 0.1.1
     ports:
       - "8101:8080"
     volumes:
