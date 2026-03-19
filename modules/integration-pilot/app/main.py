@@ -39,6 +39,11 @@ def execute(payload: Dict[str, Any]) -> Dict[str, Any]:
     module_dir.mkdir(parents=True, exist_ok=True)
 
     stable_input = payload.get("input", payload)
+
+    # Controlled failure trigger for E5
+    if isinstance(stable_input, dict) and stable_input.get("force_error") is True:
+        raise ValueError("Controlled E5 failure: forced error triggered")
+
     stable_input_hash = sha256_text(canonical_json(stable_input))
 
     artifact_filename = f"{stable_input_hash}.json"
