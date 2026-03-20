@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyses — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:          #0b0f1a;
+            --surface:     #111827;
+            --card:        #161d2e;
+            --card-border: #1e2d45;
+            --accent:      #2563eb;
+            --accent-lite: #3b82f6;
+            --text:        #e2e8f0;
+            --text-2:      #94a3b8;
+            --text-3:      #64748b;
+            --success:     #10b981;
+            --warning:     #f59e0b;
+            --danger:      #ef4444;
+            --row-hover:   #1a2540;
+            --font:        'Inter', system-ui, sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+            padding-bottom: 4rem;
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 52px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+        .nav-left  { display: flex; align-items: center; gap: 2rem; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .brand {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.01em;
+        }
+        .brand b { color: var(--accent-lite); }
+        .nav-link {
+            color: var(--text-2);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color .15s, background .15s;
+        }
+        .nav-link:hover  { color: var(--text); background: var(--card); }
+        .nav-link.active { color: var(--accent-lite); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: var(--font);
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-lite); }
+
+        /* ── Page ── */
+        .page { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+        .page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .page-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+        }
+        .page-header p { font-size: 13px; color: var(--text-3); margin-top: .25rem; }
+        .total-badge {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-lite);
+            letter-spacing: -.03em;
+        }
+        .total-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+        }
+
+        /* ── Sector groups ── */
+        .sector-group { margin-bottom: 3rem; }
+        .sector-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-3);
+            margin-bottom: 1.25rem;
+            padding-bottom: .75rem;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+        .sector-title::before {
+            content: '';
+            display: block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent-lite);
+            flex-shrink: 0;
+        }
+
+        /* ── Card grid ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .analysis-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .15s;
+        }
+        .analysis-card:hover { border-color: var(--accent); }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(11,15,26,.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s;
+        }
+        .loading-overlay.active { opacity: 1; pointer-events: all; }
+        .spinner {
+            width: 24px; height: 24px;
+            border: 3px solid rgba(37,99,235,.2);
+            border-top-color: var(--accent-lite);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin-bottom: .75rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Card internals */
+        .card-header { margin-bottom: 1.25rem; }
+        .segment-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: .25rem;
+        }
+        .last-run {
+            font-size: 11px;
+            color: var(--text-3);
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .75rem;
+            margin-bottom: 1.25rem;
+            background: rgba(0,0,0,.15);
+            border-radius: 6px;
+            padding: .9rem 1rem;
+        }
+        .metric-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+            font-weight: 600;
+            margin-bottom: .2rem;
+        }
+        .metric-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-lite);
+            letter-spacing: -.02em;
+        }
+
+        /* Sources */
+        .sources-block {
+            flex: 1;
+            margin-bottom: 1.25rem;
+        }
+        .sources-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+            margin-bottom: .5rem;
+        }
+        .sources-block ul { list-style: none; }
+        .sources-block li { margin-bottom: .25rem; }
+        .sources-block a {
+            font-size: 11px;
+            color: var(--text-3);
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            transition: color .15s;
+        }
+        .sources-block a:hover { color: var(--accent-lite); }
+
+        /* Card actions */
+        .card-actions {
+            display: flex;
+            gap: .5rem;
+            margin-top: auto;
+            padding-top: 1.1rem;
+            border-top: 1px solid var(--card-border);
+        }
+        .btn-action {
+            flex: 1;
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--card-border);
+            color: var(--text-2);
+            border-radius: 5px;
+            padding: .55rem;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all .15s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .35rem;
+            font-family: var(--font);
+        }
+        .btn-action:hover { background: var(--row-hover); color: var(--text); border-color: var(--text-3); }
+        .btn-action.btn-view {
+            background: rgba(37,99,235,.1);
+            border-color: rgba(37,99,235,.3);
+            color: var(--accent-lite);
+        }
+        .btn-action.btn-view:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* Archive history */
+        .archive-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+        }
+        .archive-toggle {
+            display: flex; align-items: center; gap: .4rem;
+            font-size: 11px; font-weight: 600; color: var(--text-3);
+            cursor: pointer; background: none; border: none;
+            font-family: var(--font); padding: 0;
+            text-transform: uppercase; letter-spacing: .06em;
+            transition: color .15s;
+        }
+        .archive-toggle:hover { color: var(--text-2); }
+        .archive-list {
+            display: none;
+            flex-direction: column;
+            gap: .4rem;
+            margin-top: .6rem;
+        }
+        .archive-list.open { display: flex; }
+        .archive-row {
+            display: flex; align-items: center; gap: .5rem;
+            padding: .45rem .65rem;
+            background: rgba(0,0,0,.15);
+            border-radius: 5px;
+            font-size: 11px; color: var(--text-3);
+        }
+        .archive-row-label { flex: 1; font-weight: 500; }
+        .archive-row-meta { color: var(--text-3); }
+        .archive-row-actions { display: flex; gap: .3rem; }
+        .archive-btn {
+            font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--card-border);
+            color: var(--text-3); cursor: pointer;
+            font-family: var(--font); text-decoration: none;
+            transition: all .1s;
+        }
+        .archive-btn:hover { color: var(--text); border-color: var(--text-3); }
+
+        /* Dropdown */
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute;
+            bottom: 110%;
+            right: 0;
+            min-width: 160px;
+            background: var(--surface);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: .35rem;
+            box-shadow: 0 -8px 24px rgba(0,0,0,.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(6px);
+            transition: all .15s;
+            z-index: 20;
+        }
+        .dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-item {
+            display: block;
+            padding: .45rem .75rem;
+            color: var(--text-2);
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .1s;
+            white-space: nowrap;
+        }
+        .dropdown-item:hover { background: var(--row-hover); color: var(--text); }
+        .btn-archive {
+            background: rgba(245,158,11,.1);
+            border: 1px solid rgba(245,158,11,.3);
+            color: var(--warning);
+        }
+        .btn-archive:hover { background: rgba(245,158,11,.2); }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+        }
+        .empty-state h3 { font-size: 18px; color: var(--text-2); margin-bottom: .5rem; }
+        .empty-state p  { font-size: 13px; color: var(--text-3); margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-left">
+        <a href="/" class="brand">Supply<b>Trace</b></a>
+        <a href="/analyses"  class="nav-link active">Analyses</a>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/comparison" class="nav-link">Geopolitical Comparison</a>
+    </div>
+    <div class="nav-right">
+        <a href="/" class="btn btn-primary">+ New Analysis</a>
+    </div>
+</nav>
+
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Intelligence Hub</h1>
+            <p>Past supply chain extractions — browse, compare, or re-run any analysis.</p>
+        </div>
+        <div style="text-align:right">
+            <div class="total-badge">{{ total_count }}</div>
+            <div class="total-label">Total Analyses</div>
+        </div>
+    </div>
+
+    {% if not grouped_analyses %}
+    <div class="empty-state">
+        <h3>No analyses found</h3>
+        <p>No supply chain extractions have been run yet. Start your first analysis below.</p>
+        <a href="/" class="btn btn-primary">Start New Analysis</a>
+    </div>
+    {% else %}
+
+    {% for sector_name, analyses in grouped_analyses.items() %}
+    <div class="sector-group">
+        <div class="sector-title">{{ sector_name }}</div>
+        <div class="grid">
+            {% for item in analyses %}
+            <div class="analysis-card" id="card-{{ loop.index }}">
+
+                <div class="loading-overlay" id="loading-{{ loop.index }}">
+                    <div class="spinner"></div>
+                    <div style="font-size:12px;font-weight:600;color:var(--text-2)" id="loading-text-{{ loop.index }}">Re-running extraction…</div>
+                </div>
+
+                <div class="card-header">
+                    <div class="segment-name">{{ item.segment }}</div>
+                    <div class="last-run">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Updated {{ item.last_run }}
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div>
+                        <div class="metric-label">Components</div>
+                        <div class="metric-value">{{ item.components_count }}</div>
+                    </div>
+                    <div>
+                        <div class="metric-label">Suppliers Found</div>
+                        <div class="metric-value">{{ item.suppliers_count }}</div>
+                    </div>
+                </div>
+
+                <div class="sources-block">
+                    <div class="sources-label">Intelligence Sources</div>
+                    <ul>
+                        {% if item.sources %}
+                            {% for src in item.sources[:4] %}
+                            <li><a href="{{ src }}" target="_blank" rel="noopener">{{ src | truncate(55, True, '…') }}</a></li>
+                            {% endfor %}
+                            {% if item.sources|length > 4 %}
+                            <li><span style="font-size:11px;color:var(--text-3)">+ {{ item.sources|length - 4 }} more</span></li>
+                            {% endif %}
+                        {% else %}
+                            <li><span style="color:var(--text-3);font-style:italic;font-size:12px">No taxonomy sources recorded.</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="card-actions">
+                    <a href="/dashboard?sector={{ item.sector | urlencode }}&segment={{ item.segment | urlencode }}" class="btn-action btn-view">
+                        Dashboard
+                    </a>
+                    <a href="/taxonomy-view?sector={{ item.sector | urlencode }}&segment={{ item.segment | urlencode }}" class="btn-action">
+                        Tree
+                    </a>
+                    <a href="/comparison?sector={{ item.sector | urlencode }}&segment={{ item.segment | urlencode }}" class="btn-action">
+                        Comparison
+                    </a>
+                    <button class="btn-action btn-archive" onclick="archiveAndRerun('{{ item.sector }}', '{{ item.segment }}', '{{ loop.index }}')">
+                        Archive &amp; Re-run
+                    </button>
+                    <div class="dropdown" id="dd-{{ loop.index }}" onclick="toggleDropdown('dd-{{ loop.index }}', event)">
+                        <div class="btn-action">&#8942;</div>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item" onclick="rerun('{{ item.sector }}', '{{ item.segment }}', null, '{{ loop.index }}', event)">Re-run (overwrite)</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if item.archived_runs %}
+                <div class="archive-section">
+                    <button class="archive-toggle" onclick="toggleArchive('arch-{{ loop.index }}', this)">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        {{ item.archived_runs | length }} archived run{{ 's' if item.archived_runs | length != 1 else '' }}
+                    </button>
+                    <div class="archive-list" id="arch-{{ loop.index }}">
+                        {% for run in item.archived_runs %}
+                        <div class="archive-row">
+                            <span class="archive-row-label">{{ run.label }}</span>
+                            <span class="archive-row-meta">{{ run.components_count }} components · {{ run.suppliers_count }} suppliers</span>
+                            <div class="archive-row-actions">
+                                <a class="archive-btn" href="/dashboard?sector={{ item.sector | urlencode }}&segment={{ item.segment | urlencode }}&archive={{ run.folder | urlencode }}">View</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% endif %}
+</div>
+
+<script>
+function toggleDropdown(id, e) {
+    e.stopPropagation();
+    document.querySelectorAll('.dropdown').forEach(d => {
+        if (d.id !== id) d.classList.remove('open');
+    });
+    document.getElementById(id).classList.toggle('open');
+}
+
+document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+});
+
+function toggleArchive(id, btn) {
+    const list = document.getElementById(id);
+    const isOpen = list.classList.toggle('open');
+    const arrow = btn.querySelector('svg');
+    arrow.style.transform = isOpen ? 'rotate(180deg)' : '';
+}
+
+async function archiveAndRerun(sector, segment, idx) {
+    if (!confirm(`Archive current "${segment}" data and start a fresh extraction?\n\nThe current run will be saved with today's timestamp and remain accessible.`)) return;
+    document.getElementById(`loading-${idx}`).classList.add('active');
+    document.getElementById(`loading-text-${idx}`).textContent = 'Archiving & re-running…';
+    try {
+        const res = await fetch('/api/v1/archive-and-rerun', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ sector, segment }),
+        });
+        if (res.ok) {
+            setTimeout(() => {
+                window.location.href = `/dashboard?sector=${encodeURIComponent(sector)}&segment=${encodeURIComponent(segment)}`;
+            }, 1000);
+        } else {
+            alert('Archive failed — check server logs.');
+            document.getElementById(`loading-${idx}`).classList.remove('active');
+        }
+    } catch {
+        alert('Connection error.');
+        document.getElementById(`loading-${idx}`).classList.remove('active');
+    }
+}
+
+async function rerun(sector, segment, limit, idx, e) {
+    e.stopPropagation();
+    if (!confirm(`Overwrite current "${segment}" data without archiving?`)) return;
+    document.getElementById(`loading-${idx}`).classList.add('active');
+    document.getElementById(`loading-text-${idx}`).textContent = 'Re-running extraction…';
+    try {
+        const res = await fetch('/api/v1/rerun-extraction', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ sector, segment, supplier_limit: limit }),
+        });
+        if (res.ok) {
+            setTimeout(() => {
+                window.location.href = `/dashboard?sector=${encodeURIComponent(sector)}&segment=${encodeURIComponent(segment)}`;
+            }, 1000);
+        } else {
+            alert('Extraction failed — check server logs.');
+            document.getElementById(`loading-${idx}`).classList.remove('active');
+        }
+    } catch {
+        alert('Connection error.');
+        document.getElementById(`loading-${idx}`).classList.remove('active');
+    }
+}
+</script>
+</body>
+</html>

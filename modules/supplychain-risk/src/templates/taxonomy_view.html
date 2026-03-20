@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxonomy Graph — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --bg:          #0b0f1a;
+            --surface:     #111827;
+            --card:        #161d2e;
+            --card-border: #1e2d45;
+            --accent:      #2563eb;
+            --accent-lite: #3b82f6;
+            --text:        #e2e8f0;
+            --text-2:      #94a3b8;
+            --text-3:      #64748b;
+            --success:     #10b981;
+            --warning:     #f59e0b;
+            --danger:      #ef4444;
+            --font:        'Inter', system-ui, sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Nav */
+        .nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem; height: 52px; flex-shrink: 0;
+            background: var(--surface); border-bottom: 1px solid var(--card-border);
+            z-index: 200;
+        }
+        .nav-left { display: flex; align-items: center; gap: 2rem; }
+        .nav-right { display: flex; align-items: center; gap: .6rem; }
+        .brand { font-weight: 700; font-size: 15px; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
+        .brand b { color: var(--accent-lite); }
+        .nav-link { color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 500; padding: 4px 8px; border-radius: 4px; transition: color .15s, background .15s; }
+        .nav-link:hover { color: var(--text); background: var(--card); }
+        .nav-link.active { color: var(--accent-lite); }
+        .btn {
+            display: inline-flex; align-items: center; gap: .3rem;
+            border: none; border-radius: 6px; padding: 5px 12px;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            transition: all .15s; font-family: var(--font); text-decoration: none;
+        }
+        .btn-ghost   { background: var(--card); border: 1px solid var(--card-border); color: var(--text-2); }
+        .btn-ghost:hover { color: var(--text); border-color: var(--text-3); }
+        .btn-accent  { background: var(--accent); color: #fff; border: none; }
+        .btn-accent:hover { background: var(--accent-lite); }
+        .btn-success { background: var(--success); color: #fff; border: none; }
+        .btn-success:hover { opacity: .85; }
+        .mode-badge { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; }
+        .mode-view { background: rgba(37,99,235,.12); color: var(--accent-lite); border: 1px solid rgba(37,99,235,.25); }
+        .mode-edit { background: rgba(245,158,11,.12); color: var(--warning); border: 1px solid rgba(245,158,11,.25); }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex; align-items: center; gap: 1rem;
+            padding: .5rem 2rem; flex-shrink: 0;
+            background: var(--card); border-bottom: 1px solid var(--card-border);
+        }
+        .toolbar-title { font-size: 14px; font-weight: 700; letter-spacing: -.01em; flex: 1; }
+        .toolbar-title span { color: var(--accent-lite); }
+        .legend { display: flex; align-items: center; gap: 1rem; font-size: 11px; color: var(--text-3); }
+        .leg-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px; }
+
+        /* Graph canvas */
+        #graph-wrap {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--surface);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: .55rem .85rem;
+            font-size: 12px;
+            color: var(--text);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .15s;
+            max-width: 260px;
+            z-index: 100;
+            line-height: 1.5;
+        }
+        .tooltip.show { opacity: 1; }
+        .tt-score { font-weight: 700; margin-left: .4rem; }
+        .tt-score.high   { color: var(--danger); }
+        .tt-score.medium { color: var(--warning); }
+        .tt-score.low    { color: var(--success); }
+        .tt-score.none   { color: var(--accent-lite); }
+
+        /* Hint */
+        .hint {
+            position: absolute;
+            bottom: 1rem; left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px; color: var(--text-3);
+            background: rgba(11,15,26,.8);
+            padding: 4px 12px; border-radius: 20px;
+            pointer-events: none;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.6);
+            display: none; align-items: center; justify-content: center; z-index: 400;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal { background: var(--card); border: 1px solid var(--card-border); border-radius: 8px; padding: 1.5rem; width: 360px; max-width: 90vw; }
+        .modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 1rem; }
+        .modal label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: .35rem; }
+        .modal input, .modal select {
+            width: 100%; background: var(--bg); border: 1px solid var(--card-border);
+            color: var(--text); border-radius: 5px; padding: .6rem .8rem;
+            font-size: 13px; font-family: var(--font); outline: none;
+            margin-bottom: 1rem; transition: border-color .15s;
+        }
+        .modal input:focus, .modal select:focus { border-color: var(--accent-lite); }
+        .modal-actions { display: flex; gap: .5rem; justify-content: flex-end; }
+        .btn-sm { padding: 5px 14px; font-size: 12px; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 1.5rem; right: 1.5rem;
+            background: var(--surface); border: 1px solid var(--card-border);
+            border-radius: 6px; padding: .7rem 1.2rem;
+            font-size: 13px; font-weight: 500; color: var(--text);
+            box-shadow: 0 4px 20px rgba(0,0,0,.4);
+            transform: translateY(20px); opacity: 0;
+            transition: all .25s; pointer-events: none; z-index: 500;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-color: var(--success); color: var(--success); }
+        .toast.error   { border-color: var(--danger);  color: var(--danger); }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-left">
+        <a href="/" class="brand">Supply<b>Trace</b></a>
+        <a href="/analyses" class="nav-link">Analyses</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Dashboard</a>
+        <a href="/taxonomy-view{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link active">Taxonomy Graph</a>
+        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Geopolitical Comparison</a>
+    </div>
+    <div class="nav-right">
+        <span class="mode-badge mode-view" id="mode-badge">View Mode</span>
+        <button class="btn btn-ghost" id="edit-btn" onclick="toggleEditMode()">Edit</button>
+        <button class="btn btn-success" id="save-btn" style="display:none" onclick="saveTaxonomy()">Save</button>
+        <button class="btn btn-ghost" id="cancel-edit-btn" style="display:none" onclick="cancelEdit()">Cancel</button>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost">&larr; Dashboard</a>
+    </div>
+</nav>
+
+<div class="toolbar">
+    <div class="toolbar-title">
+        {% if sector %}<span>{{ sector }}</span> &mdash; {% endif %}
+        {{ segment }} — Component Graph
+    </div>
+    <div class="legend">
+        <span><span class="leg-dot" style="background:#ef4444"></span>High (&gt;0.55)</span>
+        <span><span class="leg-dot" style="background:#f59e0b"></span>Medium (0.35–0.55)</span>
+        <span><span class="leg-dot" style="background:#10b981"></span>Low (&lt;0.35)</span>
+        <span><span class="leg-dot" style="background:#3b82f6"></span>No data</span>
+    </div>
+</div>
+
+<div id="graph-wrap">
+    <svg id="graph-svg"></svg>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="hint">Scroll to zoom · Drag to pan · Click node to highlight path</div>
+</div>
+
+<!-- Add node modal -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <h3>Add Child Node</h3>
+        <label>Name</label>
+        <input type="text" id="modal-name" placeholder="e.g. Niobium Ore…">
+        <label>Type</label>
+        <select id="modal-type">
+            <option value="branch">Branch (sub-system / category)</option>
+            <option value="leaf">Leaf (specific component / material)</option>
+        </select>
+        <div class="modal-actions">
+            <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-accent btn-sm" onclick="confirmAdd()">Add</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const TAXONOMY_JSON = {{ taxonomy | tojson }};
+const SCORES        = {{ scores_json | safe }};
+const SECTOR        = "{{ sector | e }}";
+const SEGMENT       = "{{ segment | e }}";
+
+let taxonomy    = JSON.parse(JSON.stringify(TAXONOMY_JSON));
+let editMode    = false;
+let leafCounter = Date.now();
+let _addTarget  = null;
+
+// ── Score helpers ─────────────────────────────────────────────────────────────
+function getLeafScore(name) {
+    if (!name) return null;
+    const lc   = name.toLowerCase().trim();
+    const base = lc.replace(/\s*\(.*$/, '').trim();
+    for (const [k, v] of Object.entries(SCORES)) {
+        const kb = k.toLowerCase().trim();
+        if (kb === lc) return v.score;
+        const kbase = kb.replace(/\s*\(.*$/, '').trim();
+        if (kbase === base) return v.score;
+        if (kbase.startsWith(base) || base.startsWith(kbase)) return v.score;
+    }
+    return null;
+}
+
+function collectLeafScores(node) {
+    if (!node.children || !node.children.length) {
+        const s = getLeafScore(node.name);
+        return s !== null ? [s] : [];
+    }
+    return node.children.flatMap(c => collectLeafScores(c));
+}
+
+function getScore(node) {
+    if (!node.children || !node.children.length) return getLeafScore(node.name);
+    const arr = collectLeafScores(node);
+    return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+}
+
+function scoreColor(s) {
+    if (s === null) return '#3b82f6';
+    if (s > 0.55)   return '#ef4444';
+    if (s > 0.35)   return '#f59e0b';
+    return '#10b981';
+}
+
+function scoreClass(s) {
+    if (s === null) return 'none';
+    if (s > 0.55)   return 'high';
+    if (s > 0.35)   return 'medium';
+    return 'low';
+}
+
+// ── Flatten taxonomy into nodes + links for D3 ────────────────────────────────
+function buildGraph() {
+    const nodes = [];
+    const links = [];
+    let   id    = 0;
+
+    const root = {
+        id:       id++,
+        name:     taxonomy.segment || SEGMENT || 'Segment',
+        isRoot:   true,
+        isLeaf:   false,
+        nodeData: { name: taxonomy.segment || SEGMENT, children: taxonomy.supply_chain || [] },
+        score:    getScore({ children: taxonomy.supply_chain || [] }),
+        leafCount: collectLeafScores({ children: taxonomy.supply_chain || [] }).length,
+    };
+    nodes.push(root);
+
+    function walk(node, parentId) {
+        const isLeaf = !node.children || !node.children.length;
+        const score  = getScore(node);
+        const n = {
+            id:       id++,
+            name:     node.name,
+            isRoot:   false,
+            isLeaf,
+            leafId:   node.leaf_id || null,
+            nodeData: node,
+            score,
+            leafCount: isLeaf ? 0 : collectLeafScores(node).length,
+        };
+        nodes.push(n);
+        links.push({ source: parentId, target: n.id });
+        if (!isLeaf) node.children.forEach(c => walk(c, n.id));
+    }
+
+    (taxonomy.supply_chain || []).forEach(c => walk(c, root.id));
+    return { nodes, links };
+}
+
+// ── D3 render ─────────────────────────────────────────────────────────────────
+let simulation, svg, gAll, nodeGroup, linkGroup;
+let graphData;
+
+function renderGraph() {
+    graphData = buildGraph();
+    const { nodes, links } = graphData;
+
+    const wrap = document.getElementById('graph-wrap');
+    const W    = wrap.clientWidth;
+    const H    = wrap.clientHeight;
+
+    d3.select('#graph-svg').selectAll('*').remove();
+
+    svg = d3.select('#graph-svg');
+
+    // Zoom/pan
+    const zoom = d3.zoom().scaleExtent([0.15, 3]).on('zoom', e => {
+        gAll.attr('transform', e.transform);
+    });
+    svg.call(zoom);
+
+    gAll       = svg.append('g');
+    linkGroup  = gAll.append('g').attr('class', 'links');
+    nodeGroup  = gAll.append('g').attr('class', 'nodes');
+
+    // Node radius by type
+    const r = d => d.isRoot ? 22 : d.isLeaf ? 7 : 14;
+
+    // Build index map for links
+    const nodeById = new Map(nodes.map(n => [n.id, n]));
+    const linkObjs = links.map(l => ({
+        source: nodeById.get(l.source),
+        target: nodeById.get(l.target),
+    }));
+
+    // Force simulation
+    simulation = d3.forceSimulation(nodes)
+        .force('link',   d3.forceLink(linkObjs).id(d => d.id).distance(d => {
+            if (d.source.isRoot) return 120;
+            if (!d.target.isLeaf) return 80;
+            return 55;
+        }).strength(0.7))
+        .force('charge', d3.forceManyBody().strength(d => d.isLeaf ? -60 : -180))
+        .force('center', d3.forceCenter(W / 2, H / 2))
+        .force('collide', d3.forceCollide(d => r(d) + 8))
+        .alphaDecay(0.03);
+
+    // Links
+    const link = linkGroup.selectAll('line')
+        .data(linkObjs)
+        .join('line')
+        .attr('stroke', '#1e2d45')
+        .attr('stroke-width', d => d.source.isRoot ? 2 : 1)
+        .attr('stroke-opacity', 0.7);
+
+    // Nodes
+    const node = nodeGroup.selectAll('g')
+        .data(nodes)
+        .join('g')
+        .attr('cursor', d => (d.isLeaf && !editMode) ? 'default' : 'pointer')
+        .call(d3.drag()
+            .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+            .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+            .on('end',   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+        );
+
+    // Circle
+    node.append('circle')
+        .attr('r', r)
+        .attr('fill', d => {
+            const c = scoreColor(d.score);
+            return d.isRoot ? '#1e3a8a' : c + (d.isLeaf ? '33' : '22');
+        })
+        .attr('stroke', d => d.isRoot ? '#3b82f6' : scoreColor(d.score))
+        .attr('stroke-width', d => d.isRoot ? 2.5 : d.isLeaf ? 1 : 1.5);
+
+    // Score text inside non-leaf nodes
+    node.filter(d => !d.isLeaf)
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'central')
+        .attr('font-size', d => d.isRoot ? 9 : 8)
+        .attr('font-weight', '700')
+        .attr('fill', d => d.isRoot ? '#93c5fd' : scoreColor(d.score))
+        .attr('pointer-events', 'none')
+        .text(d => d.score !== null ? d.score.toFixed(2) : '—');
+
+    // Label below node
+    node.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dy', d => r(d) + 11)
+        .attr('font-size', d => d.isRoot ? 12 : d.isLeaf ? 9 : 10)
+        .attr('font-weight', d => d.isRoot ? '700' : d.isLeaf ? '400' : '600')
+        .attr('fill', d => d.isRoot ? '#e2e8f0' : d.isLeaf ? '#64748b' : '#94a3b8')
+        .attr('pointer-events', 'none')
+        .text(d => {
+            const n = d.name;
+            // Strip parenthetical country suffixes on leaf labels to keep them short
+            const clean = n.replace(/\s*\([^)]*\)/, '');
+            return clean.length > 22 ? clean.slice(0, 20) + '…' : clean;
+        });
+
+    // Tooltip
+    const tip = document.getElementById('tooltip');
+    node
+        .on('mouseover', (e, d) => {
+            const sc = d.score;
+            const cls = scoreClass(sc);
+            tip.innerHTML = `
+                <strong>${d.name}</strong>
+                <span class="tt-score ${cls}">${sc !== null ? sc.toFixed(3) : 'No data'}</span>
+                ${d.isLeaf ? `<br><span style="color:var(--text-3);font-size:11px">${d.leafId || 'Leaf component'}</span>` : `<br><span style="color:var(--text-3);font-size:11px">${d.leafCount} leaf components</span>`}
+            `;
+            tip.classList.add('show');
+        })
+        .on('mousemove', e => {
+            tip.style.left = (e.offsetX + 14) + 'px';
+            tip.style.top  = (e.offsetY - 10) + 'px';
+        })
+        .on('mouseout', () => tip.classList.remove('show'));
+
+    // Click: highlight path to root
+    node.on('click', (e, d) => {
+        if (editMode) { openAddModal(d.nodeData); return; }
+        // Find ancestors
+        const ancestors = new Set();
+        function findPath(n) {
+            if (n.id === d.id) return true;
+            for (const c of (n.nodeData.children || [])) {
+                const cNode = nodes.find(x => x.nodeData === c);
+                if (cNode && findPath(cNode)) { ancestors.add(n.id); return true; }
+            }
+            return false;
+        }
+        findPath(nodes[0]);
+        ancestors.add(d.id);
+
+        node.select('circle')
+            .attr('opacity', x => ancestors.has(x.id) ? 1 : 0.2);
+        link.attr('opacity', x => ancestors.has(x.source.id) && ancestors.has(x.target.id) ? 1 : 0.1);
+        // Click anywhere else to reset
+        svg.on('click.reset', () => {
+            node.select('circle').attr('opacity', 1);
+            link.attr('opacity', 0.7);
+            svg.on('click.reset', null);
+        });
+        e.stopPropagation();
+    });
+
+    // Tick
+    simulation.on('tick', () => {
+        link
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y);
+        node.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+}
+
+// ── Edit mode ─────────────────────────────────────────────────────────────────
+function toggleEditMode() {
+    editMode = !editMode;
+    document.getElementById('mode-badge').className  = 'mode-badge ' + (editMode ? 'mode-edit' : 'mode-view');
+    document.getElementById('mode-badge').textContent = editMode ? 'Edit Mode — click node to add child' : 'View Mode';
+    document.getElementById('edit-btn').textContent   = editMode ? 'Exit Edit' : 'Edit';
+    document.getElementById('save-btn').style.display        = editMode ? '' : 'none';
+    document.getElementById('cancel-edit-btn').style.display = editMode ? '' : 'none';
+}
+
+function cancelEdit() {
+    taxonomy = JSON.parse(JSON.stringify(TAXONOMY_JSON));
+    editMode = false;
+    document.getElementById('mode-badge').className  = 'mode-badge mode-view';
+    document.getElementById('mode-badge').textContent = 'View Mode';
+    document.getElementById('edit-btn').textContent   = 'Edit';
+    document.getElementById('save-btn').style.display        = 'none';
+    document.getElementById('cancel-edit-btn').style.display = 'none';
+    renderGraph();
+}
+
+// ── Add node modal ─────────────────────────────────────────────────────────────
+function openAddModal(nodeData) {
+    _addTarget = nodeData;
+    document.getElementById('modal-name').value = '';
+    document.getElementById('modal-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('modal-name').focus(), 50);
+}
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    _addTarget = null;
+}
+function confirmAdd() {
+    const name = document.getElementById('modal-name').value.trim();
+    const type = document.getElementById('modal-type').value;
+    if (!name) return;
+    if (!_addTarget.children) _addTarget.children = [];
+    _addTarget.children.push(type === 'leaf'
+        ? { name, leaf_id: `EDIT-${++leafCounter}` }
+        : { name, children: [] });
+
+    // Track pending extraction in localStorage (only leaf nodes need extraction)
+    if (type === 'leaf') {
+        const storageKey = `pending_nodes__${SECTOR}__${SEGMENT}`;
+        const existing   = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        if (!existing.includes(name)) existing.push(name);
+        localStorage.setItem(storageKey, JSON.stringify(existing));
+    }
+
+    closeModal();
+    renderGraph();
+}
+document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Save ──────────────────────────────────────────────────────────────────────
+async function saveTaxonomy() {
+    try {
+        const res = await fetch('/api/v1/save-taxonomy', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                taxonomy,
+                sector:  SECTOR || taxonomy.technology_domain || '',
+                segment: SEGMENT || taxonomy.segment || '',
+                region:  'EU',
+            }),
+        });
+        if (res.ok) {
+            showToast('Taxonomy saved.', 'success');
+            editMode = false;
+            document.getElementById('mode-badge').className  = 'mode-badge mode-view';
+            document.getElementById('mode-badge').textContent = 'View Mode';
+            document.getElementById('edit-btn').textContent   = 'Edit';
+            document.getElementById('save-btn').style.display        = 'none';
+            document.getElementById('cancel-edit-btn').style.display = 'none';
+        } else {
+            showToast('Save failed.', 'error');
+        }
+    } catch { showToast('Connection error.', 'error'); }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+if (({{ taxonomy | tojson }}).supply_chain && ({{ taxonomy | tojson }}).supply_chain.length) {
+    renderGraph();
+} else {
+    document.getElementById('graph-wrap').innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-3);flex-direction:column;gap:.5rem">
+            <div style="font-size:18px;color:var(--text-2)">No taxonomy data</div>
+            <div style="font-size:13px">Run extraction from the onboarding flow first.</div>
+        </div>`;
+}
+
+// Re-render on window resize
+window.addEventListener('resize', () => renderGraph());
+</script>
+</body>
+</html>

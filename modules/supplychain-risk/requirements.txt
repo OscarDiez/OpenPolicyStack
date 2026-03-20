@@ -4,6 +4,7 @@ pydantic
 duckduckgo-search
 ddgs
 groq
+openai
 python-dotenv
 httpx
 beautifulsoup4

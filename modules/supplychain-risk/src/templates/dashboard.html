@@ -1,652 +1,1002 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — SupplyTrace</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <title>Risk Dashboard — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <style>
         :root {
-            --bg: #030712;
-            --card: rgba(15, 23, 42, 0.85);
-            --accent: #0ea5e9;
-            --border: rgba(56, 189, 248, 0.18);
-            --text: #f1f5f9;
-            --muted: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --row-hover: rgba(56, 189, 248, 0.07);
+            --bg:          #0b0f1a;
+            --surface:     #111827;
+            --card:        #161d2e;
+            --card-border: #1e2d45;
+            --accent:      #2563eb;
+            --accent-lite: #3b82f6;
+            --text:        #e2e8f0;
+            --text-2:      #94a3b8;
+            --text-3:      #64748b;
+            --success:     #10b981;
+            --warning:     #f59e0b;
+            --danger:      #ef4444;
+            --row-hover:   #1a2540;
+            --font:        'Inter', system-ui, sans-serif;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font);
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            background-image: radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.07) 0%, transparent 50%);
+            font-size: 14px;
+            line-height: 1.5;
         }
 
-        nav {
+        /* ── Navigation ── */
+        .nav {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            padding: 0.85rem 2rem;
-            background: var(--card);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(20px);
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 52px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--card-border);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200;
         }
-
-        .logo {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 900;
-            font-size: 1.1rem;
-            color: var(--accent);
-        }
-
-        .nav-link {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            padding: 0.4rem 0.85rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
-        }
-
-        .nav-link:hover {
+        .nav-left   { display: flex; align-items: center; gap: 2rem; }
+        .nav-right  { display: flex; align-items: center; gap: 1rem; }
+        .brand {
+            font-weight: 700;
+            font-size: 15px;
             color: var(--text);
-            background: rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+            letter-spacing: -0.01em;
         }
-
-        .nav-link.active {
-            color: var(--accent);
-            background: rgba(14, 165, 233, 0.1);
+        .brand b { color: var(--accent-lite); }
+        .nav-link {
+            color: var(--text-2);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color .15s, background .15s;
         }
-
-        .nav-sep {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-left: auto;
-        }
-
-        .main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2.5rem 1.5rem;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .stat {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
-            padding: 1.75rem 2rem;
-            transition: all 0.3s;
-        }
-
-        .stat:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
-        }
-
-        .stat-val {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--accent);
-        }
-
-        .stat-label {
-            color: var(--muted);
-            font-size: 0.75rem;
+        .nav-link:hover          { color: var(--text); background: var(--card); }
+        .nav-link.active         { color: var(--accent-lite); }
+        .badge-readonly {
+            font-size: 11px;
             font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 3px;
+            background: rgba(245,158,11,.12);
+            color: var(--warning);
+            border: 1px solid rgba(245,158,11,.3);
+            letter-spacing: .04em;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 0.4rem;
         }
 
-        .toolbar {
+        /* ── Page layout ── */
+        .page { max-width: 1280px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+        /* ── Controls bar ── */
+        .controls-bar {
             display: flex;
-            gap: 1rem;
             align-items: center;
-            margin-bottom: 1.5rem;
+            gap: 2rem;
+            margin-bottom: 1.75rem;
             flex-wrap: wrap;
         }
-
-        .search-box {
+        .controls-bar h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            flex: 1;
+            min-width: 250px;
+        }
+        .controls-bar h1 span { color: var(--accent-lite); }
+        .controls-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 0.5rem 1rem;
-            flex: 1;
-            min-width: 200px;
-            max-width: 360px;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .controls-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--text-3);
+            margin-bottom: .3rem;
         }
 
-        .search-box input {
+        /* Perspective tabs */
+        .perspective-tabs {
+            display: flex;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .perspective-tabs a {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-2);
+            text-decoration: none;
+            transition: background .15s, color .15s;
+            letter-spacing: .03em;
+        }
+        .perspective-tabs a:hover         { background: var(--row-hover); color: var(--text); }
+        .perspective-tabs a.active        { background: var(--accent); color: #fff; }
+
+        /* Scenario select */
+        .scenario-select {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-2);
+        }
+        .scenario-select select {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-family: var(--font);
+            cursor: pointer;
+            outline: none;
+        }
+        .scenario-select select:focus { border-color: var(--accent-lite); }
+
+        /* ── KPI row ── */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+        .kpi {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+        }
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -.03em;
+            line-height: 1;
+            margin-bottom: .35rem;
+        }
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+        }
+        .scenario-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: rgba(245,158,11,.1);
+            border: 1px solid rgba(245,158,11,.3);
+            color: var(--warning);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            letter-spacing: .04em;
+        }
+
+        /* ── Toolbar ── */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 5px 10px;
+            flex: 1;
+            max-width: 320px;
+        }
+        .search-wrap input {
             background: none;
             border: none;
-            color: var(--text);
             outline: none;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            flex: 1;
-        }
-
-        .discovery-form {
-            display: flex;
-            gap: 0.5rem;
-            flex: 1;
-        }
-
-        .discovery-input {
-            background: var(--card);
-            border: 1px solid var(--border);
             color: var(--text);
-            border-radius: 0.75rem;
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-            font-family: 'Inter', sans-serif;
-            outline: none;
+            font-size: 13px;
+            font-family: var(--font);
             flex: 1;
-            min-width: 180px;
-            max-width: 300px;
         }
-
-        .discovery-input:focus {
-            border-color: var(--accent);
-        }
-
+        .search-wrap input::placeholder { color: var(--text-3); }
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: .35rem;
             border: none;
-            border-radius: 0.65rem;
-            padding: 0.6rem 1.2rem;
-            font-weight: 700;
-            font-size: 0.85rem;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all .15s;
+            font-family: var(--font);
+            letter-spacing: .01em;
+            text-decoration: none;
         }
+        .btn-warning {
+            background: rgba(245,158,11,.15);
+            border: 1px solid rgba(245,158,11,.35);
+            color: var(--warning);
+        }
+        .btn-warning:hover { background: var(--warning); color: #000; border-color: var(--warning); }
+        .btn-danger {
+            background: rgba(239,68,68,.15);
+            border: 1px solid rgba(239,68,68,.35);
+            color: #fca5a5;
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+        .btn-success {
+            background: rgba(16,185,129,.15);
+            border: 1px solid rgba(16,185,129,.35);
+            color: var(--success);
+        }
+        .btn-success:hover { background: var(--success); color: #fff; border-color: var(--success); }
 
+        /* Pending-nodes banner */
+        .pending-banner {
+            display: none;
+            align-items: center; gap: .75rem;
+            padding: .6rem 2rem;
+            background: rgba(37,99,235,.08);
+            border-bottom: 1px solid rgba(37,99,235,.2);
+            font-size: 13px; color: var(--text-2);
+        }
+        .pending-banner.show { display: flex; }
+        .pending-banner strong { color: var(--accent-lite); }
+        .pending-tag {
+            display: inline-flex; align-items: center; gap: .35rem;
+            background: rgba(37,99,235,.12); border: 1px solid rgba(37,99,235,.25);
+            border-radius: 12px; padding: 2px 10px;
+            font-size: 12px; color: var(--accent-lite);
+        }
+        .pending-tag button {
+            background: none; border: none; color: var(--accent-lite);
+            cursor: pointer; font-size: 14px; line-height: 1; padding: 0 0 0 2px;
+        }
+        .pending-tag button:hover { color: var(--text); }
+        .pending-banner .extract-btn {
+            margin-left: auto;
+        }
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #0284c7);
-            color: white;
+            background: var(--accent);
+            color: #fff;
         }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .table-card {
+        .btn-primary:hover:not(:disabled) { background: var(--accent-lite); }
+        .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+        .btn-ghost {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
+            border: 1px solid var(--card-border);
+            color: var(--text-2);
+        }
+        .btn-ghost:hover { color: var(--text); border-color: var(--text-3); }
+        .btn-danger {
+            background: rgba(239,68,68,.15);
+            border: 1px solid rgba(239,68,68,.3);
+            color: #fca5a5;
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+        .discover-form { display: flex; gap: .5rem; align-items: center; }
+        .discover-input {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-family: var(--font);
+            outline: none;
+            width: 200px;
+        }
+        .discover-input:focus { border-color: var(--accent-lite); }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
             overflow: hidden;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: rgba(2, 6, 23, 0.5);
-            padding: 1rem 1.5rem;
-            color: var(--muted);
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: var(--surface);
+            padding: .75rem 1.25rem;
+            font-size: 11px;
             font-weight: 600;
-            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: .08em;
+            color: var(--text-3);
             text-align: left;
         }
-
-        td {
-            padding: 1.25rem 1.5rem;
-            border-top: 1px solid rgba(56, 189, 248, 0.08);
+        .data-row {
+            cursor: pointer;
+            transition: background .1s;
+        }
+        .data-row:hover { background: var(--row-hover); }
+        .data-row td {
+            padding: .9rem 1.25rem;
+            border-top: 1px solid var(--card-border);
             vertical-align: middle;
         }
-
-        .clickable-row {
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-
-        .clickable-row:hover {
-            background: var(--row-hover);
-        }
-
-        .comp-name {
-            font-family: 'Outfit', sans-serif;
+        .comp-name { font-weight: 600; font-size: 14px; }
+        .score-val {
+            font-size: 18px;
             font-weight: 700;
-            font-size: 1rem;
+            display: block;
         }
-
         .risk-bar-bg {
-            width: 90px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 3px;
-            margin-top: 0.4rem;
+            width: 80px; height: 3px;
+            background: rgba(255,255,255,.06);
+            border-radius: 2px;
+            margin-top: 5px;
             overflow: hidden;
         }
-
-        .risk-bar {
-            height: 100%;
-            border-radius: 3px;
-        }
-
-        .score-val {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
+        .risk-bar { height: 100%; border-radius: 2px; }
         .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.3rem 0.65rem;
-            border-radius: 2rem;
-            font-size: 0.7rem;
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: 0.04em;
+            letter-spacing: .05em;
             text-transform: uppercase;
         }
-
-        .badge-high {
-            background: rgba(239, 68, 68, .12);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, .25);
-        }
-
-        .badge-medium {
-            background: rgba(245, 158, 11, .12);
-            color: #fcd34d;
-            border: 1px solid rgba(245, 158, 11, .25);
-        }
-
-        .badge-low {
-            background: rgba(16, 185, 129, .12);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, .25);
-        }
-
-        .drivers-list {
-            list-style: none;
-            font-size: 0.82rem;
-            color: var(--muted);
-        }
-
+        .badge-high   { background: rgba(239,68,68,.12);  color: #fca5a5; border: 1px solid rgba(239,68,68,.25); }
+        .badge-medium { background: rgba(245,158,11,.12); color: #fcd34d; border: 1px solid rgba(245,158,11,.25); }
+        .badge-low    { background: rgba(16,185,129,.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,.25); }
+        .drivers-list { list-style: none; font-size: 12px; color: var(--text-2); }
         .drivers-list li {
-            padding: 0.2rem 0 0.2rem 1rem;
+            padding: 1px 0 1px 12px;
             position: relative;
         }
-
         .drivers-list li::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: .5rem;
-            width: 5px;
-            height: 5px;
+            left: 0; top: 7px;
+            width: 5px; height: 5px;
             border-radius: 50%;
-            background: var(--accent);
+            background: var(--accent-lite);
         }
 
-        .details-row {
-            display: none;
-            background: rgba(2, 6, 23, 0.3);
-        }
-
-        .details-content {
-            padding: 1.5rem;
+        /* ── Detail row ── */
+        .detail-row { display: none; background: #0e1525; }
+        .detail-content {
             display: flex;
             gap: 1.5rem;
-            max-height: 440px;
+            padding: 1.25rem 1.5rem;
+            max-height: 460px;
         }
-
-        .supplier-info {
+        .supplier-panel {
             flex: 1;
             overflow-y: auto;
         }
-
-        .map-container {
-            flex: 1;
-            height: 380px;
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-        }
-
-        .supplier-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 0.85rem;
-            border-radius: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .supplier-name {
+        .supplier-panel h5 {
+            font-size: 10px;
             font-weight: 700;
-            color: var(--accent);
-            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-3);
+            margin-bottom: .75rem;
         }
-
-        .supplier-meta {
-            font-size: 0.72rem;
-            color: var(--muted);
-            margin: 0.2rem 0 0.4rem;
-            display: flex;
-            gap: 0.75rem;
+        .supplier-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: .75rem 1rem;
+            margin-bottom: .6rem;
         }
-
-        .supplier-notes {
-            font-size: 0.82rem;
-            line-height: 1.5;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
         .supplier-card-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
+            align-items: baseline;
+            margin-bottom: .3rem;
         }
-
-        .tech-modality {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent2);
+        .supplier-name  { font-weight: 600; font-size: 13px; color: var(--accent-lite); }
+        .supplier-meta  { font-size: 11px; color: var(--text-3); }
+        .supplier-notes { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+        .conf-badge {
+            display: inline-block;
+            margin-top: .35rem;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+        .conf-high { background: rgba(16,185,129,.1);  color: #6ee7b7; border: 1px solid rgba(16,185,129,.2); }
+        .conf-med  { background: rgba(245,158,11,.1); color: #fcd34d; border: 1px solid rgba(245,158,11,.2); }
+        .conf-low  { background: rgba(239,68,68,.1);  color: #fca5a5; border: 1px solid rgba(239,68,68,.2); }
+        .no-data   { font-size: 12px; color: var(--text-3); font-style: italic; padding: 1rem 0; }
+        .share-badge {
+            display: inline-block;
+            margin-top: .3rem;
+            margin-bottom: .2rem;
+            font-size: 11px;
             font-weight: 700;
-            margin-bottom: 0.4rem;
+            padding: 2px 7px;
+            border-radius: 3px;
+            background: rgba(37,99,235,.12);
+            color: var(--accent-lite);
+            border: 1px solid rgba(37,99,235,.25);
+            cursor: default;
         }
-
-        .tech-specs-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .tech-badge {
-            background: rgba(14, 165, 233, 0.1);
-            border: 1px solid rgba(14, 165, 233, 0.2);
-            color: var(--accent);
-            font-size: 0.68rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
+        .ownership-flag {
+            display: block;
+            margin-top: .3rem;
+            font-size: 11px;
+            color: var(--warning);
             font-weight: 600;
         }
-
-        .supplier-details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.4rem;
-            font-size: 0.75rem;
-            color: var(--muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .fin-info,
-        .eco-info,
-        .lead-info {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .lead-info {
-            grid-column: span 2;
-        }
-
-        .no-data {
-            color: var(--muted);
+        .ownership-note {
+            display: block;
+            margin-top: .2rem;
+            font-size: 11px;
+            color: var(--text-3);
             font-style: italic;
-            text-align: center;
-            padding: 2rem;
         }
-
-        .leaflet-container {
-            background: #030712 !important;
+        .sources-block {
+            margin-top: 1rem;
+            border-top: 1px solid var(--card-border);
+            padding-top: .75rem;
         }
+        .sources-block h5 {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-3);
+            margin-bottom: .5rem;
+        }
+        .sources-block ul { list-style: none; }
+        .sources-block li { margin-bottom: .3rem; }
+        .sources-block a {
+            font-size: 11px;
+            color: var(--accent-lite);
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .sources-block a:hover { text-decoration: underline; }
 
-        .loader-text {
-            color: var(--accent);
-            font-size: 0.8rem;
+        /* Re-extract button */
+        .reextract-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-3);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: all .15s;
+            margin-left: .5rem;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .reextract-btn:hover { background: rgba(37,99,235,.12); color: var(--accent-lite); border-color: var(--accent-lite); }
+        .reextract-btn.loading { color: var(--warning); border-color: var(--warning); animation: spin 1s linear infinite; cursor: not-allowed; }
+        .reextract-btn.done { color: var(--success); border-color: var(--success); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* So what block */
+        .so-what-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            background: rgba(37,99,235,.1);
+            border: 1px solid rgba(37,99,235,.25);
+            color: var(--accent-lite);
+            border-radius: 5px;
+            padding: 4px 10px;
+            font-size: 11px;
             font-weight: 600;
-            animation: pulse 2s infinite;
-            display: none;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: all .15s;
+            margin-top: .5rem;
+        }
+        .so-what-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .so-what-text {
+            font-size: 12px;
+            color: var(--text-2);
+            line-height: 1.6;
+            font-style: italic;
+            margin-top: .6rem;
+            padding: .65rem .9rem;
+            background: rgba(37,99,235,.05);
+            border-left: 2px solid var(--accent-lite);
+            border-radius: 0 4px 4px 0;
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: .6
-            }
-
-            50% {
-                opacity: 1
-            }
+        .map-panel {
+            flex: 1;
+            min-height: 360px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
         }
+        .leaflet-container { background: #0b0f1a !important; }
 
-        .empty-table {
+        /* ── Empty state ── */
+        .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: var(--muted);
+            color: var(--text-3);
         }
+        .empty-state h3 { font-size: 18px; color: var(--text-2); margin-bottom: .5rem; }
 
-        .empty-table h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.4rem;
-            margin-bottom: .5rem;
-            color: var(--text);
+        /* ── Discovery loader ── */
+        .loader-bar {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-lite);
+            text-align: center;
+            padding: .4rem;
+            display: none;
         }
     </style>
 </head>
-
 <body>
-    <nav>
-        <div class="logo">⬡ SupplyTrace</div>
+
+<nav class="nav">
+    <div class="nav-left">
+        <a href="/" class="brand">Supply<b>Trace</b></a>
+        <a href="/analyses"  class="nav-link">Analyses</a>
         <a href="/dashboard" class="nav-link active">Dashboard</a>
-        <a href="/graph-view" class="nav-link">Supply Chain Graph</a>
-        <div class="nav-sep">
-            <form class="discovery-form" onsubmit="triggerDiscovery(event)">
-                <input class="discovery-input" id="discovery-input" placeholder="Discover new component…">
-                <button type="submit" class="btn btn-primary" id="disc-btn">+ Discover</button>
-            </form>
-            <a href="/" class="nav-link">← New Analysis</a>
-        </div>
-    </nav>
-    <div class="loader-text" id="loader" style="text-align:center;padding:.5rem">⏳ Discovering intelligence…</div>
+        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Geopolitical Comparison</a>
+    </div>
+    <div class="nav-right">
+        
+        <a href="/taxonomy-view{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;">Taxonomy Tree</a>
+    </div>
+</nav>
 
-    <div class="main">
-        <div class="stats-row">
-            <div class="stat">
-                <div class="stat-val">{{ total_components }}</div>
-                <div class="stat-label">Components Tracked</div>
-            </div>
-            <div class="stat">
-                <div class="stat-val" style="color:var(--warning)">{{ avg_risk }}</div>
-                <div class="stat-label">Average Risk Score</div>
-            </div>
-            <div class="stat">
-                <div class="stat-val" style="color:var(--danger)">{{ critical_count }}</div>
-                <div class="stat-label">High-Risk Bottlenecks</div>
-            </div>
-            <div class="stat">
-                <div class="stat-val" style="color:var(--success)">{{ segment }}</div>
-                <div class="stat-label">Active Segment</div>
-            </div>
-        </div>
+<div class="loader-bar" id="loader">Discovering intelligence…</div>
 
-        <div class="toolbar">
-            <div class="search-box">
-                <span style="color:var(--muted)">🔍</span>
-                <input type="text" id="search-filter" oninput="filterTable(this.value)"
-                    placeholder="Filter components…">
-            </div>
-        </div>
+<!-- Pending nodes banner (shown when new taxonomy nodes were added but not yet extracted) -->
+<div class="pending-banner" id="pending-banner">
+    <strong id="pending-count"></strong>
+    <div id="pending-tags"></div>
+    <button class="btn btn-primary extract-btn" id="extract-pending-btn" onclick="extractPendingNodes()">
+        ▶ Extract now
+    </button>
+    <button class="btn btn-ghost" style="font-size:11px;padding:3px 8px" onclick="dismissPending()">Dismiss</button>
+</div>
 
-        <div class="table-card">
-            {% if rows %}
-            <table id="risk-table">
-                <thead>
-                    <tr>
-                        <th style="width:30%">Component</th>
-                        <th style="width:18%">Risk Score</th>
-                        <th style="width:12%">Confidence</th>
-                        <th>Key Drivers</th>
-                    </tr>
-                </thead>
-                <tbody>{{ rows|safe }}</tbody>
-            </table>
-            {% else %}
-            <div class="empty-table">
-                {% if is_extracting %}
-                <div class="loader-text"
-                    style="display:block;font-size:3.5rem;margin-bottom:1rem;color:var(--accent);animation:none;">⏳
+<div class="page">
+
+    <!-- Controls bar -->
+    <div class="controls-bar">
+        <h1>
+            {% if sector %}<span>{{ sector }}</span> &mdash; {% endif %}
+            {{ segment }} Risk Dashboard
+        </h1>
+
+        <!-- View configuration controls -->
+        <div class="controls-group">
+            <!-- Perspective tabs -->
+            <div>
+                <div class="controls-label">Perspective</div>
+                <div class="perspective-tabs">
+                    {% set base_url = '/dashboard' %}
+                    {%- set q_sector = '&sector=' ~ (sector | urlencode) if sector else '' %}
+                    {%- set q_segment = '&segment=' ~ (segment | urlencode) if segment else '' %}
+                    {% set q_scenario = '&scenario=' ~ scenario if scenario else '' %}
+                    <a href="{{ base_url }}?region=EU{{ q_sector }}{{ q_segment }}{{ q_scenario }}"   class="{% if region == 'EU'    %}active{% endif %}">EU</a>
+                    <a href="{{ base_url }}?region=US{{ q_sector }}{{ q_segment }}{{ q_scenario }}"   class="{% if region == 'US'    %}active{% endif %}">US</a>
+                    <a href="{{ base_url }}?region=CHINA{{ q_sector }}{{ q_segment }}{{ q_scenario }}" class="{% if region == 'CHINA' %}active{% endif %}">China</a>
                 </div>
-                <h3>Extraction in Progress...</h3>
-                <p style="max-width:420px;margin:0 auto 1.5rem">
-                    The intelligence engine is actively scanning APIs and web sources for <span
-                        style="color:var(--accent)">{{ segment }}</span>.
-                    This will take several minutes. The results will populate soon.
-                </p>
-                <div style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem;">(The page will keep
-                    checking for updates automatically)</div>
-                <script>
-                    setTimeout(() => { window.location.reload(); }, 5000);
-                </script>
-                {% else %}
-                <div style="font-size:3.5rem;margin-bottom:1rem">🔍</div>
-                <h3>No data yet for <span style="color:var(--accent)">{{ segment }}</span></h3>
-                <p style="max-width:420px;margin:0 auto 1.5rem">
-                    Taxonomy saved, but no supplier intelligence has been extracted for this segment yet.
-                    Go back to the onboarding flow and click <strong>"Confirm &amp; Start Extraction"</strong> — or type
-                    a component name in the <strong>Discover</strong> bar above.
-                </p>
-                <a href="/"
-                    style="display:inline-block;background:linear-gradient(135deg,var(--accent),#0284c7);color:white;border-radius:.75rem;padding:.75rem 1.5rem;font-weight:700;text-decoration:none;font-size:.9rem">←
-                    Start Extraction Flow</a>
-                {% endif %}
             </div>
-            {% endif %}
 
+            <!-- Scenario selector -->
+            <div>
+                <div class="controls-label">Scenario</div>
+                <select id="scenario-sel" onchange="applyScenario(this.value)" style="background:var(--card);border:1px solid var(--card-border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px;font-family:var(--font);cursor:pointer;outline:none">
+                    <option value="" {% if not scenario %}selected{% endif %}>Baseline</option>
+                    {% for key, sc in scenarios.items() %}
+                    <option value="{{ key }}" {% if scenario == key %}selected{% endif %}>{{ sc.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     </div>
 
-    <script>
-        const COORDS = {{ coords_json| safe }};
-        const activeMaps = {};
-        let worldGeoJson = null;
+    <!-- KPI row -->
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--accent-lite)">{{ total_components }}</div>
+            <div class="kpi-label">Components Tracked</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--warning)">{{ avg_risk }}</div>
+            <div class="kpi-label">Average Risk Score</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--danger)">{{ critical_count }}</div>
+            <div class="kpi-label">High-Risk Bottlenecks</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--text-2);font-size:18px;">{{ region }}</div>
+            <div class="kpi-label">Perspective</div>
+        </div>
+        <div class="kpi">
+            <div style="margin-bottom:.4rem">
+                {% if scenario %}
+                    <span class="scenario-pill">&#9888; {{ scenario_label }}</span>
+                {% else %}
+                    <span style="font-size:13px;color:var(--text-2);">None</span>
+                {% endif %}
+            </div>
+            <div class="kpi-label">Active Scenario</div>
+        </div>
+    </div>
 
-        async function fetchGeoJson() {
-            if (worldGeoJson) return worldGeoJson;
-            try {
-                const r = await fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson');
-                worldGeoJson = await r.json(); return worldGeoJson;
-            } catch (e) { return null; }
-        }
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="search-wrap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="search-input" placeholder="Filter components…" oninput="filterTable(this.value)">
+        </div>
 
-        function toggleDetails(id) {
-            const row = document.getElementById(`details-${id}`);
-            const visible = row.style.display === 'table-row';
-            document.querySelectorAll('.details-row').forEach(r => r.style.display = 'none');
-            if (!visible) { row.style.display = 'table-row'; initMap(id); }
-        }
+        <form class="discover-form" onsubmit="triggerDiscovery(event)">
+            <input class="discover-input" id="disc-input" type="text" placeholder="Discover new component…">
+            <button class="btn btn-primary" id="disc-btn" type="submit">Discover</button>
+        </form>
 
-        async function initMap(id) {
-            if (activeMaps[id]) { setTimeout(() => activeMaps[id].invalidateSize(), 150); return; }
-            const el = document.getElementById(`map-${id}`); if (!el) return;
-            const suppliers = JSON.parse(el.dataset.suppliers);
-            const map = L.map(`map-${id}`, { zoomControl: false, attributionControl: false }).setView([20, 0], 2);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
-            const geo = await fetchGeoJson();
-            const active = new Set(suppliers.map(s => (s.country || '').toUpperCase()));
-            if (geo) {
-                L.geoJson(geo, {
-                    style: f => {
-                        const n = f.properties.name.toUpperCase();
-                        const match = active.has(n) || active.has((f.properties.iso_a3 || '').toUpperCase()) || (n === 'UNITED STATES' && active.has('USA'));
-                        return { fillColor: match ? '#0ea5e9' : 'transparent', weight: match ? 1 : 0.4, opacity: match ? .9 : .1, color: match ? '#0ea5e9' : '#1e293b', fillOpacity: match ? .3 : 0 };
-                    }
-                }).addTo(map);
-            }
-            const bounds = suppliers.map(s => COORDS[(s.country || '').toUpperCase()]).filter(Boolean);
-            if (bounds.length) map.fitBounds(bounds, { padding: [50, 50] }); else map.setView([20, 0], 2);
-            activeMaps[id] = map;
-        }
+        <span id="extraction-controls" style="display:flex;gap:.4rem"></span>
+    </div>
 
-        function filterTable(query) {
-            const q = query.toLowerCase();
-            document.querySelectorAll('#risk-table tbody .clickable-row').forEach(row => {
-                const name = row.querySelector('.comp-name')?.textContent.toLowerCase() || '';
-                const next = row.nextElementSibling;
-                const show = name.includes(q);
-                row.style.display = show ? '' : 'none';
-                if (next?.classList.contains('details-row')) next.style.display = show ? next.style.display : 'none';
+    <!-- Risk table -->
+    <div class="table-wrap">
+        {% if rows %}
+        <table id="risk-table">
+            <thead>
+                <tr>
+                    <th style="width:28%">Component</th>
+                    <th style="width:16%">Risk Score</th>
+                    <th style="width:11%">Confidence</th>
+                    <th>Key Risk Drivers</th>
+                </tr>
+            </thead>
+            <tbody>{{ rows | safe }}</tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            {% if is_extracting %}
+                <h3>Extraction in progress…</h3>
+                <p style="font-size:13px;margin:.5rem 0 1.5rem">
+                    The intelligence engine is scanning sources for <strong>{{ segment }}</strong>.
+                    This may take several minutes. The page refreshes automatically.
+                </p>
+                <script>
+                    // Poll every 8 seconds while extracting; reload when suppliers appear
+                    (function poll() {
+                        setTimeout(async () => {
+                            try {
+                                const r = await fetch(window.location.href, {headers: {'X-Poll': '1'}});
+                                const text = await r.text();
+                                if (text.includes('data-row') || !text.includes('Extraction in progress')) {
+                                    location.reload();
+                                } else { poll(); }
+                            } catch { poll(); }
+                        }, 8000);
+                    })();
+                </script>
+            {% else %}
+                <h3>No data for {{ segment }}</h3>
+                <p style="font-size:13px;margin:.5rem 0 1.5rem;max-width:400px;margin-left:auto;margin-right:auto">
+                    No supplier intelligence has been extracted yet.
+                    Return to the onboarding flow and click <strong>Confirm &amp; Start Extraction</strong>.
+                </p>
+                <a href="/" class="btn btn-primary">Start Extraction</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+</div><!-- /page -->
+
+<script>
+const COORDS   = {{ coords_json | safe }};
+const activeMaps = {};
+let   geoCache   = null;
+
+// ── Pending nodes (added via Taxonomy editor, not yet extracted) ──────────────
+const DASH_SECTOR  = "{{ sector | e }}";
+const DASH_SEGMENT = "{{ segment | e }}";
+const PENDING_KEY  = `pending_nodes__${DASH_SECTOR}__${DASH_SEGMENT}`;
+
+function loadPendingBanner() {
+    const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+    if (!pending.length) return;
+
+    const banner = document.getElementById('pending-banner');
+    const count  = document.getElementById('pending-count');
+    const tags   = document.getElementById('pending-tags');
+
+    count.textContent = `${pending.length} new node${pending.length > 1 ? 's' : ''} added — not yet extracted:`;
+    tags.innerHTML = '';
+    pending.forEach(name => {
+        const tag = document.createElement('span');
+        tag.className = 'pending-tag';
+        tag.innerHTML = `${name} <button onclick="removePendingNode('${name.replace(/'/g,"\\'")}')">×</button>`;
+        tags.appendChild(tag);
+    });
+
+    banner.classList.add('show');
+}
+
+function removePendingNode(name) {
+    let pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+    pending = pending.filter(n => n !== name);
+    localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+    loadPendingBanner();
+    if (!pending.length) document.getElementById('pending-banner').classList.remove('show');
+}
+
+function dismissPending() {
+    localStorage.removeItem(PENDING_KEY);
+    document.getElementById('pending-banner').classList.remove('show');
+}
+
+async function extractPendingNodes() {
+    const pending = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+    if (!pending.length) return;
+
+    const btn = document.getElementById('extract-pending-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Queuing…';
+
+    let succeeded = 0;
+    for (const name of pending) {
+        try {
+            const res = await fetch('/api/v1/extract-node', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ component: name, sector: DASH_SECTOR, segment: DASH_SEGMENT }),
             });
+            if (res.ok) { succeeded++; removePendingNode(name); }
+        } catch (e) {
+            console.error('extract-node failed for', name, e);
         }
+    }
 
-        async function triggerDiscovery(e) {
-            e.preventDefault();
-            const input = document.getElementById('discovery-input');
-            const btn = document.getElementById('disc-btn');
-            const loader = document.getElementById('loader');
-            const val = input.value.trim(); if (!val) return;
-            btn.disabled = true; loader.style.display = 'block';
-            try {
-                const res = await fetch(`/api/v1/discovery/${encodeURIComponent(val)}`, { method: 'POST' });
-                const data = await res.json();
-                if (data.status === 'success') {
-                    loader.textContent = `[+] Intelligence secured! Refreshing…`;
-                    setTimeout(() => window.location.reload(), 1500);
-                } else {
-                    alert('Discovery failed: ' + (data.error || 'Unknown error'));
-                    btn.disabled = false; loader.style.display = 'none';
-                }
-            } catch (err) {
-                alert('Connection error.'); btn.disabled = false; loader.style.display = 'none';
+    btn.textContent = succeeded ? `✓ Extraction started for ${succeeded} node${succeeded > 1 ? 's' : ''}` : '✗ Error';
+    setTimeout(() => { btn.disabled = false; btn.textContent = '▶ Extract now'; }, 3000);
+}
+
+loadPendingBanner();
+
+function applyScenario(val) {
+    const url   = new URL(window.location.href);
+    if (val) url.searchParams.set('scenario', val);
+    else     url.searchParams.delete('scenario');
+    window.location.href = url.toString();
+}
+
+async function fetchGeo() {
+    if (geoCache) return geoCache;
+    try {
+        const r = await fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson');
+        geoCache = await r.json();
+        return geoCache;
+    } catch { return null; }
+}
+
+function toggleDetails(id) {
+    const row     = document.getElementById(`details-${id}`);
+    const visible = row.style.display === 'table-row';
+    document.querySelectorAll('.detail-row').forEach(r => r.style.display = 'none');
+    if (!visible) { row.style.display = 'table-row'; initMap(id); }
+}
+
+async function initMap(id) {
+    if (activeMaps[id]) { setTimeout(() => activeMaps[id].invalidateSize(), 100); return; }
+    const el = document.getElementById(`map-${id}`);
+    if (!el) return;
+    const suppliers = JSON.parse(el.dataset.suppliers);
+    const map = L.map(`map-${id}`, { zoomControl: false, attributionControl: false }).setView([20, 0], 2);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+    const geo = await fetchGeo();
+    const active = new Set(suppliers.map(s => (s.country || '').toUpperCase()));
+    if (geo) {
+        L.geoJson(geo, {
+            style: f => {
+                const n     = (f.properties.name || '').toUpperCase();
+                const iso   = (f.properties.iso_a3 || '').toUpperCase();
+                const match = active.has(n) || active.has(iso)
+                           || (n === 'UNITED STATES' && (active.has('USA') || active.has('US')));
+                return {
+                    fillColor:   match ? '#3b82f6' : 'transparent',
+                    fillOpacity: match ? 0.35 : 0,
+                    color:       match ? '#3b82f6' : '#1e293b',
+                    weight:      match ? 1 : 0.3,
+                    opacity:     match ? 0.9 : 0.15,
+                };
+            },
+        }).addTo(map);
+    }
+    const pts = suppliers.map(s => COORDS[(s.country || '').toUpperCase()]).filter(Boolean);
+    if (pts.length) map.fitBounds(pts, { padding: [40, 40] });
+    activeMaps[id] = map;
+}
+
+function filterTable(q) {
+    const lq = q.toLowerCase();
+    document.querySelectorAll('#risk-table tbody .data-row').forEach(row => {
+        const name = row.querySelector('.comp-name')?.textContent.toLowerCase() || '';
+        const show = name.includes(lq);
+        row.style.display = show ? '' : 'none';
+        const next = row.nextElementSibling;
+        if (next?.classList.contains('detail-row'))
+            next.style.display = (show && next.style.display === 'table-row') ? 'table-row' : 'none';
+    });
+}
+
+async function loadSoWhat(component, rowId) {
+    const btn  = document.querySelector(`#sw-${rowId} .so-what-btn`);
+    const area = document.getElementById(`sw-text-${rowId}`);
+    if (!btn || !area) return;
+    btn.textContent    = 'Generating…';
+    btn.disabled       = true;
+    area.style.display = 'none';
+    try {
+        const url  = new URL('/api/v1/so-what', window.location.origin);
+        url.searchParams.set('component', component);
+        {% if sector %}url.searchParams.set('sector',  '{{ sector | e }}');{% endif %}
+        {% if segment %}url.searchParams.set('segment', '{{ segment | e }}');{% endif %}
+        url.searchParams.set('region', '{{ region }}');
+        const res  = await fetch(url);
+        const data = await res.json();
+        area.textContent   = data.text;
+        area.style.display = 'block';
+        btn.textContent    = 'Regenerate Analysis';
+        btn.disabled       = false;
+    } catch {
+        area.textContent   = 'Analysis generation failed.';
+        area.style.display = 'block';
+        btn.disabled       = false;
+    }
+}
+
+// ── Re-extract single component ───────────────────────────────────────────────
+async function reExtractComponent(componentName, rowId) {
+    const btn = document.getElementById(`reextract-${rowId}`);
+    if (btn) {
+        btn.classList.add('loading');
+        btn.disabled = true;
+        btn.title = 'Re-extracting…';
+    }
+
+    try {
+        const res = await fetch('/api/v1/re-extract-component', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                component: componentName,
+                sector:    DASH_SECTOR,
+                segment:   DASH_SEGMENT,
+            }),
+        });
+        if (res.ok) {
+            if (btn) {
+                btn.classList.remove('loading');
+                btn.classList.add('done');
+                btn.title = 'Re-extraction started — refresh page in ~30s for updated data';
+                setTimeout(() => {
+                    btn.classList.remove('done');
+                    btn.disabled = false;
+                    btn.title = 'Re-extract intelligence for this component';
+                }, 5000);
             }
+        } else {
+            throw new Error('Server error');
         }
-    </script>
-</body>
+    } catch (e) {
+        console.error('re-extract-component failed for', componentName, e);
+        if (btn) {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+            btn.title = 'Re-extraction failed — try again';
+        }
+    }
+}
 
+// ── Extraction controls (polled every 3s — no stale Jinja state) ─────────────
+let _pollTimer = null;
+
+function _renderExtractionControls(isExtracting, isPaused) {
+    const wrap = document.getElementById('extraction-controls');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    if (!isExtracting) return;
+    if (!isPaused) {
+        const p = document.createElement('button');
+        p.className   = 'btn btn-warning';
+        p.textContent = '❚❚ Pause';
+        p.onclick     = pauseExtraction;
+        wrap.appendChild(p);
+    } else {
+        const r = document.createElement('button');
+        r.className   = 'btn btn-success';
+        r.textContent = '▶ Resume';
+        r.onclick     = resumeExtraction;
+        wrap.appendChild(r);
+    }
+    const s = document.createElement('button');
+    s.className   = 'btn btn-danger';
+    s.textContent = '■ Stop';
+    s.onclick     = cancelExtraction;
+    wrap.appendChild(s);
+}
+
+async function _pollStatus() {
+    try {
+        const res  = await fetch('/api/v1/session-status');
+        const data = await res.json();
+        _renderExtractionControls(data.is_extracting, data.is_paused);
+    } catch {}
+    _pollTimer = setTimeout(_pollStatus, 3000);
+}
+
+async function pauseExtraction() {
+    await fetch('/api/v1/pause-extraction', { method: 'POST' });
+}
+
+async function resumeExtraction() {
+    await fetch('/api/v1/resume-extraction', { method: 'POST' });
+}
+
+async function cancelExtraction() {
+    await fetch('/api/v1/cancel-extraction', { method: 'POST' });
+    setTimeout(() => location.reload(), 1500);
+}
+
+// Start polling immediately
+_pollStatus();
+
+async function triggerDiscovery(e) {
+    e.preventDefault();
+    const input  = document.getElementById('disc-input');
+    const btn    = document.getElementById('disc-btn');
+    const loader = document.getElementById('loader');
+    const val    = input.value.trim();
+    if (!val) return;
+
+    // Redirect to taxonomy editor instead of running discovery directly
+    const taxUrl = '/taxonomy-view' + (DASH_SECTOR || DASH_SEGMENT
+        ? `?sector=${encodeURIComponent(DASH_SECTOR)}&segment=${encodeURIComponent(DASH_SEGMENT)}`
+        : '');
+    alert(`Add "${val}" to the taxonomy graph first — it will appear here once extracted.\n\nYou'll be redirected to the Taxonomy editor.`);
+    window.location.href = taxUrl;
+}
+</script>
+</body>
 </html>

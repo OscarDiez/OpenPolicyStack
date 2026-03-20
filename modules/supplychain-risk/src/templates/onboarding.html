@@ -1,562 +1,753 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Build Taxonomy — SupplyTrace</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700;900&display=swap"
-        rel="stylesheet">
+    <title>New Analysis — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030712;
-            --card: rgba(15, 23, 42, 0.88);
-            --accent: #0ea5e9;
-            --accent2: #8b5cf6;
-            --glow: rgba(14, 165, 233, 0.2);
-            --border: rgba(56, 189, 248, 0.18);
-            --text: #f1f5f9;
-            --muted: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --bg:          #0b0f1a;
+            --surface:     #111827;
+            --card:        #161d2e;
+            --card-border: #1e2d45;
+            --accent:      #2563eb;
+            --accent-lite: #3b82f6;
+            --text:        #e2e8f0;
+            --text-2:      #94a3b8;
+            --text-3:      #64748b;
+            --success:     #10b981;
+            --warning:     #f59e0b;
+            --danger:      #ef4444;
+            --font:        'Inter', system-ui, sans-serif;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font);
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            padding: 2rem 1rem;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        nav {
+        /* ── Navigation ── */
+        .nav {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 2.5rem;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 52px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 200;
         }
-
-        .nav-back {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .nav-back:hover {
-            color: var(--accent);
-        }
-
-        .step-indicator {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .step {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            color: var(--muted);
-            font-size: 0.75rem;
+        .nav-left  { display: flex; align-items: center; gap: 2rem; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .brand {
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .step.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(14, 165, 233, 0.1);
-        }
-
-        .step.done {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .step-line {
-            flex: 1;
-            height: 2px;
-            background: var(--border);
-            border-radius: 2px;
-            max-width: 60px;
-        }
-
-        h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .sub {
-            color: var(--muted);
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-
-        .context-bar {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .chip {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 2rem;
-            padding: 0.35rem 0.9rem;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .chip span {
+            font-size: 15px;
             color: var(--text);
-            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: -0.01em;
         }
+        .brand b { color: var(--accent-lite); }
+        .nav-link {
+            color: var(--text-2);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color .15s, background .15s;
+        }
+        .nav-link:hover { color: var(--text); background: var(--card); }
 
-        .btn {
+        /* ── Page container ── */
+        .page { max-width: 820px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+        /* ── Sub-nav (back + steps) ── */
+        .subnav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .back-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-3);
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            border: none;
-            border-radius: 0.75rem;
-            padding: 0.85rem 1.75rem;
+            gap: 4px;
+            transition: color .15s;
+        }
+        .back-link:hover { color: var(--text-2); }
+        .steps {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-left: auto;
+        }
+        .step {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--card-border);
+            color: var(--text-3);
+            font-size: 11px;
             font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
         }
+        .step.active { border-color: var(--accent-lite); color: var(--accent-lite); background: rgba(59,130,246,.08); }
+        .step.done   { border-color: var(--success); color: var(--success); background: rgba(16,185,129,.08); }
+        .step-line   { width: 40px; height: 2px; background: var(--card-border); border-radius: 1px; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #0284c7);
-            color: white;
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 28px rgba(14, 165, 233, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-ghost {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            color: var(--muted);
-        }
-
-        .btn-ghost:hover {
-            color: var(--text);
-            border-color: var(--text);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #059669);
-            color: white;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-        }
-
-        #step-generate {
-            text-align: center;
-            padding: 3rem 1rem;
-        }
-
-        #step-generate .big-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        #step-review {
-            display: none;
-        }
-
-        .taxonomy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.5rem;
+        /* ── Context chips ── */
+        .context-bar {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
             margin-bottom: 2rem;
         }
+        .chip {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--text-3);
+        }
+        .chip strong { color: var(--text-2); font-weight: 600; }
+
+        /* ── Steps ── */
+        #step-generate {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        #step-generate h2 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            margin-bottom: .75rem;
+        }
+        #step-generate p {
+            font-size: 13px;
+            color: var(--text-2);
+            max-width: 420px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        #step-review  { display: none; }
+        #step-extracting { display: none; text-align: center; padding: 4rem 1rem; }
+
+        /* ── Review step ── */
+        #step-review h2 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            margin-bottom: .35rem;
+        }
+        #step-review > p {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-bottom: 1.5rem;
+        }
+
+        .taxonomy-grid { margin-bottom: 1.75rem; }
 
         .subsystem-card {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 1.25rem;
-        }
-
-        .subsystem-title {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--accent);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
             margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
-
-        .comp-list {
-            list-style: none;
-        }
-
-        .comp-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .comp-item:last-child {
-            border-bottom: none;
-        }
-
-        .comp-name {
-            flex: 1;
-            font-size: 0.9rem;
-        }
-
-        .comp-del {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1rem;
-            opacity: 0.5;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .comp-del:hover {
-            opacity: 1;
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .add-comp-form {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .add-comp-input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 0.5rem;
-            padding: 0.4rem 0.7rem;
-            font-size: 0.85rem;
-            font-family: 'Inter', sans-serif;
-            outline: none;
-        }
-
-        .add-comp-input:focus {
-            border-color: var(--accent);
-        }
-
-        .add-comp-btn {
-            background: rgba(14, 165, 233, 0.15);
-            border: 1px solid rgba(14, 165, 233, 0.3);
-            color: var(--accent);
-            border-radius: 0.5rem;
-            padding: 0 0.85rem;
-            cursor: pointer;
+        .subsystem-title {
+            font-size: 12px;
             font-weight: 700;
-            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--accent-lite);
+            margin-bottom: 1rem;
         }
 
-        .add-comp-btn:hover {
-            background: rgba(14, 165, 233, 0.25);
+        /* Tree */
+        .tree-root { list-style: none; padding-left: 0; }
+        .tree-root ul {
+            list-style: none;
+            padding-left: 1.5rem;
+            border-left: 1px dashed var(--card-border);
+            margin-top: .3rem;
+            margin-bottom: .3rem;
+        }
+        .tree-root li { padding: .2rem 0; }
+        .tree-node {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: 13px;
+        }
+        .tree-node.branch { color: var(--accent-lite); font-weight: 600; }
+        .tree-node.leaf   { color: var(--text-2); }
+        .node-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .branch .node-dot { background: var(--accent-lite); }
+        .leaf   .node-dot { background: var(--text-3); }
+
+        /* Editable node label */
+        .node-label[contenteditable="true"] {
+            outline: none;
+            border-bottom: 1px dashed var(--accent-lite);
+            padding: 0 2px;
+            cursor: text;
+            min-width: 30px;
         }
 
+        /* Inline edit buttons — visible on hover */
+        .node-edit-btns {
+            display: none;
+            align-items: center;
+            gap: .2rem;
+            margin-left: .3rem;
+        }
+        .tree-node:hover .node-edit-btns { display: inline-flex; }
+        .ne-btn {
+            background: none;
+            border: 1px solid var(--card-border);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+            color: var(--text-3);
+            cursor: pointer;
+            font-family: var(--font);
+            line-height: 1.4;
+            transition: all .1s;
+        }
+        .ne-btn:hover { background: var(--surface); color: var(--text); }
+        .ne-btn.del:hover { border-color: var(--danger); color: var(--danger); }
+        .ne-btn.add:hover { border-color: var(--success); color: var(--success); }
+
+        /* Edit hint */
+        .edit-hint {
+            font-size: 11px; color: var(--text-3);
+            margin-bottom: 1rem;
+            display: flex; align-items: center; gap: .4rem;
+        }
+
+        /* Add-node modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.6);
+            display: none; align-items: center; justify-content: center; z-index: 400;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--card); border: 1px solid var(--card-border);
+            border-radius: 8px; padding: 1.5rem; width: 360px; max-width: 90vw;
+        }
+        .modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 1rem; }
+        .modal label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: .3rem; }
+        .modal input, .modal select {
+            width: 100%; background: var(--bg); border: 1px solid var(--card-border);
+            color: var(--text); border-radius: 5px; padding: .55rem .75rem;
+            font-size: 13px; font-family: var(--font); outline: none;
+            margin-bottom: .9rem; transition: border-color .15s;
+        }
+        .modal input:focus, .modal select:focus { border-color: var(--accent-lite); }
+        .modal-actions { display: flex; gap: .5rem; justify-content: flex-end; }
+
+        /* Sources card */
+        .sources-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .sources-card h4 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+            margin-bottom: .75rem;
+        }
+        .sources-card ul { list-style: none; }
+        .sources-card li { margin-bottom: .35rem; }
+        .sources-card a {
+            font-size: 12px;
+            color: var(--accent-lite);
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .sources-card a:hover { text-decoration: underline; }
+
+        /* Cached notice */
+        .cached-notice {
+            background: rgba(16,185,129,.08);
+            border: 1px solid rgba(16,185,129,.2);
+            color: var(--success);
+            border-radius: 6px;
+            padding: .85rem 1.1rem;
+            font-size: 13px;
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        /* Action bar */
         .action-bar {
             display: flex;
-            gap: 1rem;
+            gap: .75rem;
             flex-wrap: wrap;
             align-items: center;
         }
 
-        #step-extracting {
-            display: none;
-            text-align: center;
-            padding: 3rem 1rem;
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: var(--font);
         }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover:not(:disabled) { background: var(--accent-lite); }
+        .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover { background: #059669; }
+        .btn-ghost {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--text-2);
+        }
+        .btn-ghost:hover { color: var(--text); border-color: var(--text-3); }
+
+        /* ── Extracting step ── */
+        #step-extracting h2 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            margin-bottom: .5rem;
+        }
+        #step-extracting > p {
+            font-size: 13px;
+            color: var(--text-2);
+            max-width: 440px;
+            margin: 0 auto 1.75rem;
+            line-height: 1.6;
+        }
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(37,99,235,.2);
+            border-top-color: var(--accent-lite);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin: 0 auto 1.25rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .progress-card {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
-            padding: 2rem;
-            margin: 1.5rem auto;
-            max-width: 500px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            max-width: 480px;
+            margin: 0 auto;
             text-align: left;
+            max-height: 240px;
+            overflow-y: auto;
         }
-
         .log-line {
-            font-size: 0.8rem;
-            color: var(--muted);
+            font-size: 12px;
+            color: var(--text-3);
             font-family: monospace;
-            padding: 0.2rem 0;
+            padding: .2rem 0;
         }
-
-        .log-line.ok {
-            color: var(--success);
-        }
-
-        .log-line.err {
-            color: var(--danger);
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(14, 165, 233, 0.2);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 0.7
-            }
-
-            50% {
-                opacity: 1
-            }
+        .log-line.ok  { color: var(--success); }
+        .log-line.err { color: var(--danger); }
+        .redirect-note {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 1rem;
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <nav>
-            <a href="/" class="nav-back">← Back</a>
-            <div style="flex:1"></div>
-            <div class="step-indicator">
-                <div class="step done" id="s1">✓</div>
-                <div class="step-line"></div>
-                <div class="step active" id="s2">2</div>
-                <div class="step-line"></div>
-                <div class="step" id="s3">3</div>
-            </div>
-        </nav>
 
-        <div class="context-bar">
-            <div class="chip">Sector: <span id="ctx-sector"></span></div>
-            <div class="chip">Segment: <span id="ctx-segment"></span></div>
-            <div class="chip">Region: <span id="ctx-region"></span></div>
-        </div>
+<nav class="nav">
+    <div class="nav-left">
+        <a href="/" class="brand">Supply<b>Trace</b></a>
+        <a href="/analyses"  class="nav-link">Analyses</a>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+    </div>
+</nav>
 
-        <!-- Step 2: Generate -->
-        <div id="step-generate">
-            <div class="big-icon">🧠</div>
-            <h2>Generate Component Taxonomy</h2>
-            <p class="sub" style="max-width:480px;margin:0 auto 2rem">The AI will propose a full component breakdown for
-                this segment. You can review, edit, add, or remove components before extraction begins.</p>
-            <button class="btn btn-primary" id="gen-btn" onclick="generateTaxonomy()">Generate Taxonomy</button>
-        </div>
+<div class="page">
 
-        <!-- Step 3: Review & Edit -->
-        <div id="step-review">
-            <h2>Review &amp; Edit Taxonomy</h2>
-            <p class="sub">Add or remove components as needed. When you're happy, click Confirm to start extraction.</p>
-            <div class="taxonomy-grid" id="taxonomy-grid"></div>
-            <div class="action-bar">
-                <button class="btn btn-success" onclick="confirmAndExtract()">✅ Confirm &amp; Start Extraction
-                    →</button>
-                <button class="btn btn-ghost" onclick="generateTaxonomy()">↺ Regenerate</button>
-            </div>
-        </div>
-
-        <!-- Step 4: Extracting -->
-        <div id="step-extracting">
-            <div class="spinner pulse"></div>
-            <h2>Extracting Intelligence…</h2>
-            <p class="sub">The engine is querying trade databases, scraping suppliers, and building risk profiles. This
-                may take a few minutes.</p>
-            <div class="progress-card" id="log-container">
-                <div class="log-line ok">[*] Taxonomy saved. Starting batch extraction...</div>
-            </div>
-            <p style="color: var(--muted); font-size: 0.8rem; margin-top: 1rem;">You'll be redirected to the dashboard
-                when done.</p>
+    <!-- Sub-nav -->
+    <div class="subnav">
+        <a href="/" class="back-link">&larr; Back</a>
+        <div class="steps">
+            <div class="step done" id="s1">&#10003;</div>
+            <div class="step-line"></div>
+            <div class="step active" id="s2">2</div>
+            <div class="step-line"></div>
+            <div class="step" id="s3">3</div>
         </div>
     </div>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const sector = params.get('sector') || 'Unknown';
-        const segment = params.get('segment') || 'Unknown';
-        const region = params.get('region') || 'EU';
+    <!-- Context chips -->
+    <div class="context-bar">
+        <div class="chip">Sector: <strong id="ctx-sector"></strong></div>
+        <div class="chip">Segment: <strong id="ctx-segment"></strong></div>
+        <div class="chip">Perspective: <strong id="ctx-region"></strong></div>
+    </div>
 
-        document.getElementById('ctx-sector').textContent = sector;
-        document.getElementById('ctx-segment').textContent = segment;
-        document.getElementById('ctx-region').textContent = region;
+    <!-- Step 2: Generate -->
+    <div id="step-generate">
+        <h2>Generate Component Taxonomy</h2>
+        <p>
+            The AI will propose a full component breakdown for this segment, tracing dependencies
+            all the way to raw earth materials. Review and edit the structure before extraction begins.
+        </p>
+        <div id="existing-taxonomy-banner" style="display:none;margin-bottom:1rem;padding:.85rem 1.1rem;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:8px;font-size:13px;color:var(--success)">
+            <strong>⚠ Existing taxonomy found for this segment.</strong>
+            Generating a new one may change component names and break the link to already-extracted files.
+            <div style="margin-top:.6rem;display:flex;gap:.5rem">
+                <button class="btn btn-success" style="font-size:12px;padding:5px 14px" onclick="useExistingTaxonomy()">Use existing taxonomy &rarr;</button>
+                <button class="btn btn-ghost"   style="font-size:12px;padding:5px 14px" onclick="document.getElementById('gen-btn').click()">Regenerate anyway</button>
+            </div>
+        </div>
+        <button class="btn btn-primary" id="gen-btn" onclick="generateTaxonomy()">Generate Taxonomy</button>
+    </div>
 
-        let currentTaxonomy = null;
+    <!-- Step 3: Review and Edit -->
+    <div id="step-review">
+        <h2>Review &amp; Edit Taxonomy</h2>
+        <p>Add, rename, or remove components before extraction starts. Hover any node to see edit controls.</p>
+        <div class="edit-hint">
+            <span>&#9432;</span>
+            Hover a node to <strong>rename</strong>, add a <strong>child</strong>, or <strong>delete</strong> it. Changes are saved when you confirm.
+        </div>
+        <div class="taxonomy-grid" id="taxonomy-grid"></div>
+        <div style="margin-bottom:1rem;">
+            <button class="btn btn-ghost" id="add-toplevel-btn" onclick="addTopLevelNode()" style="font-size:12px;padding:6px 14px;">
+                + Add Top-Level System
+            </button>
+        </div>
+        <div class="action-bar">
+            <button class="btn btn-success" onclick="confirmAndExtract()">Confirm &amp; Start Extraction &rarr;</button>
+            <button class="btn btn-ghost"   onclick="generateTaxonomy(true)">Regenerate</button>
+        </div>
+    </div>
 
-        async function generateTaxonomy() {
-            const btn = document.getElementById('gen-btn');
-            if (btn) { btn.disabled = true; btn.textContent = '⏳ Generating…'; }
-            document.getElementById('step-generate').style.display = 'block';
-            document.getElementById('step-review').style.display = 'none';
+    <!-- Add node modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h3>Add Node</h3>
+            <label>Name</label>
+            <input type="text" id="modal-name" placeholder="e.g. Niobium Ore…">
+            <label>Type</label>
+            <select id="modal-type">
+                <option value="branch">Branch (sub-system / category)</option>
+                <option value="leaf">Leaf (specific component / material)</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" style="padding:6px 14px;font-size:12px" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" style="padding:6px 14px;font-size:12px" onclick="confirmAdd()">Add</button>
+            </div>
+        </div>
+    </div>
 
-            const res = await fetch('/api/v1/generate-taxonomy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sector, segment })
-            });
-            const data = await res.json();
+    <!-- Step 4: Extracting -->
+    <div id="step-extracting">
+        <div class="spinner"></div>
+        <h2>Extracting Intelligence…</h2>
+        <p>
+            Querying trade databases, scraping supplier registries, and computing 7-pillar risk scores
+            for each component. This may take several minutes.
+        </p>
+        <div class="progress-card" id="log-container">
+            <div class="log-line ok">[*] Taxonomy saved. Starting batch extraction…</div>
+        </div>
+        <p class="redirect-note">You will be redirected to the dashboard automatically.</p>
+    </div>
+
+</div><!-- /page -->
+
+<script>
+const params  = new URLSearchParams(window.location.search);
+const sector  = params.get('sector')  || 'Unknown';
+const segment = params.get('segment') || 'Unknown';
+const region  = params.get('region')  || 'EU';
+
+document.getElementById('ctx-sector').textContent  = sector;
+document.getElementById('ctx-segment').textContent = segment;
+document.getElementById('ctx-region').textContent  = region;
+
+let currentTaxonomy = null;
+
+// Check on load if a taxonomy already exists for this sector/segment
+(async () => {
+    try {
+        const res  = await fetch('/api/v1/generate-taxonomy', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ sector, segment, force: false }),
+        });
+        const data = await res.json();
+        if (data.taxonomy && data.taxonomy.supply_chain && data.taxonomy.supply_chain.length) {
             currentTaxonomy = data.taxonomy;
-            const isCached = data.is_cached;
-            renderTaxonomy(currentTaxonomy);
+            document.getElementById('existing-taxonomy-banner').style.display = 'block';
+        }
+    } catch {}
+})();
 
-            document.getElementById('step-generate').style.display = 'none';
-            document.getElementById('step-review').style.display = 'block';
+async function useExistingTaxonomy() {
+    if (!currentTaxonomy) return;
+    renderTaxonomy(currentTaxonomy, true);
+    document.getElementById('step-generate').style.display = 'none';
+    document.getElementById('step-review').style.display   = 'block';
+    document.getElementById('s2').classList.remove('active');
+    document.getElementById('s2').classList.add('done');
+    document.getElementById('s2').textContent = '✓';
+    document.getElementById('s3').classList.add('active');
+}
 
-            const reviewDiv = document.getElementById('step-review');
-            const oldNotice = document.getElementById('cached-notice');
-            if (oldNotice) oldNotice.remove();
+async function generateTaxonomy(force = false) {
+    const btn = document.getElementById('gen-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+    document.getElementById('step-generate').style.display = 'block';
+    document.getElementById('step-review').style.display   = 'none';
 
-            if (isCached) {
-                const notice = document.createElement('div');
-                notice.id = 'cached-notice';
-                notice.style = 'background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: var(--success); padding: 1rem 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem; font-weight: 400; line-height: 1.5;';
-                notice.innerHTML = '✨ <strong>Hey! This segment was already extracted previously!</strong> The data is already available. If you want to add a new component, it will be automatically linked into the correct supply chain dependencies. You can Confirm to safely update & read it, and jump straight to the Dashboard.';
-                reviewDiv.insertBefore(notice, document.getElementById('taxonomy-grid'));
-            }
+    const res  = await fetch('/api/v1/generate-taxonomy', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ sector, segment, force }),
+    });
+    const data = await res.json();
+    currentTaxonomy = data.taxonomy;
+    renderTaxonomy(currentTaxonomy, data.is_cached);
 
-            document.getElementById('s2').classList.remove('active');
-            document.getElementById('s2').classList.add('done');
-            document.getElementById('s2').textContent = '✓';
-            document.getElementById('s3').classList.add('active');
+    document.getElementById('step-generate').style.display = 'none';
+    document.getElementById('step-review').style.display   = 'block';
+
+    document.getElementById('s2').classList.remove('active');
+    document.getElementById('s2').classList.add('done');
+    document.getElementById('s2').textContent = '\u2713';
+    document.getElementById('s3').classList.add('active');
+}
+
+function renderTaxonomy(tax, isCached) {
+    const grid = document.getElementById('taxonomy-grid');
+    grid.innerHTML = '';
+
+    // Cached notice
+    if (isCached) {
+        const notice = document.createElement('div');
+        notice.className = 'cached-notice';
+        notice.innerHTML = '<strong>This segment was previously extracted.</strong> The supplier data is already available. You can confirm to proceed directly to the dashboard, or click Regenerate to re-generate the taxonomy.';
+        grid.appendChild(notice);
+    }
+
+    // Tree card
+    const supplyChain = tax?.supply_chain || [];
+    if (supplyChain.length > 0) {
+        const card = document.createElement('div');
+        card.className = 'subsystem-card';
+        card.innerHTML = '<div class="subsystem-title">Supply Chain Taxonomy</div>';
+        const ul = document.createElement('ul');
+        ul.className = 'tree-root';
+        buildTree(supplyChain, ul, null); // null = top-level nodes can't be deleted
+        card.appendChild(ul);
+        grid.appendChild(card);
+    }
+
+    // Sources card
+    const sources = tax?.sources || [];
+    if (sources.length > 0) {
+        const sCard = document.createElement('div');
+        sCard.className = 'sources-card';
+        sCard.innerHTML = '<h4>Intelligence Sources</h4>';
+        const ul = document.createElement('ul');
+        sources.forEach(src => {
+            if (!src || src.length < 5) return;
+            const li  = document.createElement('li');
+            const a   = document.createElement('a');
+            a.href    = src.startsWith('http') ? src : `https://www.google.com/search?q=${encodeURIComponent(src)}`;
+            a.target  = '_blank';
+            a.rel     = 'noopener';
+            a.textContent = src.length > 90 ? src.slice(0, 87) + '…' : src;
+            li.appendChild(a);
+            ul.appendChild(li);
+        });
+        sCard.appendChild(ul);
+        grid.appendChild(sCard);
+    }
+}
+
+let _addTarget   = null;
+let _leafCounter = Date.now();
+
+function buildTree(nodes, parentEl, parentNodeArray) {
+    nodes.forEach((node, idx) => {
+        const isLeaf = !!node.leaf_id;
+        const li     = document.createElement('li');
+
+        // Node row
+        const span = document.createElement('span');
+        span.className = 'tree-node ' + (isLeaf ? 'leaf' : 'branch');
+
+        const dot = document.createElement('span');
+        dot.className = 'node-dot';
+        span.appendChild(dot);
+
+        // Editable label
+        const label = document.createElement('span');
+        label.className = 'node-label';
+        label.contentEditable = 'true';
+        label.textContent = node.name;
+        label.addEventListener('blur', () => { node.name = label.textContent.trim() || node.name; });
+        label.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); label.blur(); } });
+        span.appendChild(label);
+
+        // Edit buttons (shown on hover via CSS)
+        const editBtns = document.createElement('span');
+        editBtns.className = 'node-edit-btns';
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'ne-btn add';
+        addBtn.textContent = '+ child';
+        addBtn.title = 'Add child node';
+        addBtn.onclick = (e) => { e.preventDefault(); openAddModal(node); };
+        editBtns.appendChild(addBtn);
+
+        if (parentNodeArray) {
+            const delBtn = document.createElement('button');
+            delBtn.className = 'ne-btn del';
+            delBtn.textContent = '✕';
+            delBtn.title = 'Delete node';
+            delBtn.onclick = (e) => {
+                e.preventDefault();
+                if (!confirm(`Delete "${node.name}" and all its children?`)) return;
+                parentNodeArray.splice(idx, 1);
+                renderTaxonomy(currentTaxonomy, false);
+            };
+            editBtns.appendChild(delBtn);
         }
 
-        function renderTaxonomy(tax) {
-            const grid = document.getElementById('taxonomy-grid');
-            grid.innerHTML = '';
-            const subsystems = tax?.subsystems?.[0]?.subsystems || [];
-            subsystems.forEach((sub, si) => {
-                const card = document.createElement('div');
-                card.className = 'subsystem-card';
-                card.innerHTML = `<div class="subsystem-title">⬡ ${sub.name}</div><ul class="comp-list" id="list-${si}"></ul>
-            <div class="add-comp-form">
-                <input class="add-comp-input" id="new-comp-${si}" placeholder="Add component…">
-                <button class="add-comp-btn" onclick="addComp(${si})">+</button>
-            </div>`;
-                grid.appendChild(card);
-                const list = document.getElementById(`list-${si}`);
-                (sub.components || []).forEach((c, ci) => appendCompItem(list, c, si, ci));
-            });
+        span.appendChild(editBtns);
+        li.appendChild(span);
+
+        if (node.children && node.children.length > 0) {
+            const ul = document.createElement('ul');
+            buildTree(node.children, ul, node.children);
+            li.appendChild(ul);
         }
+        parentEl.appendChild(li);
+    });
+}
 
-        function appendCompItem(list, comp, si, ci) {
-            const li = document.createElement('li');
-            li.className = 'comp-item';
-            li.id = `comp-${si}-${ci}`;
-            li.innerHTML = `<span class="comp-name">${comp.name}</span><button class="comp-del" onclick="delComp(${si}, ${ci})" title="Remove">×</button>`;
-            list.appendChild(li);
-        }
+function addTopLevelNode() {
+    _addTarget = '__TOP_LEVEL__';
+    document.getElementById('modal-name').value = '';
+    document.getElementById('modal-type').value = 'branch';
+    document.querySelector('#modal-overlay .modal h3').textContent = 'Add Top-Level System';
+    document.getElementById('modal-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('modal-name').focus(), 50);
+}
 
-        function addComp(si) {
-            const input = document.getElementById(`new-comp-${si}`);
-            const name = input.value.trim();
-            if (!name) return;
-            const subs = currentTaxonomy.subsystems[0].subsystems;
-            const ci = subs[si].components.length;
-            subs[si].components.push({ name, leaf_id: `AUTO.${name.toUpperCase().replace(/ /g, '_')}` });
-            const list = document.getElementById(`list-${si}`);
-            appendCompItem(list, { name }, si, ci);
-            input.value = '';
-        }
+function openAddModal(parentNode) {
+    _addTarget = parentNode;
+    document.querySelector('#modal-overlay .modal h3').textContent = 'Add Node';
+    document.getElementById('modal-name').value = '';
+    document.getElementById('modal-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('modal-name').focus(), 50);
+}
 
-        function delComp(si, ci) {
-            const el = document.getElementById(`comp-${si}-${ci}`);
-            if (el) el.remove();
-            currentTaxonomy.subsystems[0].subsystems[si].components.splice(ci, 1);
-        }
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    _addTarget = null;
+}
 
-        async function confirmAndExtract() {
-            // Save taxonomy
-            document.getElementById('step-review').style.display = 'none';
-            document.getElementById('step-extracting').style.display = 'block';
+function confirmAdd() {
+    const name = document.getElementById('modal-name').value.trim();
+    const type = document.getElementById('modal-type').value;
+    if (!name) return;
+    const newNode = type === 'leaf'
+        ? { name, leaf_id: `NEW-${++_leafCounter}` }
+        : { name, children: [] };
+    if (_addTarget === '__TOP_LEVEL__') {
+        if (!currentTaxonomy.supply_chain) currentTaxonomy.supply_chain = [];
+        currentTaxonomy.supply_chain.push(newNode);
+    } else {
+        if (!_addTarget.children) _addTarget.children = [];
+        _addTarget.children.push(newNode);
+    }
+    closeModal();
+    renderTaxonomy(currentTaxonomy, false);
+}
 
-            const saveRes = await fetch('/api/v1/save-taxonomy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ taxonomy: currentTaxonomy, sector, segment, region })
-            });
-            addLog('[+] Taxonomy confirmed and saved.', 'ok');
+document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-            // Trigger extraction
-            addLog('[*] Starting batch extraction for all components…', '');
-            const extractRes = await fetch('/api/v1/run-extraction', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sector, segment, region })
-            });
-            const result = await extractRes.json();
-            if (result.status === 'started') {
-                addLog(`[+] Extraction started for ${result.component_count} components.`, 'ok');
-                addLog('[*] Redirecting to dashboard…', '');
-                setTimeout(() => { window.location.href = '/dashboard'; }, 2000);
-            } else {
-                addLog('[!] Extraction error: ' + (result.error || 'Unknown'), 'err');
-            }
-        }
+async function confirmAndExtract() {
+    document.getElementById('step-review').style.display     = 'none';
+    document.getElementById('step-extracting').style.display = 'block';
 
-        function addLog(text, cls) {
-            const log = document.getElementById('log-container');
-            const div = document.createElement('div');
-            div.className = 'log-line ' + (cls || '');
-            div.textContent = text;
-            log.appendChild(div);
-            log.scrollTop = log.scrollHeight;
-        }
-    </script>
+    await fetch('/api/v1/save-taxonomy', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ taxonomy: currentTaxonomy, sector, segment, region }),
+    });
+    addLog('[+] Taxonomy confirmed and saved.', 'ok');
+
+    addLog('[*] Starting batch extraction for all components…', '');
+    const extractRes = await fetch('/api/v1/run-extraction', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ sector, segment, region }),
+    });
+    const result = await extractRes.json();
+
+    if (result.status === 'started') {
+        addLog(`[+] Extraction started — ${result.component_count} components queued.`, 'ok');
+        addLog('[*] Redirecting to dashboard…', '');
+        setTimeout(() => {
+            window.location.href = `/dashboard?sector=${encodeURIComponent(sector)}&segment=${encodeURIComponent(segment)}&region=${encodeURIComponent(region)}`;
+        }, 2000);
+    } else {
+        addLog('[!] Extraction error: ' + (result.error || 'Unknown error'), 'err');
+    }
+}
+
+function addLog(text, cls) {
+    const log = document.getElementById('log-container');
+    const div = document.createElement('div');
+    div.className   = 'log-line ' + (cls || '');
+    div.textContent = text;
+    log.appendChild(div);
+    log.scrollTop   = log.scrollHeight;
+}
+</script>
 </body>
-
 </html>

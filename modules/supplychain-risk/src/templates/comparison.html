@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geopolitical Comparison — SupplyTrace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:          #0b0f1a;
+            --surface:     #111827;
+            --card:        #161d2e;
+            --card-border: #1e2d45;
+            --accent:      #2563eb;
+            --accent-lite: #3b82f6;
+            --text:        #e2e8f0;
+            --text-2:      #94a3b8;
+            --text-3:      #64748b;
+            --success:     #10b981;
+            --warning:     #f59e0b;
+            --danger:      #ef4444;
+            --row-hover:   #1a2540;
+            --eu-color:    #3b82f6;
+            --us-color:    #10b981;
+            --cn-color:    #f97316;
+            --font:        'Inter', system-ui, sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 52px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+        .nav-left  { display: flex; align-items: center; gap: 2rem; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .brand {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.01em;
+        }
+        .brand b { color: var(--accent-lite); }
+        .nav-link {
+            color: var(--text-2);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color .15s, background .15s;
+        }
+        .nav-link:hover { color: var(--text); background: var(--card); }
+        .nav-link.active { color: var(--accent-lite); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: var(--font);
+            letter-spacing: .01em;
+            text-decoration: none;
+        }
+        .btn-ghost {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            color: var(--text-2);
+        }
+        .btn-ghost:hover { color: var(--text); border-color: var(--text-3); }
+
+        /* ── Page layout ── */
+        .page { max-width: 1280px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+        /* ── Page header ── */
+        .page-header { margin-bottom: 1.75rem; }
+        .page-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -.025em;
+            margin-bottom: .25rem;
+        }
+        .page-header h1 span { color: var(--accent-lite); }
+        .page-header p {
+            font-size: 13px;
+            color: var(--text-3);
+            max-width: 680px;
+            line-height: 1.6;
+        }
+
+        /* ── KPI row ── */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+        .kpi {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+        }
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -.03em;
+            line-height: 1;
+            margin-bottom: .35rem;
+        }
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+        }
+
+        /* ── Legend strip ── */
+        .legend-strip {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+        .legend-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        /* ── Search ── */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-bottom: 1rem;
+        }
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 5px 10px;
+            max-width: 300px;
+            flex: 1;
+        }
+        .search-wrap input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 13px;
+            font-family: var(--font);
+            flex: 1;
+        }
+        .search-wrap input::placeholder { color: var(--text-3); }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: var(--surface);
+            padding: .75rem 1.25rem;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-3);
+            text-align: left;
+        }
+        thead th.score-col { text-align: right; }
+        .data-row {
+            cursor: pointer;
+            transition: background .1s;
+        }
+        .data-row:hover { background: var(--row-hover); }
+        .data-row td {
+            padding: .9rem 1.25rem;
+            border-top: 1px solid var(--card-border);
+            vertical-align: middle;
+        }
+        .comp-name { font-weight: 600; font-size: 14px; }
+        .comp-sub  { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+        /* Score cells */
+        .score-cell { text-align: right; }
+        .score-num {
+            font-size: 17px;
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+        .score-bar-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 4px;
+        }
+        .score-bar-bg {
+            width: 60px; height: 3px;
+            background: rgba(255,255,255,.06);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .score-bar { height: 100%; border-radius: 2px; }
+
+        /* Divergence cell */
+        .diverg-cell { white-space: nowrap; }
+        .diverg-val {
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .diverg-badge {
+            display: inline-block;
+            margin-top: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .diverg-high   { background: rgba(239,68,68,.12);  color: #fca5a5; border: 1px solid rgba(239,68,68,.25); }
+        .diverg-medium { background: rgba(245,158,11,.12); color: #fcd34d; border: 1px solid rgba(245,158,11,.25); }
+        .diverg-low    { background: rgba(16,185,129,.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,.25); }
+
+        .pillar-chip {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-3);
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--card-border);
+            border-radius: 3px;
+            padding: 2px 6px;
+        }
+
+        /* ── Detail row ── */
+        .detail-row { display: none; background: #0e1525; }
+        .detail-content {
+            padding: 1.5rem 1.5rem;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .perspective-panel {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 1rem 1.1rem;
+        }
+        .perspective-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .9rem;
+            padding-bottom: .6rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .perspective-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+        .perspective-score {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Pillar breakdown bars */
+        .pillar-row {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: .5rem;
+        }
+        .pillar-name {
+            font-size: 11px;
+            color: var(--text-2);
+            width: 140px;
+            flex-shrink: 0;
+        }
+        .pillar-bar-bg {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,.05);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .pillar-bar-fill { height: 100%; border-radius: 2px; }
+        .pillar-score-txt {
+            font-size: 11px;
+            font-weight: 600;
+            width: 34px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* Adversary list */
+        .adversary-note {
+            margin-top: .8rem;
+            padding-top: .7rem;
+            border-top: 1px solid var(--card-border);
+            font-size: 10px;
+            color: var(--text-3);
+            line-height: 1.5;
+        }
+        .adversary-note strong { color: var(--text-2); }
+
+        /* Drivers section */
+        .drivers-section { margin-top: .8rem; }
+        .drivers-section h6 {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-3);
+            margin-bottom: .5rem;
+        }
+        .driver-item {
+            font-size: 11.5px;
+            color: var(--text-2);
+            padding: .3rem 0 .3rem 12px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,.03);
+            line-height: 1.5;
+        }
+        .driver-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 9px;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--accent-lite);
+        }
+
+        /* Divergence summary row */
+        .diverg-summary {
+            background: rgba(37,99,235,.05);
+            border: 1px solid rgba(37,99,235,.15);
+            border-radius: 6px;
+            padding: .85rem 1.1rem;
+            font-size: 12px;
+            color: var(--text-2);
+            line-height: 1.6;
+        }
+        .diverg-summary strong { color: var(--text); }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-3);
+        }
+        .empty-state h3 { font-size: 18px; color: var(--text-2); margin-bottom: .5rem; }
+
+        /* ── Methodology callout ── */
+        .methodology-note {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            padding: .9rem 1.2rem;
+            font-size: 12px;
+            color: var(--text-2);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .methodology-note strong { color: var(--text); }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-left">
+        <a href="/" class="brand">Supply<b>Trace</b></a>
+        <a href="/analyses"   class="nav-link">Analyses</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Dashboard</a>
+        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link active">Geopolitical Comparison</a>
+    </div>
+    <div class="nav-right">
+        <a href="/taxonomy-view{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;">Taxonomy Tree</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;">&larr; Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>
+            {% if sector %}<span>{{ sector }}</span> &mdash; {% endif %}
+            {{ segment }} — Geopolitical Perspective Comparison
+        </h1>
+        <p>
+            EU, US, and China risk scores for each component, derived from perspective-specific adversary
+            configurations (methodology section&nbsp;5.3). Divergence measures the spread between the
+            highest and lowest perspective score for the same component.
+        </p>
+    </div>
+
+    <!-- Methodology callout -->
+    <div class="methodology-note">
+        <strong>How scores differ by perspective:</strong>
+        The geopolitical pillar score is recalculated per perspective using distinct adversary sets.
+        <strong>EU</strong> treats Russia, China, Iran, Belarus, and North Korea as adversaries.
+        <strong>US</strong> treats Russia, China, Iran, North Korea, and Cuba as adversaries (Venezuela removed, 2026).
+        <strong>China</strong> treats the United States, Japan, South Korea, Taiwan, India, Australia, and the UK as adversaries.
+        All other pillars (HHI, shelf-life, substitutability, lead-time, regulatory, strategic impact) are perspective-neutral.
+    </div>
+
+    <!-- Scenario selector -->
+    <div style="margin-bottom:1.5rem">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-3);margin-bottom:.5rem">Scenario</div>
+        <select id="scenario-sel" onchange="applyScenario(this.value)" style="background:var(--card);border:1px solid var(--card-border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px;font-family:var(--font);cursor:pointer;outline:none">
+            <option value="" {% if not scenario %}selected{% endif %}>Baseline</option>
+            {% for key, sc in scenarios.items() %}
+            <option value="{{ key }}" {% if scenario == key %}selected{% endif %}>{{ sc.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% if comparisons %}
+
+    <!-- KPI row -->
+    {% set ns = namespace(high_eu=0.0, high_diverg=0.0, high_diverg_comp='', diverg_sum=0.0, high_count=0) %}
+    {% for c in comparisons %}
+        {% if c.scores.EU > ns.high_eu %}{% set ns.high_eu = c.scores.EU %}{% endif %}
+        {% if c.divergence > ns.high_diverg %}{% set ns.high_diverg = c.divergence %}{% set ns.high_diverg_comp = c.component %}{% endif %}
+        {% set ns.diverg_sum = ns.diverg_sum + c.divergence %}
+        {% if c.scores.EU > 0.55 %}{% set ns.high_count = ns.high_count + 1 %}{% endif %}
+    {% endfor %}
+
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--accent-lite)">{{ comparisons | length }}</div>
+            <div class="kpi-label">Components Compared</div>
+        </div>
+        <div class="kpi">
+            {% set avg_d = (ns.diverg_sum / comparisons|length) | round(3) %}
+            <div class="kpi-value" style="color:var(--warning)">{{ "%.3f" | format(avg_d) }}</div>
+            <div class="kpi-label">Avg Perspective Divergence</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--danger)">{{ ns.high_count }}</div>
+            <div class="kpi-label">High-Risk (EU &gt; 0.55)</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-value" style="color:var(--cn-color);font-size:18px;">{{ "%.3f" | format(ns.high_diverg) }}</div>
+            <div class="kpi-label">Max Divergence</div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:4px">{{ ns.high_diverg_comp }}</div>
+        </div>
+    </div>
+
+    <!-- Legend + search toolbar -->
+    <div class="toolbar">
+        <div class="legend-strip">
+            <span><span class="legend-dot" style="background:var(--eu-color)"></span>EU Perspective</span>
+            <span><span class="legend-dot" style="background:var(--us-color)"></span>US Perspective</span>
+            <span><span class="legend-dot" style="background:var(--cn-color)"></span>China Perspective</span>
+        </div>
+        <div class="search-wrap" style="margin-left:auto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="search-input" placeholder="Filter components…" oninput="filterTable(this.value)">
+        </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="table-wrap">
+        <table id="cmp-table">
+            <thead>
+                <tr>
+                    <th style="width:22%">Component</th>
+                    <th class="score-col" style="width:12%">EU Score</th>
+                    <th class="score-col" style="width:12%">US Score</th>
+                    <th class="score-col" style="width:12%">China Score</th>
+                    <th style="width:14%">Divergence</th>
+                    <th>Key Divergence Pillar</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in comparisons %}
+                {% set eu_score = c.scores.EU %}
+                {% set us_score = c.scores.US %}
+                {% set cn_score = c.scores.CHINA %}
+                {% set div_label_lower = c.divergence_label | lower %}
+
+                {% if eu_score > 0.55 %}{% set eu_color = 'var(--danger)' %}
+                {% elif eu_score > 0.35 %}{% set eu_color = 'var(--warning)' %}
+                {% else %}{% set eu_color = 'var(--success)' %}{% endif %}
+
+                {% if us_score > 0.55 %}{% set us_color = 'var(--danger)' %}
+                {% elif us_score > 0.35 %}{% set us_color = 'var(--warning)' %}
+                {% else %}{% set us_color = 'var(--success)' %}{% endif %}
+
+                {% if cn_score > 0.55 %}{% set cn_color = 'var(--danger)' %}
+                {% elif cn_score > 0.35 %}{% set cn_color = 'var(--warning)' %}
+                {% else %}{% set cn_color = 'var(--success)' %}{% endif %}
+
+                {% set pillar_labels = {
+                    'hhi':             'Market Concentration',
+                    'geopolitics':     'Geopolitical Dependency',
+                    'shelf_life':      'Shelf-Life',
+                    'substitutability':'Substitutability',
+                    'lead_time':       'Lead-Time',
+                    'regulatory':      'Regulatory Exposure',
+                    'impact':          'Strategic Impact'
+                } %}
+
+                <tr class="data-row" onclick="toggleDetail('det-{{ loop.index }}')">
+                    <td>
+                        <div class="comp-name">{{ c.component }}</div>
+                        <div class="comp-sub">Click to expand per-pillar breakdown</div>
+                    </td>
+                    <td class="score-cell">
+                        <span class="score-num" style="color:{{ eu_color }}">{{ "%.3f" | format(eu_score) }}</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar-bg"><div class="score-bar" style="width:{{ (eu_score * 100) | round(1) }}%;background:{{ eu_color }}"></div></div>
+                        </div>
+                    </td>
+                    <td class="score-cell">
+                        <span class="score-num" style="color:{{ us_color }}">{{ "%.3f" | format(us_score) }}</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar-bg"><div class="score-bar" style="width:{{ (us_score * 100) | round(1) }}%;background:{{ us_color }}"></div></div>
+                        </div>
+                    </td>
+                    <td class="score-cell">
+                        <span class="score-num" style="color:{{ cn_color }}">{{ "%.3f" | format(cn_score) }}</span>
+                        <div class="score-bar-wrap">
+                            <div class="score-bar-bg"><div class="score-bar" style="width:{{ (cn_score * 100) | round(1) }}%;background:{{ cn_color }}"></div></div>
+                        </div>
+                    </td>
+                    <td class="diverg-cell">
+                        <div class="diverg-val" style="
+                            {% if c.divergence_label == 'High' %}color:var(--danger)
+                            {% elif c.divergence_label == 'Medium' %}color:var(--warning)
+                            {% else %}color:var(--success){% endif %}
+                        ">{{ "%.3f" | format(c.divergence) }}</div>
+                        <span class="diverg-badge diverg-{{ div_label_lower }}">{{ c.divergence_label }}</span>
+                    </td>
+                    <td>
+                        <span class="pillar-chip">
+                            {{ pillar_labels.get(c.key_divergence_pillar, c.key_divergence_pillar) }}
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- Detail row: per-pillar breakdown by perspective -->
+                <tr class="detail-row" id="det-{{ loop.index }}">
+                    <td colspan="6">
+                        <div class="detail-content">
+
+                            {% set divergence_note %}
+                                Divergence of <strong>{{ "%.3f" | format(c.divergence) }}</strong> ({{ c.divergence_label }}).
+                                The largest score spread between perspectives occurs on the
+                                <strong>{{ pillar_labels.get(c.key_divergence_pillar, c.key_divergence_pillar) }}</strong> pillar,
+                                which is calibrated by adversary-specific supply exposure.
+                            {% endset %}
+                            <div class="diverg-summary" style="margin-bottom:1.1rem">{{ divergence_note }}</div>
+
+                            <!-- Per-perspective panels -->
+                            <div class="detail-grid">
+
+                                <!-- EU panel -->
+                                {% set eu_ps = c.pillar_scores.EU %}
+                                <div class="perspective-panel">
+                                    <div class="perspective-panel-header">
+                                        <span class="perspective-label" style="color:var(--eu-color)">European Union</span>
+                                        <span class="perspective-score" style="color:{{ eu_color }}">{{ "%.3f" | format(eu_score) }}</span>
+                                    </div>
+                                    {% for pk, pv in eu_ps.items() %}
+                                        {% if pv > 0.55 %}{% set bar_color = 'var(--danger)' %}
+                                        {% elif pv > 0.35 %}{% set bar_color = 'var(--warning)' %}
+                                        {% else %}{% set bar_color = 'var(--success)' %}{% endif %}
+                                        <div class="pillar-row">
+                                            <div class="pillar-name">{{ pillar_labels.get(pk, pk) }}</div>
+                                            <div class="pillar-bar-bg">
+                                                <div class="pillar-bar-fill" style="width:{{ (pv * 100) | round(1) }}%;background:{{ bar_color }}"></div>
+                                            </div>
+                                            <div class="pillar-score-txt" style="color:{{ bar_color }}">{{ "%.2f" | format(pv) }}</div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="adversary-note">
+                                        <strong>Adversary set:</strong>
+                                        {{ c.adversary_configs.EU | join(', ') | title }}
+                                    </div>
+                                    {% if c.drivers.EU %}
+                                    <div class="drivers-section">
+                                        <h6>Key Drivers</h6>
+                                        {% for d in c.drivers.EU[:3] %}
+                                        <div class="driver-item">{{ d }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- US panel -->
+                                {% set us_ps = c.pillar_scores.US %}
+                                <div class="perspective-panel">
+                                    <div class="perspective-panel-header">
+                                        <span class="perspective-label" style="color:var(--us-color)">United States</span>
+                                        <span class="perspective-score" style="color:{{ us_color }}">{{ "%.3f" | format(us_score) }}</span>
+                                    </div>
+                                    {% for pk, pv in us_ps.items() %}
+                                        {% if pv > 0.55 %}{% set bar_color = 'var(--danger)' %}
+                                        {% elif pv > 0.35 %}{% set bar_color = 'var(--warning)' %}
+                                        {% else %}{% set bar_color = 'var(--success)' %}{% endif %}
+                                        <div class="pillar-row">
+                                            <div class="pillar-name">{{ pillar_labels.get(pk, pk) }}</div>
+                                            <div class="pillar-bar-bg">
+                                                <div class="pillar-bar-fill" style="width:{{ (pv * 100) | round(1) }}%;background:{{ bar_color }}"></div>
+                                            </div>
+                                            <div class="pillar-score-txt" style="color:{{ bar_color }}">{{ "%.2f" | format(pv) }}</div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="adversary-note">
+                                        <strong>Adversary set:</strong>
+                                        {{ c.adversary_configs.US | join(', ') | title }}
+                                    </div>
+                                    {% if c.drivers.US %}
+                                    <div class="drivers-section">
+                                        <h6>Key Drivers</h6>
+                                        {% for d in c.drivers.US[:3] %}
+                                        <div class="driver-item">{{ d }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- China panel -->
+                                {% set cn_ps = c.pillar_scores.CHINA %}
+                                <div class="perspective-panel">
+                                    <div class="perspective-panel-header">
+                                        <span class="perspective-label" style="color:var(--cn-color)">China</span>
+                                        <span class="perspective-score" style="color:{{ cn_color }}">{{ "%.3f" | format(cn_score) }}</span>
+                                    </div>
+                                    {% for pk, pv in cn_ps.items() %}
+                                        {% if pv > 0.55 %}{% set bar_color = 'var(--danger)' %}
+                                        {% elif pv > 0.35 %}{% set bar_color = 'var(--warning)' %}
+                                        {% else %}{% set bar_color = 'var(--success)' %}{% endif %}
+                                        <div class="pillar-row">
+                                            <div class="pillar-name">{{ pillar_labels.get(pk, pk) }}</div>
+                                            <div class="pillar-bar-bg">
+                                                <div class="pillar-bar-fill" style="width:{{ (pv * 100) | round(1) }}%;background:{{ bar_color }}"></div>
+                                            </div>
+                                            <div class="pillar-score-txt" style="color:{{ bar_color }}">{{ "%.2f" | format(pv) }}</div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="adversary-note">
+                                        <strong>Adversary set:</strong>
+                                        {{ c.adversary_configs.CHINA | join(', ') | title }}
+                                    </div>
+                                    {% if c.drivers.CHINA %}
+                                    <div class="drivers-section">
+                                        <h6>Key Drivers</h6>
+                                        {% for d in c.drivers.CHINA[:3] %}
+                                        <div class="driver-item">{{ d }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                            </div><!-- /detail-grid -->
+                        </div><!-- /detail-content -->
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+        <h3>No comparison data available</h3>
+        <p style="font-size:13px;margin:.5rem 0 1.5rem;max-width:380px;margin-left:auto;margin-right:auto">
+            No supplier intelligence has been extracted for this segment yet.
+            Return to the dashboard and trigger extraction first.
+        </p>
+        <a href="/dashboard" class="btn btn-ghost">Back to Dashboard</a>
+    </div>
+
+    {% endif %}
+
+</div><!-- /page -->
+
+<script>
+function toggleDetail(id) {
+    const row     = document.getElementById(id);
+    const visible = row.style.display === 'table-row';
+    document.querySelectorAll('.detail-row').forEach(r => r.style.display = 'none');
+    if (!visible) row.style.display = 'table-row';
+}
+
+function filterTable(q) {
+    const lq = q.toLowerCase();
+    document.querySelectorAll('#cmp-table tbody .data-row').forEach(row => {
+        const name = row.querySelector('.comp-name')?.textContent.toLowerCase() || '';
+        const show = name.includes(lq);
+        row.style.display = show ? '' : 'none';
+        const next = row.nextElementSibling;
+        if (next?.classList.contains('detail-row'))
+            next.style.display = (show && next.style.display === 'table-row') ? 'table-row' : 'none';
+    });
+}
+
+function applyScenario(val) {
+    const url   = new URL(window.location.href);
+    if (val) url.searchParams.set('scenario', val);
+    else     url.searchParams.delete('scenario');
+    window.location.href = url.toString();
+}
+</script>
+</body>
+</html>

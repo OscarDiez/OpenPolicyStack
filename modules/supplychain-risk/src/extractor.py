@@ -1,33 +1,61 @@
 #!/usr/bin/env python3
 """
 Supply-Chain Intelligence Extractor
-====================================
-Universal extraction pipeline for quantum technology components.
+=====================================
+Implements the data collection hierarchy from the methodology:
 
-Usage:
-    python extractor.py --component "Helium-3"
-    python extractor.py --batch --segment cryogenics
+  Priority 1 — UN Comtrade API (official trade statistics, most reliable)
+  Priority 2 — Web extraction: DuckDuckGo + BeautifulSoup/PyPDF2 + LLM (70B)
+  Priority 3 — LLM-estimated trade shares (last resort, clearly labelled)
+
+All sources are tracked and included in every output file.
+Taxonomy generation goes all the way down to raw earth materials.
+
+Key improvements:
+- Ownership tracking: who OWNS facilities, not just where they are
+- Unbiased global supplier search — no geographic preference baked in
+- Quantum computing-specific relevance validation
+- Exhaustiveness enforcement with loud failure reporting
+- CRM-aware: He-3, NbTiN, Si-28, In, Nb, Ge, Ga, GaAs, InP focus
 """
 
 import os
 import json
-import httpx
-from bs4 import BeautifulSoup
+import time
+import re
+import datetime
 import io
-import PyPDF2
-from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from dotenv import load_dotenv
-import argparse
+import httpx
 
-# Load environment variables from .env file
-load_dotenv(override=True)
+# Load .env immediately — before any os.getenv() calls or provider checks
+load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=True)
+print(f"[env] LLM_PROVIDER={os.getenv('LLM_PROVIDER','groq')} OPENAI_KEY={'set' if os.getenv('OPENAI_API_KEY') else 'MISSING'} GROQ_KEY={'set' if os.getenv('GROQ_API_KEY') else 'MISSING'}")
+
+# LLM provider is selected via LLM_PROVIDER env var: "groq" (default) or "openai"
+_PROVIDER = os.getenv("LLM_PROVIDER", "groq").lower().strip()
+
+# Human-readable label stamped into data_source fields so outputs always reflect
+# which model actually produced the estimate.
+_MODEL_LABEL = "GPT-4o mini (OpenAI)" if _PROVIDER == "openai" else "Llama 3.3 70B (Groq)"
 
 try:
-    from .comtrade_client import ComtradeClient
+    from groq import Groq
 except ImportError:
-    from comtrade_client import ComtradeClient
+    Groq = None
+
+try:
+    from openai import OpenAI
+except Exception as _e:
+    print(f"[!] openai import failed: {_e}")
+    OpenAI = None
+
+if _PROVIDER == "openai" and OpenAI is None:
+    raise RuntimeError("LLM_PROVIDER=openai but 'openai' failed to import. Check the error above.")
+if _PROVIDER == "groq" and Groq is None:
+    raise RuntimeError("LLM_PROVIDER=groq but 'groq' failed to import. Run: pip install groq")
 
 try:
     from ddgs import DDGS
@@ -36,34 +64,95 @@ except ImportError:
         from duckduckgo_search import DDGS
     except ImportError:
         DDGS = None
-        print("[!] Warning: ddgs not installed. Install with: pip install ddgs")
 
 try:
-    from groq import Groq
+    from bs4 import BeautifulSoup
 except ImportError:
-    Groq = None
-    print("[!] Warning: groq not installed. Install with: pip install groq")
+    BeautifulSoup = None
+
+try:
+    import PyPDF2
+except ImportError:
+    PyPDF2 = None
+
+# ─── Models ───────────────────────────────────────────────────────────────────
+# Groq models
+GROQ_MODEL_QUALITY = "llama-3.3-70b-versatile"
+GROQ_MODEL_FAST    = "llama-3.1-8b-instant"
+
+# OpenAI models
+OPENAI_MODEL_QUALITY = "gpt-4o-mini"    # universally available, strong quality
+OPENAI_MODEL_FAST    = "gpt-4o-mini"    # same — no reason to downgrade with OpenAI pricing
+
+# Legacy aliases (used in old code paths)
+MODEL_QUALITY = GROQ_MODEL_QUALITY
+MODEL_FAST    = GROQ_MODEL_FAST
+
+# ─── CRM Knowledge Base (from PDF review) ─────────────────────────────────────
+# Critical Raw Materials for Quantum Technology — semi-manufactured goods are
+# the true chokepoints, not raw elements.  China controls >50% refining for 9/20.
+QT_CRITICAL_MATERIALS = {
+    "He-3":   "Helium-3 isotope — produced as byproduct of tritium decay in nuclear reactors; US and Russia only significant sources",
+    "NbTiN":  "Niobium-titanium nitride — superconducting thin film; <5 fabs worldwide capable of QC-grade deposition",
+    "Si-28":  "Isotopically enriched silicon-28 — requires centrifuge enrichment; Russia (URENCO-RU) dominates",
+    "Ge-73":  "Germanium-73 isotope — requires isotope separation; niche market controlled by Russia/Germany",
+    "Rb-87":  "Rubidium-87 — cold atom/Rydberg qubits; Sigma-Aldrich/Merck + specialty isotope labs",
+    "InP":    "Indium phosphide wafers — III-V semiconductor for photonic qubits; In supply from China >60%",
+    "GaAs":   "Gallium arsenide wafers — Ga refining >80% Chinese controlled",
+    "NbTi":   "Niobium-titanium wire — superconducting wire for magnets; Bruker EAS, Luvata, Furukawa",
+    "Nb":     "Niobium metal — 90% from Brazil (CBMM) but Chinese firms hold equity stakes in CBMM",
+    "In":     "Indium — >60% refined in China; critical for InP and ITO",
+    "Ga":     "Gallium — >80% refined in China; export controls tightened 2023",
+    "Ge":     "Germanium — China export controls from 2023; dual-use restriction",
+    "OFHC":   "Oxygen-free high-conductivity copper — thermal anchor material; Aurubis, KME, Wieland",
+}
+
+# ─── Ownership Intelligence ────────────────────────────────────────────────────
+# Known cases where geographic location ≠ beneficial owner
+KNOWN_OWNERSHIP_ALERTS = {
+    "niobium": "CBMM (Brazil) is nominally Brazilian but Chinese consortium (CITIC, Taiyuan, etc.) holds ~15% equity. Companhia Brasileira de Metalurgia e Mineração (CBMM) — note partial Chinese ownership.",
+    "gallium": "Most gallium refining is in China. Even where non-Chinese plants exist, upstream germanium/gallium concentrate often sourced from Chinese smelters.",
+    "germanium": "China imposed export controls on Ge in August 2023. Umicore (Belgium) refines Ge but depends on Chinese concentrate supply.",
+    "helium-3": "He-3 in the US is managed by DOE/Isotek; Russian supply through FSUE Isotope. Both are state-controlled — ownership IS the state.",
+    "indium": "Indium refining: China >60%, South Korea ~15%, Japan ~10%. Korean/Japanese refiners often import Chinese concentrate.",
+}
 
 
 class SupplyChainExtractor:
-    """
-    Generalized extractor for supply-chain intelligence.
-    Works for ANY component in the quantum technology taxonomy.
-    """
-    
+
     def __init__(self, groq_api_key: Optional[str] = None):
-        self.groq_api_key = groq_api_key or os.getenv("GROQ_API_KEY")
-        self.data_dir = Path(__file__).resolve().parents[1] / "data"
-        self.comtrade = ComtradeClient()
-        
-        if not self.groq_api_key:
-            print("[!] No GROQ_API_KEY found. Set it via environment variable or pass as argument.")
-            print("    Get a free key at: https://console.groq.com/keys")
+        # ── provider selection ────────────────────────────────────────────────
+        # Set LLM_PROVIDER=openai in your .env to use OpenAI instead of Groq.
+        self.provider = os.getenv("LLM_PROVIDER", "groq").lower().strip()
+
+        self.groq_api_key  = groq_api_key or os.getenv("GROQ_API_KEY")
+        self.openai_api_key = os.getenv("OPENAI_API_KEY")
+        self.comtrade_key  = os.getenv("COMTRADE_API_KEY")
+        self.data_dir      = Path(__file__).resolve().parents[1] / "data"
+
+        # Groq rate-limit tracking (not needed for OpenAI)
+        self._rate_limit_hits = 0
+        self._use_fast_model  = False
+
+        if self.provider == "openai":
+            if not self.openai_api_key:
+                print("[!] LLM_PROVIDER=openai but OPENAI_API_KEY not set — LLM calls will fail.")
+            else:
+                print(f"[i] LLM provider: OpenAI ({OPENAI_MODEL_QUALITY})")
+        else:
+            if not self.groq_api_key:
+                print("[!] GROQ_API_KEY not set — LLM calls will fail.")
+            else:
+                print(f"[i] LLM provider: Groq ({GROQ_MODEL_QUALITY})")
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Utilities
+    # ──────────────────────────────────────────────────────────────────────────
 
     def _safe_name(self, text: str) -> str:
-        import re
         s = text.lower()
-        for ch in [" ", "/", "-", "\u2014", "\u2013", "(", ")", "."]:
+        s = re.sub(r'\(.*?\)', '', s)
+        for ch in [" ", "/", "-", "(", ")", ".", ",", "'"]:
             s = s.replace(ch, "_")
         return re.sub(r"_+", "_", s).strip("_")
 
@@ -72,1020 +161,1314 @@ class SupplyChainExtractor:
         p.mkdir(parents=True, exist_ok=True)
         return p
 
-    
-    def _call_groq_with_retry(self, client, model, messages, temperature=0.0):
+    def _llm_call(self, prompt: str, model: str, max_tokens: int) -> str:
+        """Raw single LLM call — dispatches to the correct provider."""
+        if self.provider == "openai":
+            client = OpenAI(api_key=self.openai_api_key)
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.0,
+                max_tokens=max_tokens,
+            )
+            return resp.choices[0].message.content.strip()
+        else:
+            client = Groq(api_key=self.groq_api_key)
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.0,
+                max_tokens=max_tokens,
+            )
+            return resp.choices[0].message.content.strip()
+
+    def _llm(self, prompt: str, model: str = MODEL_QUALITY, max_retries: int = 3, max_tokens: int = 4096) -> str:
+        """Robust LLM call with exponential back-off.
+        - OpenAI: waits on rate limits, never downgrades model.
+        - Groq: after 3 cumulative rate-limit hits on the quality model,
+          permanently switches to the fast model for the rest of the run.
         """
-        Wrapper for Groq API calls with exponential backoff for rate limits.
-        """
-        import time
-        max_retries = 5
-        base_delay = 5
-        
+        if self.provider == "openai":
+            quality_model = OPENAI_MODEL_QUALITY
+            current_model = quality_model
+        else:
+            quality_model = GROQ_MODEL_QUALITY
+            fast_model    = GROQ_MODEL_FAST
+            if self._use_fast_model and model == GROQ_MODEL_QUALITY:
+                model = fast_model
+            current_model = model
+
         for attempt in range(max_retries):
             try:
-                return client.chat.completions.create(
-                    model=model,
-                    messages=messages,
-                    temperature=temperature
-                )
+                return self._llm_call(prompt, current_model, max_tokens)
             except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "rate limit" in err_str.lower():
-                    wait_time = base_delay * (2 ** attempt)
-                    print(f"    [*] Rate Limit Reached. Pausing operation for {wait_time}s to cooldown...")
-                    time.sleep(wait_time)
+                err_str = str(e).lower()
+                is_rate_limit = "rate_limit" in err_str or "429" in err_str or "rate limit" in err_str
+
+                # Groq: fall back to fast model after repeated rate limits
+                if self.provider == "groq" and is_rate_limit and current_model == GROQ_MODEL_QUALITY:
+                    self._rate_limit_hits += 1
+                    if self._rate_limit_hits >= 3:
+                        self._use_fast_model = True
+                        print(f"[!] {self._rate_limit_hits} rate limit hits — permanently switching to {GROQ_MODEL_FAST} for this run.")
+                    else:
+                        print(f"[!] Rate limit on {GROQ_MODEL_QUALITY} (hit {self._rate_limit_hits}/3) — falling back to {GROQ_MODEL_FAST} for this call.")
+                    current_model = GROQ_MODEL_FAST
+                    continue
+
+                if attempt < max_retries - 1:
+                    wait = 20 * (attempt + 1)
+                    print(f"[!] LLM failed (attempt {attempt + 1}/{max_retries}): {e}. Retrying in {wait}s…")
+                    time.sleep(wait)
                 else:
-                    raise e
-        raise Exception("Max retries exceeded for Groq API")
+                    raise
 
-    def update_taxonomy(self, component: str, hs_code: str, sector: str, segment: str):
-        """
-        Learns where to place a new component in the taxonomy using LLM.
-        """
-        if not self.groq_api_key or Groq is None: return
+    def _llm_quality_only(self, prompt: str, max_tokens: int = 8000, max_retries: int = 5) -> str:
+        """Always uses the quality model. On rate limit, waits and retries — never downgrades."""
+        if self.provider == "openai":
+            quality_model = OPENAI_MODEL_QUALITY
+        else:
+            quality_model = GROQ_MODEL_QUALITY
 
-        print(f"[*] Taxonomy Learning: Deciding where '{component}' fits in the hierarchy...")
-        
-        # Load existing taxonomy structure (skeleton only)
-        taxonomy_file = self._get_sector_dir(sector, segment) / "taxonomy.json"
-        try:
-            with open(taxonomy_file, "r") as f:
-                tax = json.load(f)
-        except FileNotFoundError:
-            print(f"[!] Taxonomy file not found for sector '{sector}', segment '{segment}'. Skipping taxonomy update.")
-            return
-        except json.JSONDecodeError:
-            print(f"[!] Error decoding taxonomy JSON for sector '{sector}', segment '{segment}'. Skipping taxonomy update.")
-            return
-        
-        categories = [sub['name'] for sub in tax['subsystems'][0]['subsystems']]
-        
-        prompt = f"""You are a taxonomy classifier.
-Item: "{component}"
-Categories: {json.dumps(categories)}
-
-Task: classify the Item into one of the Categories.
-
-CRITICAL RULES:
-1. Return ONLY the category name.
-2. NO explanations. NO punctuation. NO "The category is...".
-3. If unsure, return "Materials".
-
-Output:"""
-        try:
-            client = Groq(api_key=self.groq_api_key)
-            response = self._call_groq_with_retry(
-                client,
-                model="llama-3.1-8b-instant",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.0
-            )
-            # Clean up potential extra quotes or whitespace
-            category_name = response.choices[0].message.content.strip().replace('"', '').replace("'", "").split('\n')[0]
-            
-            # Update the file safely
-            for subsystem in tax['subsystems'][0]['subsystems']:
-                if subsystem['name'].lower() == category_name.lower():
-                    # Check if already exists
-                    if any(c['name'].lower() == component.lower() for c in subsystem['components']):
-                        print(f"[-] Component {component} already in taxonomy.")
-                        return
-
-                    new_entry = {
-                        "name": component,
-                        "leaf_id": f"CRYO.AUTO.{component.upper().replace(' ', '_')}",
-                        "hs_code": hs_code
-                    }
-                    subsystem['components'].append(new_entry)
-                    
-                    with open(taxonomy_file, "w") as f:
-                        json.dump(tax, f, indent=4)
-                    print(f"[+] Taxonomy Updated: Added '{component}' to '{subsystem['name']}'")
-                    return
-            
-            print(f"[!] Could not match '{category_name}' to existing categories.")
-
-        except Exception as e:
-            print(f"[!] Taxonomy Update failed: {e}")
-
-    def backfill_missing_trade_data(self):
-        """
-        Iterate through all existing supplier files. 
-        If corresponding trade data is missing, run autonomous trade discovery.
-        """
-        print(f"\n{'='*60}\nStarting Trade Data Backfill\n{'='*60}\n")
-        
-        supplier_files = list(self.suppliers_dir.glob("*_suppliers.json"))
-        print(f"[*] Found {len(supplier_files)} supplier records. Checking for missing trade data...")
-        
-        for f in supplier_files:
+        for attempt in range(max_retries):
             try:
-                data = json.load(open(f))
-                component = data.get("component")
-                if not component: continue
-                
-                safe_name = f.stem.replace("_suppliers", "")
-                trade_file = self.data_dir / "trade" / f"{safe_name}_trade_flows.json"
-                
-                if not trade_file.exists():
-                    print(f"[+] Backfilling trade data for: {component}")
-                    
-                    # 1. Try to find HS Code in existing file or discover it
-                    hs_code = self._lookup_hs_code_in_taxonomies(component)
-                    if not hs_code:
-                        hs_code = self.discover_hs_code(component)
-                    
-                    if hs_code:
-                        # 2. Try Official API
-                        api_data = self.comtrade.get_trade_data(hs_code)
-                        if api_data and api_data.get("data"):
-                            self.save_trade_flows(component, api_data)
-                            continue
-                            
-                    # 3. Fallback to Estimation
-                    print(f"[*] API data unavailable. Running AI Estimation for {component}...")
-                    # We need some context. Quick search.
-                    results = self.search_web(f"{component} global market share export import", max_results=3)
-                    context = "\n".join([f"{r['title']}: {r['snippet']}" for r in results])
-                    estimated = self.estimate_trade_flows_with_llm(component, context)
-                    if estimated:
-                        self.save_estimated_trade_flows(component, estimated)
-                
-                # Add a politeness delay to avoid hammering the API
-                print(f"[*] Cooldown: Waiting 5s before next component...")
-                import time
-                time.sleep(5)
-                
+                return self._llm_call(prompt, quality_model, max_tokens)
             except Exception as e:
-                print(f"[!] Error backfilling {f.name}: {e}")
+                err_str = str(e).lower()
+                is_rate_limit = "rate_limit" in err_str or "429" in err_str or "rate limit" in err_str
+                if is_rate_limit:
+                    wait = 60 if attempt == 0 else 90 * attempt
+                    print(f"[!] Rate limit on {quality_model}. Waiting {wait}s before retry {attempt + 1}/{max_retries}…")
+                    time.sleep(wait)
+                elif attempt < max_retries - 1:
+                    wait = 20 * (attempt + 1)
+                    print(f"[!] LLM error (attempt {attempt + 1}/{max_retries}): {e}. Retrying in {wait}s…")
+                    time.sleep(wait)
+                else:
+                    raise
 
-    def search_web(self, query: str, max_results: int = 10) -> List[Dict[str, str]]:
-        """
-        Search the web using DuckDuckGo.
-        """
-        if DDGS is None:
-            return []
-        
-        print(f"[*] Searching: {query}")
+    def _parse_json(self, raw: str) -> Any:
+        """Robust JSON extraction from LLM response — handles markdown fences and plain JSON."""
+        raw = raw.strip()
         try:
-            results = []
-            with DDGS() as ddgs:
-                ddgs_gen = ddgs.text(query, max_results=max_results)
-                if ddgs_gen:
-                    for r in ddgs_gen:
-                        results.append({
-                            "title": r.get("title", ""),
-                            "snippet": r.get("body", ""),
-                            "url": r.get("href", "")
-                        })
-            
-            if results:
-                # Filter out likely low-quality/non-technical noise
-                noise_patterns = ["linkedin.com", "pinterest.com", "tiktok.com", "facebook.com", "alibaba.com", "made-in-china.com", "youtube.com"]
-                filtered = [r for r in results if not any(p in r['url'].lower() for p in noise_patterns)]
-                print(f"[+] Found {len(results)} results (Filtered to {len(filtered)} technical hits)")
-                return filtered
-            return results
-        except Exception as e:
-            print(f"[!] Search error: {e}")
-            return []
-
-    def fetch_page_content(self, url: str) -> Optional[str]:
-        """
-        Fetch and clean textual content from a URL, supporting HTML and PDF.
-        """
-        print(f"[*] Fetching: {url}")
-        try:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            }
-            timeout = 30.0 if url.lower().endswith(".pdf") else 15.0
-            
-            response = httpx.get(url, headers=headers, timeout=timeout, follow_redirects=True)
-            response.raise_for_status()
-            
-            content_type = response.headers.get("Content-Type", "").lower()
-            
-            if "application/pdf" in content_type or url.lower().endswith(".pdf"):
-                print(f"[*] Parsing PDF content ({len(response.content)} bytes)")
-                pdf_file = io.BytesIO(response.content)
-                reader = PyPDF2.PdfReader(pdf_file)
-                text = ""
-                for i in range(min(30, len(reader.pages))):
-                    page_text = reader.pages[i].extract_text()
-                    if page_text:
-                        text += page_text + "\n"
-                return text[:35000]
-            else:
-                soup = BeautifulSoup(response.text, "html.parser")
-                for tag in soup(["script", "style", "nav", "header", "footer", "form"]):
-                    tag.decompose()
-                return soup.get_text(separator=" ", strip=True)[:12000]
-        except Exception as e:
-            print(f"[!] Fetch error: {e}")
-            return None
-
-    def _lookup_hs_code_in_taxonomies(self, component: str) -> Optional[str]:
-        """
-        Searches built taxonomies to find if we already know the HS code for this component.
-        """
-        safe_comp = self._safe_name(component)
-        
-        # First check if we've already extracted it (in any sector)
-        for supplier_file in self.data_dir.glob("sectors/*/*/suppliers/*_suppliers.json"):
-            if supplier_file.stem == f"{safe_comp}_suppliers":
+            return json.loads(raw)
+        except Exception:
+            pass
+        for pattern in [r'```json\s*([\s\S]*?)```', r'```\s*([\s\S]*?)```']:
+            m = re.search(pattern, raw)
+            if m:
                 try:
-                    with open(supplier_file, "r") as f:
-                        data = json.load(f)
-                        from_suppliers = data.get("official_trade_stats")
-                        if from_suppliers and not from_suppliers.get("estimated", False) and from_suppliers.get("data"):
-                            code = from_suppliers["data"][0].get("cmdCode")
-                            if code: 
-                                print(f"[*] Found HS code {code} in existing supplier registry.")
-                                return code
+                    return json.loads(m.group(1).strip())
                 except Exception:
                     pass
+        for start, end in [('{', '}'), ('[', ']')]:
+            i = raw.find(start)
+            j = raw.rfind(end)
+            if i != -1 and j > i:
+                try:
+                    return json.loads(raw[i:j + 1])
+                except Exception:
+                    pass
+        raise ValueError(f"Could not parse JSON from LLM response:\n{raw[:300]}")
 
-                trade_file = supplier_file.parent.parent / "trade" / f"{safe_comp}_trade_flows.json"
-                if trade_file.exists():
-                    try:
-                        with open(trade_file, "r") as f:
-                            data = json.load(f)
-                            if data.get("hs_code"):
-                                return data["hs_code"]
-                    except Exception:
-                        pass
-                        
-        # Check taxonomies
-        for tax_file in self.data_dir.glob("sectors/*/*/taxonomy.json"):
-            try:
-                with open(tax_file, "r") as f:
-                    tax = json.load(f)
-                for cat in tax.get("subsystems", []):
-                    for sub in cat.get("subsystems", []):
-                        for comp in sub.get("components", []):
-                            if comp.get("name", "").lower() == component.lower() and comp.get("hs_code"):
-                                print(f"[*] Found HS code {comp['hs_code']} in taxonomy.")
-                                return comp["hs_code"]
-            except Exception:
-                continue
-        return None
-
-    def discover_hs_code(self, component: str) -> Optional[str]:
-        """
-        Autonomous Discovery: Uses LLM + Web Search to find the 6-digit HS Code for any component.
-        """
-        if not self.groq_api_key or Groq is None:
-            return None
-
-        print(f"[*] Autonomous Discovery: Finding HS Code for '{component}'...")
-        
-        # 1. Search for the HS Code
-        search_results = self.search_web(f"{component} 6-digit HS code Harmonized System code global", max_results=5)
-        context = "\n".join([f"{r['title']}: {r['snippet']}" for r in search_results])
-        
-        # 2. Ask LLM to extract the most likely 6-digit code
-        prompt = f"""You are a global trade and customs expert.
-Component: {component}
-
-CONTEXT:
-{context}
-
-GOAL: Identify the standard 6-digit Harmonized System (HS) code that best matches this component for international trade.
-Rules:
-1. Return ONLY the 6-digit numeric code (e.g., 854411).
-2. If uncertain, return the most likely parent category code.
-3. If totally unknown, return "UNKNOWN".
-
-RETURN ONLY THE CODE OR "UNKNOWN". No explanation.
-"""
-        try:
-            client = Groq(api_key=self.groq_api_key)
-            response = self._call_groq_with_retry(
-                client,
-                model="llama-3.1-8b-instant",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.0
-            )
-            code = response.choices[0].message.content.strip()
-            # Clean non-numeric characters if any
-            import re
-            numeric_code = re.sub(r"\D", "", code)
-            if len(numeric_code) >= 6:
-                final_code = numeric_code[:6]
-                print(f"[+] Discovered HS Code: {final_code}")
-                return final_code
-            print(f"[!] Could not reliably discover HS code for {component}")
-            return None
-        except Exception as e:
-            print(f"[!] HS Discovery error: {e}")
-            return None
-
-    def extract_entities_with_llm(self, component: str, search_results: List[Dict[str, str]], deep_dive: bool = False) -> List[Dict[str, Any]]:
-        """
-        Use Groq's Llama 3.3 70B to extract structured supplier data.
-        """
-        if not self.groq_api_key or Groq is None:
-            return []
-        
-        context_blocks = []
-        for r in search_results[:5]:
-            block = f"Source: {r['title']}\nSnippet: {r['snippet']}\nURL: {r['url']}"
-            if deep_dive:
-                full_text = self.fetch_page_content(r['url'])
-                if full_text:
-                    block += f"\nFull Content (Truncated): {full_text[:8000]}"
-            context_blocks.append(block)
-        
-        context = "\n\n---\n\n".join(context_blocks)
-        prompt = f"""You are a senior supply-chain intelligence analyst and industrial physicist.
-Component: {component}
-
-GOAL: Extract a detailed database of entities (COMPANIES, STATE AGENCIES, CONSORTIUMS, SPECIALIZED DISTRIBUTORS).
-
-HYPER-PRECISION RULES:
-1. **NEVER Generalize**: Do not use words like 'thousands', 'many', or 'most' if a specific number is available.
-2. **GLOBAL INDUSTRY TOTALS**: Record global figures as "GLOBAL_INDUSTRY_TOTAL".
-3. **STRICT UNIT VALIDATION**: A unit must be a physical measurement.
-4. **COMPREHENSIVE DISCOVERY**: Extract EVERY company mentioned that plays a role in production, enrichment, specialized distribution, or supply-chain logistics for this component. Specialized gas leaders and industrial isotope providers (e.g., specialists in isotopic enrichment or rare gas supply) are high priority.
-5. **Context Analysis**: Analyze the context below from multiple sources.
-
-INSTRUCTIONS:
-1. Extract entity name, country, and role.
-2. For production_volume, you MUST return a JSON object. If a number is found, return it.
-3. INTRICACY UPGRADE: Search deep for:
-   - Technical Capacity: Identify specific hardware naming (e.g., 'Boson 4 chip'), technical modalities (e.g., 'Cat Qubits'), and engineering metrics.
-   - Financials: Capture total funding, latest round (e.g., 'Series B Jan 2025'), and lead investors.
-   - Ecosystem: List strategic partnerships (e.g., 'Bluefors', 'Quantum Machines') and government programs (e.g., 'PROQCIMA').
-   - Leadership: Identify founders and key executives.
-
-SCHEMA: 
-```json
-{{
-  "name": "string",
-  "country": "string",
-  "role": "string",
-  "production_volume": {{"value": float or null, "unit": "string or null", "year": int or null, "source": "string or null"}},
-  "technical_capacity": {{
-    "specs": ["specific hardware/versions", "performance metrics"],
-    "modality": "string (e.g. Cat Qubit)"
-  }},
-  "financials": {{
-    "total_funding": "string or null",
-    "last_round": "string or null",
-    "lead_investors": ["string"]
-  }},
-  "ecosystem": {{
-    "partnerships": ["string"],
-    "programs": ["string"]
-  }},
-  "leadership": {{
-    "founders": ["string"],
-    "key_people": ["string"]
-  }},
-  "strategic_notes": "string"
-}}
-```
-
-SEARCH RESULTS/CONTEXT:
-{{context}}
-
-RETURN ONLY A VALID JSON ARRAY. No chat.
-"""
-        try:
-            client = Groq(api_key=self.groq_api_key)
-            print(f"[*] Calling LLM (llama-3.3-70b-versatile) for extraction...")
-            try:
-                response = client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[{"role": "system", "content": "You are a precise JSON extraction assistant."},
-                              {"role": "user", "content": prompt}],
-                    temperature=0.1,
-                    max_tokens=2000
-                )
-            except Exception as e:
-                if "429" in str(e) or "413" in str(e):
-                    print(f"[!] Rate/Size limit hit. Sampling context and falling back to llama-3.1-8b-instant...")
-                    # Smart sampling: take head and tail to preserve both top results and totals
-                    if len(context) > 15000:
-                        short_context = context[:7500] + "\n[...]\n" + context[-7500:]
-                    else:
-                        short_context = context
-                    small_prompt = prompt.replace(context, short_context)
-                    response = client.chat.completions.create(
-                        model="llama-3.1-8b-instant",
-                        messages=[{"role": "system", "content": "You are a precise JSON extraction assistant."},
-                                  {"role": "user", "content": small_prompt}],
-                        temperature=0.1,
-                        max_tokens=2000
-                    )
-                else:
-                    raise e
-
-            raw_output = response.choices[0].message.content.strip()
-            if "```json" in raw_output:
-                raw_output = raw_output.split("```json")[1].split("```")[0].strip()
-            elif "```" in raw_output:
-                raw_output = raw_output.split("```")[1].split("```")[0].strip()
-            entities = json.loads(raw_output)
-            # Ensure structure
-            for ent in entities:
-                if "production_volume" not in ent or not isinstance(ent["production_volume"], dict):
-                    ent["production_volume"] = {"value": None, "unit": None, "year": None, "source": None}
-            return entities
-        except Exception as e:
-            print(f"[!] LLM extraction error: {e}")
-            return []
-
-    def refine_entity_data(self, entity: Dict[str, Any], component: str, context: str) -> Dict[str, Any]:
-        """
-        Refine a single entity's data using targeted context.
-        """
-        prompt = f"""Update the data for '{entity['name']}' regarding '{component}'.
-Search the context below for EXACT numerical values (capacity, output, share).
-
-HYPER-PRECISION RULE:
-- Record exact numbers (e.g. 8200) only.
-- If not found, do not guess.
-- SCHEMA MUST MATCH: 
-```json
-{{
-  "name": "string",
-  "country": "string",
-  "role": "string",
-  "production_volume": {{"value": float or null, "unit": "string or null", "year": int or null, "source": "string or null"}},
-  "technical_capacity": {{"specs": [str], "modality": str}},
-  "financials": {{"total_funding": str, "last_round": str, "lead_investors": [str]}},
-  "ecosystem": {{"partnerships": [str], "programs": [str]}},
-  "leadership": {{"founders": [str], "key_people": [str]}},
-  "strategic_notes": "string"
-}}
-```
-
-CONTEXT:
-{{context}}
-
-RETURN the updated JSON for THIS ENTITY ONLY.
-"""
-        try:
-            client = Groq(api_key=self.groq_api_key)
-            try:
-                response = self._call_groq_with_retry(
-                    client,
-                    model="llama-3.3-70b-versatile",
-                    messages=[{"role": "system", "content": "You are a precise data analyst. Return only valid JSON for the entity."},
-                              {"role": "user", "content": prompt}],
-                    temperature=0.0
-                )
-            except Exception as e:
-                # Fallback logic for context length is handled here manually or we could just let retry handle 429
-                # But for 413 (too large), we need truncation.
-                if "429" in str(e) or "413" in str(e) or "rate limit" in str(e).lower():
-                    print(f"    [!] Context limit or rate limit hit. Truncating context...")
-                    short_context = context[:4000]
-                    small_prompt = prompt.replace(context, short_context)
-                    response = self._call_groq_with_retry(
-                        client,
-                        model="llama-3.1-8b-instant",
-                        messages=[{"role": "system", "content": "You are a precise data analyst. Return only valid JSON for the entity."},
-                                  {"role": "user", "content": small_prompt}],
-                        temperature=0.0
-                    )
-                else:
-                    raise e
-                    
-            raw_output = response.choices[0].message.content.strip()
-            if not raw_output:
-                print(f"[!] Refinement returned empty string for {entity['name']}")
-                return entity
-                
-            if "```json" in raw_output:
-                raw_output = raw_output.split("```json")[1].split("```")[0].strip()
-            elif "```" in raw_output:
-                raw_output = raw_output.split("```")[1].split("```")[0].strip()
-            
-            try:
-                return json.loads(raw_output)
-            except Exception as e:
-                print(f"[!] Refinement JSON error: {e}")
-                print(f"    Raw Output: {raw_output[:200]}...")
-                return entity
-        except Exception as e:
-            print(f"[!] Refinement API error: {e}")
-            return entity
-
-
-    def estimate_trade_flows_with_llm(self, component: str, context: str) -> Dict[str, Any]:
-        """
-        Fallback: Use LLM to estimate trade flows if API fails.
-        """
-        print(f"[*] Autonomous Fallback: Estimating trade flows via LLM for '{component}'...")
-        
-        prompt = f"""You are a global trade analyst.
-Component: {component}
-
-CONTEXT from Search:
-{context}
-
-GOAL: Estimate the global market structure for this component based on the context and general knowledge.
-1. Estimate the Total Global Market Value (in USD).
-2. List the Top 5 Exporter Countries with their ESTIMATED market share (0.0 to 1.0).
-3. List the Top 5 Importer Countries.
-
-RETURN JSON ONLY:
-{{
-  "year": 2024,
-  "commodity": "{component}",
-  "global_trade_value": float (estimated USD),
-  "exporters": [ {{"country": str, "share": float}}, ... ],
-  "importers": [ {{"country": str, "share": float}}, ... ],
-  "sources": ["AI-Estimated based on search context"]
-}}
-"""
-        try:
-            client = Groq(api_key=self.groq_api_key)
-            response = self._call_groq_with_retry(
-                client,
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "system", "content": "Return valid JSON only."},
-                          {"role": "user", "content": prompt}],
-                temperature=0.2
-            )
-            raw = response.choices[0].message.content.strip()
-            if "```json" in raw: raw = raw.split("```json")[1].split("```")[0].strip()
-            elif "```" in raw: raw = raw.split("```")[1].split("```")[0].strip()
-            
-            data = json.loads(raw)
-            # Ensure value is present for consistency
-            if "global_trade_value" in data:
-                val = data["global_trade_value"]
-                for e in data.get("exporters", []):
-                    if "value" not in e: e["value"] = val * e.get("share", 0)
-                for i in data.get("importers", []):
-                    if "value" not in i: i["value"] = val * i.get("share", 0)
-            
-            return data
-        except Exception as e:
-            print(f"[!] LLM Trade Estimation failed: {e}")
-            return None
-
-    def save_estimated_trade_flows(self, component: str, data: Dict[str, Any], sector: str, segment: str):
-        trade_dir = self._get_sector_dir(sector, segment) / "trade"
-        trade_dir.mkdir(parents=True, exist_ok=True)
-        safe_name = self._safe_name(component)
-        output_path = trade_dir / f"{safe_name}_trade_flows.json"
-        
-        with open(output_path, "w") as f:
-            json.dump(data, f, indent=2)
-        print(f"[+] Saved ESTIMATED trade flows to: {output_path}")
-
-    def save_trade_flows(self, component: str, api_data: Dict[str, Any], sector: str, segment: str):
-        """
-        Converts Comtrade API results into a standardized trade flow JSON.
-        """
-        trade_dir = self._get_sector_dir(sector, segment) / "trade"
-        trade_dir.mkdir(parents=True, exist_ok=True)
-        safe_name = self._safe_name(component)
-        output_path = trade_dir / f"{safe_name}_trade_flows.json"
-        
-        data_records = api_data.get("data", [])
-        if not data_records: return
-        
-        # Organize by year and country
-        # We'll take the most recent year's data
-        latest_year = max([r.get("period") for r in data_records if r.get("period")])
-        year_data = [r for r in data_records if r.get("period") == latest_year]
-        
-        exporters = []
-        importers = []
-        global_value = 0
-        
-        for r in year_data:
-            flow = r.get("flowCode")
-            country = r.get("reporterDesc")
-            value = r.get("primaryValue", 0)
-            
-            if flow == "X": # Export
-                exporters.append({"country": country, "value": value})
-                global_value += value
-            elif flow == "M": # Import
-                importers.append({"country": country, "value": value})
-
-        # Calculate shares
-        for e in exporters: e["share"] = round(e["value"] / global_value, 4) if global_value > 0 else 0
-        for i in importers: i["share"] = round(i["value"] / global_value, 4) if global_value > 0 else 0
-        
-        # Sort by value
-        exporters = sorted(exporters, key=lambda x: x["value"], reverse=True)
-        importers = sorted(importers, key=lambda x: x["value"], reverse=True)
-
-        flow_data = {
-            "year": latest_year,
-            "commodity": component,
-            "unit": "USD",
-            "global_trade_value": global_value,
-            "exporters": exporters[:10],
-            "importers": importers[:10],
-            "sources": ["UN Comtrade API (Automated)"]
-        }
-        
-        with open(output_path, "w") as f:
-            json.dump(flow_data, f, indent=2)
-        print(f"[+] Saved trade flows to: {output_path}")
-
-    def save_suppliers(self, component: str, entities: List[Dict[str, Any]], search_query: str, sector: str, segment: str, sources: List[str], api_data: Optional[Dict[str, Any]] = None) -> Optional[Path]:
-        suppliers_dir = self._get_sector_dir(sector, segment) / "suppliers"
-        suppliers_dir.mkdir(parents=True, exist_ok=True)
-        safe_component = self._safe_name(component)
-        filename = f"{safe_component}_suppliers.json"
-        output_path = suppliers_dir / filename
-        
-        output_data = {
-            "component": component,
-            "extraction_metadata": {
-                "timestamp": datetime.utcnow().isoformat() + "Z",
-                "search_query": search_query,
-                "llm_model": "llama-3.3-70b-versatile",
-                "entity_count": len(entities),
-                "has_api_data": api_data is not None
-            },
-            "sources": sources,
-            "official_trade_stats": api_data,
-            "suppliers": entities
-        }
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(output_data, f, indent=2, ensure_ascii=False)
-        print(f"[+] Saved to: {output_path}")
-        return output_path
-
-    def extract_component(self, component: str, sector: str, segment: str, deep_dive: bool = False, hs_code: Optional[str] = None) -> Optional[Path]:
-        print(f"\n{'='*60}\nExtracting: {component} {'(DEEP DIVE)' if deep_dive else ''}\n{'='*60}\n")
-        
-        # --- STAGE 1: Autonomous HS Discovery & Trade Data ---
-        if hs_code is None:
-            hs_code = self._lookup_hs_code_in_taxonomies(component)
-            if not hs_code:
-                hs_code = self.discover_hs_code(component)
-                # If we discovered a new code, let's learn it!
-                if hs_code:
-                    self.update_taxonomy(component, hs_code, sector, segment)
-            
-        api_data = None
-        if hs_code:
-            print(f"[*] Querying Official API (UN Comtrade) for HS Code: {hs_code}")
-            api_data = self.comtrade.get_trade_data(hs_code)
-            
-            
-            # If we got trade data, let's cache it as a trade flow file for the risk engine
-            if api_data and api_data.get("data"):
-                self.save_trade_flows(component, api_data, sector, segment)
-            else:
-                api_data = None # Reset if empty
-        
-        # --- STAGE 2: Web Extraction ---
-        
-        # Diverse search queries for better coverage
-        queries = [
-            f"{component} best producers manufacturers list 2024",
-            f"{component} top suppliers companies global market share",
-            f"{component} industrial production volume by company"
-        ]
-        
-        all_results = []
-        for q in queries:
-            print(f"[*] Searching: {q}")
-            results = self.search_web(q, max_results=5)
-            all_results.extend(results)
-            
-        # Deduplicate results by URL
-        seen_urls = set()
-        unique_results = []
-        for r in all_results:
-            url = r.get('href') or r.get('link') or r.get('url')
-            if url and url not in seen_urls:
-                unique_results.append(r)
-                seen_urls.add(url)
-        
-        print(f"[+] Found {len(unique_results)} unique results")
-        
-        # If API failed, use the search context to estimate trade flows
-        if not api_data:
-            context = "\n".join([f"{r['title']}: {r['snippet']}" for r in unique_results[:10]])
-            estimated_trade = self.estimate_trade_flows_with_llm(component, context)
-            if estimated_trade:
-                self.save_estimated_trade_flows(component, estimated_trade, sector, segment)
-                # We treat this as "official" enough for the risk engine
-                api_data = {"estimated": True, "data": estimated_trade}
-
-        # Extract entities using LLM
-        print(f"[*] Calling LLM (llama-3.3-70b-versatile) for extraction...")
-        entities = self.extract_entities_with_llm(component, unique_results, deep_dive=deep_dive)
-        
-        # Use first query for metadata
-        search_query = queries[0]
-        
-        if not entities:
-            print("[!] No entities extracted.")
-            return None
-            
-        if deep_dive:
-            print("\n[*] Performing recursive entity deep-dive for top entities...")
-            refined_entities = []
-            for entity in entities:
-                # Targeted search for production volume if it's a Producer
-                role = str(entity.get("role", "")).lower()
-                if "producer" in role or "agency" in role or "facility" in role:
-                    name = entity.get('name', 'Unknown')
-                    print(f"[*] Statistical Deep-Dive for: {name}")
-                    # Specific unit-aware query
-                    comp_query = f"\"{name}\" {component} production volume statistics liters grams kg per year 2023 2024"
-                    comp_results = self.search_web(comp_query, max_results=3)
-                    
-                    company_context = ""
-                    for cr in comp_results:
-                        text = self.fetch_page_content(cr['url'])
-                        if text:
-                            company_context += f"\nSource: {cr['url']}\nContent: {text[:15000]}\n"
-                    
-                    if company_context:
-                        # Refine the entity
-                        refined = self.refine_entity_data(entity, component, company_context)
-                        refined_entities.append(refined)
-                    else:
-                        refined_entities.append(entity)
-                else:
-                    refined_entities.append(entity)
-            entities = refined_entities
-            
-        source_urls = [r.get('href') or r.get('link') or r.get('url') for r in unique_results]
-        source_urls = [u for u in source_urls if u]
-            
-        return self.save_suppliers(component, entities, search_query, sector, segment, source_urls, api_data=api_data)
-
-    def batch_extract_from_taxonomy(self, segment: str, sector: str, deep_dive: bool = False):
-        taxonomy_file = self._get_sector_dir(sector, segment) / "taxonomy.json"
-        if not taxonomy_file.exists():
-            return
-        
-        with open(taxonomy_file, "r") as f:
-            taxonomy = json.load(f)
-        
-        components = []
-        for category in taxonomy.get("subsystems", []):
-            for sub in category.get("subsystems", []):
-                for comp in sub.get("components", []):
-                    components.append({"name": comp.get("name"), "hs_code": comp.get("hs_code")})
-        
-        for i, comp_info in enumerate(components, 1):
-            print(f"\n[{i}/{len(components)}] Processing: {comp_info['name']}")
-            self.extract_component(comp_info['name'], sector, segment, deep_dive=deep_dive, hs_code=comp_info['hs_code'])
-
+    # ──────────────────────────────────────────────────────────────────────────
+    # Taxonomy Generation
+    # ──────────────────────────────────────────────────────────────────────────
 
     def generate_taxonomy_with_llm(self, sector: str, segment: str) -> Dict[str, Any]:
         """
-        Uses the LLM to propose a structured component taxonomy for any sector+segment.
-        Returns a dict following the same schema as cryogenics_taxonomy.json.
-        Falls back to built-in sector taxonomies if no API key is available.
+        Generate a DEEP, POLICY-GRADE bill-of-materials taxonomy.
+        Two-pass: generate then deepen/validate.
+        Scrapes actual web pages for richer context.
         """
-        # ── Built-in fallback taxonomies (used when no Groq API key) ──────────
-        BUILTIN_TAXONOMIES: Dict[str, Any] = {
-            "quantum computing": {
-                "dilution refrigeration": {"Cooling System": ["Mixing Chamber", "Still Stage", "Cold Plate Assembly", "Pulse Tube Cryocooler", "Compressor Unit"], "Cryogenic Plumbing": ["Helium-3 Gas Handling System", "Helium-4 Pressurized Vessel", "Fill Line Assembly", "Check Valve Set", "Pressure Gauge Array"]},
-                "cryogenics": {"Core Cooling": ["Dilution Refrigerator", "Pulse Tube Cryocooler", "Mixing Chamber", "Still Flange", "He-3/He-4 Mixture"], "Cryostat Hardware": ["Radiation Shield", "Vacuum Can", "Cold Finger Assembly", "Vibration Isolator Mount", "Thermal Anchor"]},
-                "superconducting qubits": {"Qubit Chipset": ["Transmon Qubit Die", "Josephson Junction Array", "Qubit Substrate (Sapphire)", "Superconducting Resonator", "Qubit Wiring Interposer"], "Control Electronics": ["Arbitrary Waveform Generator", "IQ Mixer", "RF Attenuator Chain", "Circulators and Isolators", "HEMT Amplifier"]},
-                "default": {"Processing Unit": ["Qubit Processor", "Control FPGA", "RF Signal Generator", "Microwave Switch Matrix", "Error Correction ASIC"], "Infrastructure": ["Dilution Refrigerator", "Vibration Isolation Platform", "Coaxial Cable Harness", "Magnetic Shielding Enclosure", "UPS Power Supply"]},
-            },
-            "artificial intelligence": {
-                "gpu hardware": {"GPU Chipset": ["NVIDIA H100 SXM", "AMD Instinct MI300X", "Google TPU v5", "Intel Gaudi3 AI Accelerator", "Graphcore IPU"], "Memory": ["HBM3 Stack", "GDDR7 Module", "High-Bandwidth Memory Die", "On-Package SRAM", "NVLink Switch Chip"]},
-                "ai infrastructure": {"Compute": ["GPU Server Node", "AI Training Cluster Switch", "High-Speed Interconnect NIC", "NVMe SSD Array", "Liquid Cooling Module"], "Networking": ["InfiniBand 400G Switch", "OSFP Optical Transceiver", "Direct-Attach Copper Cable", "Fiber Patch Panel", "Network Time Server"]},
-                "default": {"AI Compute Hardware": ["H100 GPU", "TPU Accelerator", "FPGA Inference Card", "AI ASIC Chip", "High-Bandwidth Memory (HBM)"], "Data Center": ["Liquid Cooling System", "High-Speed Interconnect", "NVMe Storage Array", "Power Distribution Unit", "Rack Enclosure"]},
-            },
-            "semiconductors": {
-                "default": {"Wafer Fabrication": ["Silicon Wafer (300mm)", "EUV Photomask", "Photoresist Chemical", "Chemical Mechanical Planarization Slurry", "Bulk Silicon Ingot"], "Lithography Equipment": ["ASML EUV Scanner (NXE:3600D)", "Immersion DUV Lithography System", "Electron Beam Writer", "Metrology SEM", "Spin Coater"], "Process Gases": ["Ultra-High Purity Nitrogen", "Argon Process Gas", "Hydrogen Fluoride Etch Gas", "Tungsten Hexafluoride", "Silane (SiH4)"], "Packaging": ["Advanced Flip-Chip Package", "High-Density Fan-Out Wafer Level Package", "2.5D Interposer", "Copper Pillar Bumping", "Underfill Epoxy"]},
-                "memory": {"DRAM": ["DDR5 DRAM Die", "High-Bandwidth Memory (HBM3)", "LPDDR5 Mobile DRAM", "DRAM Module PCB", "Error-Correcting DIMM"], "NAND Flash": ["3D NAND Flash Die (QLC)", "NAND Controller ASIC", "NVMe SSD Enclosure", "Flash Translation Layer Firmware", "NAND Interface Driver"]},
-            },
-            "aerospace": {
-                "propulsion": {"Rocket Engines": ["Turbopump Assembly", "Thrust Chamber", "Nozzle Extension", "Igniter System", "Propellant Valve"], "Propellants": ["Liquid Oxygen (LOX)", "Liquid Hydrogen (LH2)", "RP-1 Kerosene", "Hydrazine Monopropellant", "Ammonium Perchlorate Oxidizer"]},
-                "default": {"Airframe Structures": ["Carbon Fibre Reinforced Polymer Panel", "Titanium Structural Frame", "Aluminium 7075 Alloy Sheet", "Fastener Set (Aerospace Grade)", "Honeycomb Core Sandwich Panel"], "Avionics": ["Flight Management Computer", "Inertial Navigation System", "GPS/GNSS Receiver Module", "Digital Air Data Computer", "ARINC 429 Data Bus Module"], "Propulsion": ["Turbofan Engine Core", "Combustion Chamber Liner", "Fan Blade (Ti alloy)", "Engine Control Unit", "Thrust Reverser Assembly"]},
-            },
-            "defence": {
-                "default": {"Electronics": ["Military-Grade FPGA (Radiation Hardened)", "EO/IR Sensor Array", "Secure Communications Module", "Electronic Warfare Jammer Module", "GPS Anti-Jam Receiver"], "Propulsion & Munitions": ["Solid Rocket Motor", "Explosive Warhead Component", "Guidance System IMU", "Fin Stabilizer Assembly", "Propellant Grain"], "Platforms": ["Armour Steel Plate (MIL-DTL-12560)", "Composite Hull Panel", "Military Vehicle Engine Assembly", "Night Vision Optics", "Tactical Radio Set"]},
-            },
-            "pharmaceuticals": {
-                "default": {"Active Pharmaceutical Ingredients": ["Paracetamol API", "Ibuprofen API", "Amoxicillin API", "Aspirin API", "Metformin API"], "Excipients": ["Microcrystalline Cellulose", "Lactose Monohydrate", "Magnesium Stearate", "Polyvinyl Pyrrolidone (PVP)", "Croscarmellose Sodium"], "Manufacturing Equipment": ["Fluid Bed Dryer", "High-Shear Granulator", "Tablet Press", "Blister Packaging Machine", "Autoclave Sterilizer"]},
-            },
-        }
+        print(f"[*] Generating deep taxonomy: {sector} → {segment}")
 
-        def _make_taxonomy(sector_str, segment_str, groups: Dict[str, list]) -> Dict[str, Any]:
-            subsystems = []
-            for group_name, components in groups.items():
-                subsystems.append({
-                    "name": group_name,
-                    "components": [{"name": c, "leaf_id": f"{sector_str[:3].upper()}.{group_name[:3].upper()}.{c[:6].upper().replace(' ', '_')}"} for c in components]
-                })
-            return {
-                "technology_domain": sector_str,
-                "segment": segment_str,
-                "subsystems": [{"name": segment_str, "subsystems": subsystems}]
-            }
+        # ── Step 1: Rich web context (scrape, not just snippets) ──────────────
+        seed_queries = [
+            f"{segment} {sector} bill of materials full component list",
+            f"{segment} quantum computing supply chain critical materials raw inputs 2024",
+            f"{segment} quantum technology components manufacturers upstream materials",
+            f"{segment} dilution refrigerator OR qubit OR superconducting full parts list",
+            f"site:arxiv.org OR site:nature.com {segment} quantum computing supply chain components",
+        ]
+        sources: List[str] = []
+        context_parts: List[str] = []
 
-        def _get_builtin(sector_str: str, segment_str: str) -> Optional[Dict[str, Any]]:
-            sector_key = sector_str.lower().strip()
-            segment_key = segment_str.lower().strip()
-            # Find best matching sector key
-            for s_key, s_data in BUILTIN_TAXONOMIES.items():
-                if s_key in sector_key or any(w in sector_key for w in s_key.split()):
-                    # Find best matching segment
-                    for seg_key, groups in s_data.items():
-                        if seg_key != "default" and (seg_key in segment_key or any(w in segment_key for w in seg_key.split())):
-                            return _make_taxonomy(sector_str, segment_str, groups)
-                    # Use default
-                    if "default" in s_data:
-                        return _make_taxonomy(sector_str, segment_str, s_data["default"])
-            return None
+        for q in seed_queries:
+            results = self.search_web(q, max_results=6)
+            for r in results:
+                url = r.get("url", "")
+                snippet = f"[{url}]\n{r['title']}: {r['snippet']}"
+                context_parts.append(snippet)
+                if url:
+                    sources.append(url)
+            time.sleep(1)
 
-        if not self.groq_api_key or Groq is None:
-            builtin = _get_builtin(sector, segment)
-            if builtin:
-                print(f"[*] Using built-in taxonomy for '{sector}' / '{segment}' (no Groq API key)")
-                return builtin
-            # Generic fallback
-            return _make_taxonomy(sector, segment, {
-                "Key Components": [f"{segment} Primary Component", f"{segment} Secondary Component", f"{segment} Supporting Material"],
-                "Supporting Infrastructure": [f"{segment} Processing Equipment", f"{segment} Quality Control System", f"{segment} Storage & Handling"]
-            })
+        # Scrape top 4 URLs for full page content
+        scraped_context = ""
+        for url in sources[:4]:
+            scraped = self._scrape_url(url, timeout=12)
+            if scraped:
+                scraped_context += f"\n\n=== FULL PAGE: {url} ===\n{scraped[:2500]}"
 
-        print(f"[*] LLM Taxonomy Generation: '{sector}' → '{segment}'...")
+        search_context = "\n".join(context_parts[:20])
+        full_context   = search_context + scraped_context
 
-        prompt = f"""You are a senior supply-chain intelligence analyst. A user wants to map the supply chain for the following:
-Industry Sector: {sector}
-Segment / Sub-domain: {segment}
+        # Inject CRM knowledge
+        crm_note = "\n".join(f"  - {k}: {v}" for k, v in QT_CRITICAL_MATERIALS.items())
 
-Your task is to generate a structured component taxonomy for this exact segment.
+        prefix = segment[:3].upper()
 
-RULES:
-1. Return ONLY a valid JSON object, no explanation text.
-2. Group components into logical high-level assemblies (create as many as necessary to accurately model the entire technology stack).
-3. For EVERY high-level assembly, you MUST comprehensively break it down into specialized Tier-2 and Tier-3 sub-groups.
-4. For each sub-group, provide an EXHAUSTIVE, unconstrained list of leaf components. Do not artificially limit your output. List EVERY critical raw material, specific micro-part, specialized chemical, and precise hardware component needed. Even if it takes 30+ items per group, list them ALL. Your depth should be equivalent to a full engineering Bill of Materials.
-5. Components should be SPECIFIC and REAL items that can be sourced/traded (e.g. "Oxygen-Free High-Conductivity Copper" instead of "Copper"). Expand on intricate dependencies!
-6. Use the exact JSON schema below.
+        # ── Step 2: First-pass taxonomy generation ────────────────────────────
+        print("[*] Pass 1: generating taxonomy skeleton…")
 
-JSON SCHEMA:
+        prompt_1 = f"""You are a senior supply-chain engineer and critical-materials analyst advising the European Commission on strategic technology dependencies. You are mapping the FULL upstream supply chain for the "{segment}" segment of {sector}.
+
+YOUR SINGLE MOST IMPORTANT RULE:
+Every branch MUST drill all the way down to a RAW or REFINED MATERIAL — the actual substance that gets mined, refined, or synthesised and traded internationally. A "fiber optic cable" or "magnet" is NOT a leaf. Germanium dioxide, neodymium oxide, hafnium tetrachloride — THESE are leaves.
+
+═══════════════════════════════════════════════════════════════
+STRUCTURE (mandatory — follow exactly)
+═══════════════════════════════════════════════════════════════
+
+Level 1 = Functional subsystem (e.g. "Light Source", "Waveguide", "Detector")
+Level 2 = Sub-assembly or component (e.g. "Laser Diode", "Optical Fiber")
+Level 3 = Material input to that component (e.g. "Germanium-doped silica preform")
+Level 4 = Raw/refined material — THIS IS THE LEAF (e.g. "Germanium Dioxide (GeO2)")
+
+EVERY branch must end at Level 4 (a raw/refined material with a leaf_id).
+NO branch may end at Level 1, 2, or 3.
+NO exceptions.
+
+═══════════════════════════════════════════════════════════════
+WHAT COUNTS AS A VALID LEAF (raw/refined material)
+═══════════════════════════════════════════════════════════════
+
+✅ VALID leaves (what we want):
+• Elements and refined metals: Germanium, Indium, Gallium, Hafnium, Niobium, Tantalum, Ruthenium
+• Chemical compounds: Germanium Dioxide, Indium Phosphide, Hafnium Oxide, Trimethylindium
+• Isotopes: Helium-3, Silicon-28, Germanium-73
+• Specialty refined materials: High-purity silicon wafer, OFHC copper, NbTi superconducting wire
+• Specialty gases: Arsine (AsH3), Phosphine (PH3), Silane (SiH4), Nitrogen trifluoride
+
+❌ INVALID leaves (do NOT use as leaves — drill deeper):
+• "Fiber optic cable" → drill to: silica preform → germanium dioxide + silicon dioxide
+• "Laser diode" → drill to: InP substrate → indium + phosphorus
+• "Magnet" → drill to: neodymium-iron-boron alloy → neodymium oxide + iron + boron
+• "Superconducting wire" → drill to: niobium-titanium alloy → niobium + titanium
+• "PCB" → drill to: copper foil + FR4 substrate + solder (tin-silver-copper)
+• "Sensor" → drill to: the active material (e.g. ruthenium oxide, germanium crystal)
+• ANY manufactured component — always drill one level deeper to the material
+
+═══════════════════════════════════════════════════════════════
+CRITICAL RAW MATERIALS TO LOOK FOR (include if relevant)
+═══════════════════════════════════════════════════════════════
+{crm_note}
+
+═══════════════════════════════════════════════════════════════
+QUALITY RULES
+═══════════════════════════════════════════════════════════════
+• Minimum 40 leaf nodes across the whole tree
+• leaf_id format: {prefix}-001, {prefix}-002 … (sequential, no gaps)
+• Node names: CLEAN chemical/material names only — no country, supplier, or company names
+• NO vague nodes: "Other materials", "Miscellaneous", "Various"
+• NO invented compounds — only real substances used in real {segment} fabrication
+• NO duplicates — if a material appears in multiple branches, give each instance its own leaf_id
+
+WEB RESEARCH CONTEXT:
+{full_context[:5000]}
+
+═══════════════════════════════════════════════════════════════
+OUTPUT FORMAT — return ONLY valid JSON, no explanation, no markdown:
+═══════════════════════════════════════════════════════════════
 {{
   "technology_domain": "{sector}",
   "segment": "{segment}",
-  "subsystems": [
+  "sources": {json.dumps(list(dict.fromkeys(sources))[:8])},
+  "supply_chain": [
     {{
-      "name": "Top-level Assembly Name",
-      "subsystems": [
+      "name": "Functional Subsystem",
+      "children": [
         {{
-          "name": "Subsystem Group Name",
-          "components": [
+          "name": "Component or Sub-assembly",
+          "children": [
             {{
-              "name": "Specific Component Name",
-              "leaf_id": "ABBR.GROUP.COMPONENT_NAME"
+              "name": "Material Input",
+              "children": [
+                {{
+                  "name": "Germanium Dioxide",
+                  "leaf_id": "{prefix}-001"
+                }},
+                {{
+                  "name": "Silicon Dioxide",
+                  "leaf_id": "{prefix}-002"
+                }}
+              ]
             }}
           ]
         }}
       ]
     }}
   ]
-}}
+}}"""
 
-RETURN ONLY THE JSON. NO EXPLANATION.
-"""
         try:
-            client = Groq(api_key=self.groq_api_key)
-            response = self._call_groq_with_retry(
-                client,
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": "You are a precise JSON generation assistant. Return only valid JSON."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.0
-            )
-            raw = response.choices[0].message.content.strip()
-            if "```json" in raw:
-                raw = raw.split("```json")[1].split("```")[0].strip()
-            elif "```" in raw:
-                raw = raw.split("```")[1].split("```")[0].strip()
-            return json.loads(raw)
+            # Taxonomy MUST use the quality model — wait out rate limits rather than fall back to 8B
+            raw      = self._llm_quality_only(prompt_1, max_tokens=8000)
+            taxonomy = self._parse_json(raw)
         except Exception as e:
-            print(f"[!] Taxonomy generation failed: {e}. Falling back to built-in taxonomy.")
-            builtin = _get_builtin(sector, segment)
-            if builtin:
-                return builtin
-            return _make_taxonomy(sector, segment, {
-                "Key Components": [f"{segment} Primary Component", f"{segment} Secondary Component", f"{segment} Supporting Material"],
-                "Supporting Infrastructure": [f"{segment} Processing Equipment", f"{segment} Quality Control System", f"{segment} Storage & Handling"]
-            })
+            print(f"[!] Pass 1 taxonomy generation failed: {e}")
+            taxonomy = {"technology_domain": sector, "segment": segment, "sources": sources[:6], "supply_chain": []}
 
+        taxonomy.setdefault("technology_domain", sector)
+        taxonomy.setdefault("segment", segment)
+        taxonomy.setdefault("sources", sources[:6])
+        taxonomy.setdefault("supply_chain", [])
 
-    def save_taxonomy(self, taxonomy_dict: Dict[str, Any], segment_name: str, sector_str: str) -> Path:
-        """
-        Persists a user-approved taxonomy to data/sectors/{sector}/{segment}/taxonomy.json
-        """
-        sector_dir = self._get_sector_dir(sector_str, segment_name)
-        output_path = sector_dir / "taxonomy.json"
-        
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(taxonomy_dict, f, indent=4, ensure_ascii=False)
-        print(f"[+] Taxonomy saved to: {output_path}")
-        
-        # Ensure dependencies are mapped correctly
-        self.update_dependency_graph(sector_str, segment_name, taxonomy_dict)
-        
-        return output_path
+        n_leaves = self._count_leaves(taxonomy.get("supply_chain", []))
+        print(f"[+] Pass 1 complete — {n_leaves} leaf components.")
 
-    def update_dependency_graph(self, sector: str, segment: str, taxonomy: Dict[str, Any]):
-        """Uses LLM to map relationships between the components in the taxonomy and writes dependencies.json."""
-        sector_dir = self._get_sector_dir(sector, segment)
-        dep_path = sector_dir / "dependencies.json"
-        
-        components = []
-        for cat in taxonomy.get("subsystems", []):
-            for sub in cat.get("subsystems", []):
-                for comp in sub.get("components", []):
-                    components.append(comp.get("name"))
-                    
-        prompt = f"""You are a supply chain analyst mapping the highly complex, multi-tier bill of materials for {segment} in {sector}.
-I have the following components: {', '.join(components)}.
+        # ── Step 3: Second pass — deepen and fill gaps ────────────────────────
+        if n_leaves < 35:
+            print(f"[*] Pass 2: only {n_leaves} leaves found, deepening taxonomy…")
 
-Identify the deep n-tier parent-child relationships between these components. Which components depend on which others? 
-Create an intricate, recursive dependency graph. If a component is a top-level end-product or primary assembly, its parent is "{segment}".
-If a component is a sub-component of another, list it as a child of that specific component. Push to build multi-level chains (e.g., A depends on B, B depends on C, C depends on D).
+            existing_json = json.dumps(taxonomy, indent=2)
 
-Return ONLY valid JSON matching this exact schema:
+            # Find highest existing leaf_id number
+            all_ids = re.findall(rf'{prefix}-(\d+)', existing_json)
+            next_id = max((int(x) for x in all_ids), default=0) + 1
+
+            # For pass 2, use quality model if available; keep fast model if already fallen back
+            p2_model  = MODEL_FAST if self._use_fast_model else MODEL_QUALITY
+            p2_tokens = 4000 if p2_model == MODEL_FAST else 8000
+
+            # Only include existing tree if it's not empty (no point sending empty skeleton)
+            tree_context = (
+                f"CURRENT TAXONOMY (expand this):\n{existing_json[:3000]}"
+                if n_leaves > 0
+                else f"The previous attempt produced no leaves. Start fresh for {segment} ({sector})."
+            )
+
+            prompt_2 = f"""You are expanding a supply-chain taxonomy for "{segment}" ({sector}) for EU policy analysis.
+Target: at least 40 leaf nodes. Current count: {n_leaves}.
+
+{tree_context}
+
+YOUR MOST IMPORTANT RULE: Every leaf node must be a RAW or REFINED MATERIAL — the actual substance traded internationally (e.g. Germanium Dioxide, Indium, Niobium, Hafnium Oxide, Arsine gas). Never leave a branch ending at a component or assembly — always drill to the material.
+
+Add missing branches. New leaf_ids start at {prefix}-{next_id:03d}.
+
+Check for gaps — and for each, drill to the raw material:
+- Electrical connectors → copper, gold, tin-silver solder
+- Sealing materials → indium wire, fluoroelastomer, nitrile rubber
+- Thermal management → OFHC copper, aluminum alloy, silver paste
+- Control electronics → silicon wafer, tantalum capacitors, gold wire bonds
+- Structural alloys → specific grade (e.g. Ti-6Al-4V, SS-316L, Al-6061)
+- Specialty gases → arsine, phosphine, silane, nitrogen trifluoride
+- Dopants → boron, phosphorus, arsenic (semiconductor grade)
+
+Node names must be clean chemical/material names only — no country, supplier, or company names.
+
+Return the COMPLETE improved taxonomy as valid JSON only:
 {{
-  "dependencies": [
-    {{
-      "parent": "Component Name",
-      "children": ["Dependent Sub-component 1", "Dependent Sub-component 2"]
-    }}
-  ]
-}}
-NO EXPLANATION. ONLY JSON."""
+  "technology_domain": "{sector}",
+  "segment": "{segment}",
+  "sources": {json.dumps(taxonomy.get('sources', []))},
+  "supply_chain": [ ... ]
+}}"""
 
-        if not self.groq_api_key or Groq is None:
-            # Fallback to a flat structure
-            deps = [{"parent": segment, "children": components}]
-            with open(dep_path, "w") as f:
-                json.dump({"dependencies": deps}, f, indent=2)
-            return
+            try:
+                raw2      = self._llm_quality_only(prompt_2, max_tokens=8000)
+                taxonomy2 = self._parse_json(raw2)
+                n2 = self._count_leaves(taxonomy2.get("supply_chain", []))
+                if n2 > n_leaves:
+                    taxonomy = taxonomy2
+                    taxonomy.setdefault("technology_domain", sector)
+                    taxonomy.setdefault("segment", segment)
+                    print(f"[+] Pass 2 complete — {n2} leaf components (was {n_leaves}).")
+                else:
+                    print(f"[!] Pass 2 didn't improve count ({n2} vs {n_leaves}), keeping pass 1.")
+            except Exception as e:
+                print(f"[!] Pass 2 failed: {e}. Using pass 1 result.")
 
-        print(f"[*] Autonomous Discovery: Mapping supply chain dependencies for {segment}...")
+        n_final = self._count_leaves(taxonomy.get("supply_chain", []))
+        print(f"[+] Final taxonomy: {n_final} leaf components across {len(taxonomy.get('supply_chain', []))} top-level systems.")
+        return taxonomy
+
+    def _count_leaves(self, nodes: list) -> int:
+        count = 0
+        for node in nodes:
+            if "leaf_id" in node:
+                count += 1
+            count += self._count_leaves(node.get("children", []))
+        return count
+
+    def save_taxonomy(self, taxonomy: dict, segment: str, sector: str = "") -> Path:
+        safe_sector  = self._safe_name(sector or taxonomy.get("technology_domain", "unknown"))
+        safe_segment = self._safe_name(segment)
+        path = self.data_dir / "sectors" / safe_sector / safe_segment
+        path.mkdir(parents=True, exist_ok=True)
+        tax_file = path / "taxonomy.json"
+        with open(tax_file, "w") as f:
+            json.dump(taxonomy, f, indent=2)
+        print(f"[+] Taxonomy saved → {tax_file}")
+        return tax_file
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Phase 1 — UN Comtrade
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _get_hs_code(self, component: str) -> Optional[str]:
+        prompt = f"""You are a trade classification expert.
+What is the best 6-digit HS (Harmonised System) commodity code for "{component}" in quantum computing supply chains?
+Reply with ONLY the 6-digit code (e.g. 284590), or the word NONE if no appropriate code exists."""
         try:
-            client = Groq(api_key=self.groq_api_key)
-            response = self._call_groq_with_retry(
-                client,
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": "You output only valid JSON. No text."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.0
-            )
-            raw = response.choices[0].message.content.strip()
-            if "```json" in raw:
-                raw = raw.split("```json")[1].split("```")[0].strip()
-            elif "```" in raw:
-                raw = raw.split("```")[1].split("```")[0].strip()
-            deps = json.loads(raw)
-            if "dependencies" not in deps: deps = {"dependencies": []}
-            with open(dep_path, "w", encoding="utf-8") as f:
-                json.dump(deps, f, indent=2)
-            print(f"[+] Dependency graph automatically routed and saved to: {dep_path}")
+            result = self._llm(prompt, model=MODEL_FAST).strip().strip('"').strip("'").split()[0]
+            if re.match(r'^\d{6}$', result):
+                return result
+        except Exception:
+            pass
+        return None
+
+    def _fetch_comtrade(self, hs_code: str, component: str) -> Optional[Dict]:
+        print(f"[*] Querying UN Comtrade — HS {hs_code}…")
+        reporters = "842,156,276,251,392,410,826,528,752,756,246,124,036,356"
+        base_url  = "https://comtradeapi.un.org/public/v1/get/C/A/HS"
+        params    = {
+            "cmdCode":      hs_code,
+            "period":       "2022,2023",
+            "flowCode":     "X",
+            "reporterCode": reporters,
+            "format":       "json",
+        }
+        if self.comtrade_key:
+            base_url = "https://comtradeapi.un.org/data/v1/get/C/A/HS"
+            params["subscription-key"] = self.comtrade_key
+            params["reporterCode"]     = "all"
+
+        try:
+            headers  = {"User-Agent": "SupplyTrace/1.0 (EC AI-for-Policy research)"}
+            response = httpx.get(base_url, params=params, headers=headers, timeout=25.0)
+            if response.status_code == 200:
+                records = response.json().get("data", [])
+                if records:
+                    print(f"[+] Comtrade: {len(records)} records.")
+                    return self._process_comtrade(records, component, hs_code)
+            else:
+                print(f"[!] Comtrade {response.status_code}: {response.text[:120]}")
         except Exception as e:
-            print(f"[!] Dependency graph generation failed: {e}. Falling back to flat structure.")
-            deps = [{"parent": segment, "children": components}]
-            with open(dep_path, "w") as f:
-                json.dump({"dependencies": deps}, f, indent=2)
+            print(f"[!] Comtrade error: {e}")
+        return None
+
+    def _process_comtrade(self, records: list, component: str, hs_code: str) -> Optional[Dict]:
+        country_totals: Dict[str, float] = {}
+        total_value = 0.0
+        for rec in records:
+            country = rec.get("reporterDesc") or rec.get("reporterISO") or "Unknown"
+            value   = float(rec.get("primaryValue") or 0)
+            if value > 0:
+                country_totals[country] = country_totals.get(country, 0) + value
+                total_value += value
+
+        if not country_totals or total_value == 0:
+            return None
+
+        exporters = sorted(
+            [{"country": c, "share": round(v / total_value, 4), "value_usd": round(v),
+              "source": "UN Comtrade Official"}
+             for c, v in country_totals.items()],
+            key=lambda x: x["share"], reverse=True
+        )[:12]
+
+        return {
+            "commodity":       component,
+            "hs_code":         hs_code,
+            "year":            "2022-2023",
+            "total_value_usd": round(total_value),
+            "data_source":     "UN Comtrade Official",
+            "exporters":       exporters,
+            "importers":       [],
+        }
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Phase 2 — Web Search + LLM Extraction
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def generate_search_queries(self, component: str, sector: str = "quantum computing") -> List[str]:
+        """
+        Generate targeted search queries for finding real industrial suppliers.
+        Includes ownership/beneficial ownership queries — critical for cases
+        where location ≠ controller (e.g. Brazilian niobium mines with Chinese equity).
+        """
+        prompt = f"""You are a supply-chain intelligence researcher for the European Commission, analysing {sector} supply chains.
+
+Generate exactly 10 highly specific search queries to find REAL companies manufacturing or supplying "{component}".
+
+QUERY TYPES TO COVER (one per type minimum):
+1. Global manufacturers (no geographic filter)
+2. Asian suppliers (China, Japan, South Korea, Taiwan specifically)
+3. European/Western suppliers
+4. Ownership & parent company: who OWNS the production facilities or mines
+5. Chinese investment or equity stakes in non-Chinese producers
+6. Trade/market intelligence reports (site:bis.gov, site:usgs.gov, site:esa.int, site:ec.europa.eu)
+7. Quantum computing or cryogenic application-specific
+8. Critical raw material supply chain (if applicable)
+9. Industry association member lists or supplier registries
+10. Academic or government report on {component} supply chain
+
+Rules:
+- Do NOT include company names in queries
+- Do NOT bias toward any country — the truth matters regardless of origin
+- Include boolean operators where helpful (OR, site:)
+- Focus on verifiable, citeable sources
+
+Output: one query per line, no numbering, no bullets."""
+        try:
+            raw     = self._llm(prompt, model=MODEL_FAST)
+            queries = [l.strip() for l in raw.strip().splitlines() if len(l.strip()) > 10]
+            return queries[:10]
+        except Exception as e:
+            print(f"[!] Query generation failed: {e}")
+            return [
+                f"{component} manufacturer supplier quantum computing global",
+                f"{component} producer China Japan Korea Taiwan supplier",
+                f"{component} European manufacturer cryogenic applications",
+                f"{component} mine owner parent company China investment equity",
+                f"{component} supply chain critical raw material site:usgs.gov OR site:ec.europa.eu",
+                f"{component} supplier market share report producers list",
+            ]
+
+    def search_web(self, query: str, max_results: int = 8) -> List[Dict[str, str]]:
+        if not DDGS:
+            print("[!] DDGS not available. Install: pip install ddgs")
+            return []
+        try:
+            results = []
+            with DDGS() as ddgs:
+                for r in ddgs.text(query, max_results=max_results):
+                    results.append({
+                        "title":   r.get("title", ""),
+                        "snippet": r.get("body", ""),
+                        "url":     r.get("href", ""),
+                    })
+            return results
+        except Exception as e:
+            print(f"[!] Search error: {e}")
+            return []
+
+    def _scrape_url(self, url: str, timeout: int = 10) -> str:
+        if not url:
+            return ""
+        try:
+            headers  = {"User-Agent": "Mozilla/5.0 (compatible; SupplyTraceResearch/1.0)"}
+            response = httpx.get(url, headers=headers, timeout=timeout, follow_redirects=True)
+            if response.status_code != 200:
+                return ""
+            content_type = response.headers.get("content-type", "").lower()
+
+            if "pdf" in content_type and PyPDF2:
+                reader = PyPDF2.PdfReader(io.BytesIO(response.content))
+                text   = " ".join((p.extract_text() or "") for p in reader.pages[:8])
+                return text[:4000]
+
+            if "html" in content_type and BeautifulSoup:
+                soup = BeautifulSoup(response.text, "html.parser")
+                for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
+                    tag.decompose()
+                return soup.get_text(separator=" ", strip=True)[:4000]
+
+        except Exception:
+            pass
+        return ""
+
+    def _check_ownership_context(self, component: str) -> str:
+        """Return any known ownership intelligence for this component from our knowledge base."""
+        comp_lower = component.lower()
+        for key, note in KNOWN_OWNERSHIP_ALERTS.items():
+            if key in comp_lower:
+                return note
+        return ""
+
+    def extract_entities_with_llm(
+        self,
+        component: str,
+        search_results: List[Dict[str, str]],
+        sector: str = "quantum computing",
+    ) -> List[Dict[str, Any]]:
+        """
+        Extract real companies from search results using 70B model.
+        Includes ownership/beneficial owner tracking.
+        Scrapes the top 5 source URLs for richer content.
+        NO geographic bias — truth regardless of country.
+        """
+        if not search_results:
+            return []
+
+        context_parts = []
+        sources_used  = []
+
+        for i, r in enumerate(search_results):
+            snippet = f"[Source: {r['url']}]\nTitle: {r['title']}\n{r['snippet']}"
+            # Scrape top 8 URLs for full page content (most useful ones first)
+            if i < 8 and r.get("url"):
+                scraped = self._scrape_url(r["url"])
+                if scraped:
+                    snippet += f"\n[Full page content]:\n{scraped[:2000]}"
+            context_parts.append(snippet)
+            if r.get("url"):
+                sources_used.append(r["url"])
+
+        context = "\n\n---\n\n".join(context_parts)
+
+        # Inject any known ownership alerts for this component
+        ownership_alert = self._check_ownership_context(component)
+        ownership_note  = f"\n\nKNOWN OWNERSHIP INTELLIGENCE:\n{ownership_alert}" if ownership_alert else ""
+
+        # Inject CRM context if relevant
+        crm_context = ""
+        comp_lower  = component.lower()
+        for crm_key, crm_desc in QT_CRITICAL_MATERIALS.items():
+            if crm_key.lower() in comp_lower or comp_lower in crm_key.lower():
+                crm_context = f"\n\nCRM CONTEXT: {crm_desc}"
+                break
+
+        prompt = f"""You are a senior supply-chain intelligence analyst for the European Commission AI for Policy initiative. You are mapping {sector} supply chains for official policy briefings that will directly inform EU regulations.
+
+COMPONENT: {component}
+SECTOR: {sector}
+{ownership_note}{crm_context}
+
+TASK: From the web sources below, extract ALL real companies that manufacture, produce, or supply "{component}" for quantum computing applications.
+
+⚠️ CRITICAL — NO GEOGRAPHIC BIAS:
+You MUST identify suppliers from ALL countries including China, Russia, South Korea, Taiwan, Japan, USA, Europe, etc.
+Do NOT favour Western suppliers. Do NOT omit Chinese, Russian, or Asian suppliers.
+The truth is what matters — this is for EU policy that depends on accurate global intelligence.
+If Chinese firms dominate supply, that MUST be reflected in your output.
+
+⚠️ OWNERSHIP TRACKING — THIS IS MANDATORY:
+For EVERY supplier, research and report:
+- parent_company: the immediate parent company if different from operating entity
+- ultimate_owner_country: the country of the BENEFICIAL OWNER (who ultimately controls it)
+- ownership_notes: if a facility is in Country A but owned by Country B, state this explicitly
+  Example: "CBMM mine is in Brazil but Chinese consortium (CITIC Metals, Taiyuan Iron) holds ~15% equity"
+  Example: "Germanium refiner in Belgium but sources 100% of concentrate from Chinese smelters"
+
+TARGET: At minimum 20 companies. Include niche, regional, and specialised producers — even small or specialized ones.
+If fewer than 20 real companies exist globally for this component, explain why (market concentration note in strategic_notes).
+
+STRICT VALIDATION:
+- Only include companies you are CERTAIN exist as real legal entities
+- REJECT: product codes, model numbers, URLs, generic descriptions
+- REJECT: names that are not clearly a company (e.g. "Various manufacturers")
+- REJECT any name you cannot confidently attribute to a real firm
+
+FOR EACH COMPANY provide:
+- name: exact legal company name
+- country: country of primary operations/HQ (physical location)
+- ultimate_owner_country: country of beneficial owner (may differ from HQ country)
+- parent_company: parent/holding company name (null if independent)
+- role: "Producer" | "Distributor" | "OEM" | "Refiner" | "Research Institution" | "State-Owned Enterprise"
+- quantum_relevance: "direct" (makes QC-grade product) | "upstream" (material/precursor) | "adjacent" (general industrial)
+- strategic_notes: 1–2 sentences on market position, concentration risk, ownership flags
+- source_url: the URL from the sources below that confirms this company's existence
+- data_confidence: "high" | "medium" | "low"
+
+OUTPUT: JSON array only, no explanation:
+[
+  {{
+    "name": "Company Name",
+    "country": "Country",
+    "ultimate_owner_country": "Country",
+    "parent_company": null,
+    "role": "Producer",
+    "quantum_relevance": "direct",
+    "strategic_notes": "Description including any ownership flags.",
+    "source_url": "https://...",
+    "data_confidence": "high"
+  }}
+]
+
+SOURCES:
+{context[:12000]}"""
+
+        try:
+            time.sleep(4)
+            raw      = self._llm_quality_only(prompt, max_tokens=4096)
+            entities = self._parse_json(raw)
+            if not isinstance(entities, list):
+                return []
+            clean = []
+            for e in entities:
+                if not isinstance(e, dict):
+                    continue
+                name = (e.get("name") or "").strip()
+                if len(name) < 3 or name.lower() in {"unknown", "various", "n/a", "tbd"}:
+                    continue
+                if re.match(r'^[A-Z0-9\-_]{2,8}$', name):
+                    continue
+                # Ensure ownership fields exist (even if null)
+                e.setdefault("ultimate_owner_country", e.get("country", "Unknown"))
+                e.setdefault("parent_company", None)
+                e.setdefault("quantum_relevance", "adjacent")
+                e.setdefault("source_url", sources_used[0] if sources_used else "")
+                clean.append(e)
+            print(f"[+] Extracted {len(clean)} companies.")
+            return clean
+        except Exception as e:
+            print(f"[!] Entity extraction failed: {e}")
+            return []
+
+    def _enrich_ownership(self, entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        For each extracted supplier, ask the LLM to research beneficial ownership.
+        This catches cases where a company's listed country differs from who actually
+        controls it (e.g. a Malaysian refiner owned by a Chinese SOE).
+
+        Results are clearly labelled as LLM-estimated and should be verified against
+        current corporate filings — ownership structures change and LLM training data
+        has a cutoff date.
+        """
+        if not entities:
+            return entities
+
+        # Build a compact list of companies to research
+        company_list = []
+        for i, e in enumerate(entities):
+            company_list.append(f"{i+1}. {e.get('name','?')} (listed country: {e.get('country','?')})")
+
+        prompt = f"""You are a corporate intelligence analyst specialising in beneficial ownership and foreign equity stakes in strategic industries.
+
+For each company below, research:
+1. Who are the major shareholders or parent companies?
+2. Is there any significant foreign state ownership or equity stake — especially from China, Russia, or other geopolitically sensitive actors?
+3. Does the listed country of operations match the country of the beneficial owner?
+
+Be specific where you know facts (e.g. "CITIC Metals holds 15% of CBMM").
+Where you are uncertain, say so explicitly.
+
+COMPANIES:
+{chr(10).join(company_list)}
+
+Return a JSON array with one entry per company (same order, same numbering):
+[
+  {{
+    "index": 1,
+    "beneficial_owner_country": "Country of ultimate beneficial owner",
+    "parent_company": "Parent/holding company name or null",
+    "ownership_detail": "Specific ownership facts or 'No significant foreign ownership identified'",
+    "ownership_confidence": "high | medium | low",
+    "ownership_data_note": "LLM-estimated from training data — verify against current corporate filings"
+  }}
+]"""
+
+        try:
+            print(f"[*] Enriching ownership data for {len(entities)} companies…")
+            time.sleep(3)
+            raw = self._llm_quality_only(prompt, max_tokens=3000)
+            ownership_data = self._parse_json(raw)
+            if not isinstance(ownership_data, list):
+                return entities
+
+            # Merge ownership data back into entities
+            for item in ownership_data:
+                idx = item.get("index", 0) - 1
+                if 0 <= idx < len(entities):
+                    entities[idx]["beneficial_owner_country"] = item.get("beneficial_owner_country", entities[idx].get("country"))
+                    entities[idx]["parent_company"]          = item.get("parent_company") or entities[idx].get("parent_company")
+                    entities[idx]["ownership_detail"]        = item.get("ownership_detail", "")
+                    entities[idx]["ownership_confidence"]    = item.get("ownership_confidence", "low")
+                    entities[idx]["ownership_data_note"]     = item.get("ownership_data_note", "LLM-estimated from training data — verify against current corporate filings")
+
+            print(f"[+] Ownership enrichment complete.")
+            return entities
+
+        except Exception as e:
+            print(f"[!] Ownership enrichment failed: {e} — continuing without it.")
+            # Add the honesty label even on failure so it's always present
+            for entity in entities:
+                entity.setdefault("ownership_data_note", "Ownership not verified — LLM enrichment failed. Verify against current corporate filings.")
+            return entities
+
+    def _llm_fallback_suppliers(self, component: str, sector: str) -> List[Dict[str, Any]]:
+        """
+        Last-resort supplier extraction using pure LLM knowledge (no web context).
+        Clearly labelled as AI-estimated.  Used when web search yields nothing.
+        """
+        print(f"[*] Attempting pure LLM knowledge fallback for '{component}'…")
+        ownership_alert = self._check_ownership_context(component)
+        crm_note = ""
+        comp_lower = component.lower()
+        for crm_key, crm_desc in QT_CRITICAL_MATERIALS.items():
+            if crm_key.lower() in comp_lower or comp_lower in crm_key.lower():
+                crm_note = f"\nCRM NOTE: {crm_desc}"
+                break
+
+        prompt = f"""You are a world expert in {sector} supply chains, with deep knowledge of critical materials and industrial suppliers.
+
+COMPONENT: {component}
+{crm_note}
+{"OWNERSHIP NOTE: " + ownership_alert if ownership_alert else ""}
+
+List every real company you KNOW produces or supplies "{component}" for quantum computing or related high-tech applications.
+Include suppliers from ALL countries without any geographic bias.
+For EACH company, also report who OWNS it (parent company / beneficial owner country) — this is critical.
+
+If fewer than 10 companies exist globally, explain why (market concentration note).
+
+Output JSON array:
+[
+  {{
+    "name": "Company Name",
+    "country": "Country of operations",
+    "ultimate_owner_country": "Country of beneficial owner",
+    "parent_company": "Parent company name or null",
+    "role": "Producer",
+    "quantum_relevance": "direct",
+    "strategic_notes": "Key facts including ownership/concentration flags.",
+    "source_url": "LLMESTIMATED",
+    "data_confidence": "medium",
+    "data_source": "AI-Estimated ({_MODEL_LABEL} — no web sources consulted)"
+  }}
+]"""
+        try:
+            time.sleep(8)
+            raw      = self._llm_quality_only(prompt, max_tokens=4096)
+            entities = self._parse_json(raw)
+            if not isinstance(entities, list):
+                return []
+            for e in entities:
+                e["data_source"]        = f"AI-Estimated ({_MODEL_LABEL} — no web sources consulted)"
+                e["data_confidence"]    = "low"
+                e.setdefault("ultimate_owner_country", e.get("country", "Unknown"))
+                e.setdefault("parent_company", None)
+                e.setdefault("quantum_relevance", "adjacent")
+                e.setdefault("source_url", "LLMESTIMATED")
+            clean = [e for e in entities if isinstance(e, dict) and len((e.get("name") or "")) >= 3]
+            print(f"[+] LLM fallback yielded {len(clean)} companies (low confidence).")
+            return clean
+        except Exception as e:
+            print(f"[!] LLM fallback also failed: {e}")
+            return []
+
+    def estimate_market_shares(
+        self,
+        component: str,
+        entities: List[Dict],
+        context: str,
+    ) -> List[Dict]:
+        """
+        Ask the LLM for ACTUAL estimated market share percentages for each supplier.
+        If the LLM returns a new company not in the list, it gets added.
+        Falls back to Zipf distribution if LLM fails.
+        """
+        if not entities:
+            return entities
+        print(f"[*] Estimating market shares for {len(entities)} companies…")
+
+        names = [e["name"] for e in entities]
+        prompt = f"""You are a senior market intelligence analyst advising the European Commission on quantum technology supply chains.
+
+For each company below, estimate their ACTUAL percentage share of the global market for "{component}" specifically in quantum computing / advanced technology applications.
+
+Be specific and realistic. Use your knowledge of production capacity, reported revenues, known market positions, and industry concentration. Do NOT make all shares equal — reflect actual concentration.
+
+If you know of important companies that are NOT in the list but are significant suppliers of "{component}", include them as additional entries at the end.
+
+Companies to assess:
+{json.dumps(names, indent=2)}
+
+CONTEXT from web research:
+{context[:3000]}
+
+OUTPUT: A JSON array where each entry has:
+- "name": exact company name (from the list above, or a new company you are adding)
+- "market_share_pct": your best estimate of their % share (0-100, must sum to ~100 across all major players)
+- "share_confidence": "high" | "medium" | "low"
+- "share_notes": one sentence explaining the basis for this estimate (cite specific facts if known)
+- "is_new_company": true if this company was NOT in the input list above, false otherwise
+
+Return ONLY the JSON array:"""
+
+        try:
+            time.sleep(8)
+            raw    = self._llm_quality_only(prompt, max_tokens=3000)
+            share_data = self._parse_json(raw)
+            if not isinstance(share_data, list):
+                raise ValueError("Not a list")
+
+            # Build lookup of existing entities
+            entity_map = {e["name"].lower(): e for e in entities}
+            total_pct = 0.0
+            processed = []
+
+            for item in share_data:
+                if not isinstance(item, dict):
+                    continue
+                name = (item.get("name") or "").strip()
+                if len(name) < 3:
+                    continue
+                pct = float(item.get("market_share_pct", 0) or 0)
+                if pct <= 0:
+                    continue
+
+                # If LLM found a new company, add it to entities
+                if item.get("is_new_company") and name.lower() not in entity_map:
+                    print(f"[+] LLM identified additional supplier: {name}")
+                    new_entity = {
+                        "name": name,
+                        "country": "Unknown",
+                        "ultimate_owner_country": "Unknown",
+                        "parent_company": None,
+                        "role": "Producer",
+                        "quantum_relevance": "adjacent",
+                        "strategic_notes": item.get("share_notes", ""),
+                        "source_url": "LLMESTIMATED",
+                        "data_confidence": "low",
+                        "data_source": f"AI-Estimated ({_MODEL_LABEL} — identified during market share estimation)",
+                    }
+                    entities.append(new_entity)
+                    entity_map[name.lower()] = new_entity
+
+                # Attach share data
+                entity = entity_map.get(name.lower())
+                if entity:
+                    entity["market_share_pct"] = round(pct, 1)
+                    entity["share_confidence"] = item.get("share_confidence", "medium")
+                    entity["share_notes"]      = item.get("share_notes", "")
+                    total_pct += pct
+
+                processed.append(name.lower())
+
+            # Normalize to decimals (0-1) and fill in any companies the LLM missed.
+            # Re-scale so shares always sum to exactly 100% regardless of LLM rounding.
+            if total_pct > 0:
+                for entity in entities:
+                    if "market_share_pct" not in entity:
+                        entity["market_share_pct"] = 0.0
+                        entity["share_confidence"] = "low"
+                        entity["share_notes"] = "Share not estimated by LLM"
+                    # Re-scale: divide by actual total so sum = 1.0 exactly
+                    entity["market_share"] = round(entity["market_share_pct"] / total_pct, 4)
+                    entity["market_share_pct"] = round(entity["market_share"] * 100, 1)
+                    entity["share_source"] = "llm_direct_estimate"
+            else:
+                raise ValueError("No valid shares returned")
+
+            print(f"[+] Market shares estimated. Total accounted: {total_pct:.1f}% → normalized to 100%")
+            return entities
+
+        except Exception as ex:
+            print(f"[!] Market share LLM failed ({ex}) — falling back to Zipf distribution.")
+            # Fallback: Zipf distribution based on list order
+            for i, entity in enumerate(entities):
+                weight = 1.0 / (i + 1)
+                entity["market_share"] = round(weight / sum(1.0/(j+1) for j in range(len(entities))), 4)
+                entity["market_share_pct"] = round(entity["market_share"] * 100, 1)
+                entity["share_source"] = "zipf_fallback"
+                entity["share_confidence"] = "low"
+                entity["share_notes"] = "Estimated by rank order (LLM share estimation failed)"
+            return entities
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Phase 3 — LLM Trade Flow Estimation
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _estimate_trade_flows_llm(
+        self,
+        component: str,
+        context: str,
+        sources: List[str],
+    ) -> Optional[Dict]:
+        prompt = f"""Based on the research context below, estimate global EXPORT market shares for "{component}" in quantum computing supply chains.
+
+Identify the top exporting/supplying countries and their approximate % shares.
+Report ACTUAL global reality — do not omit countries even if politically sensitive.
+Note where official location ≠ beneficial controller (e.g. Brazilian mine, Chinese owner).
+Be conservative — if uncertain, note it.
+
+OUTPUT JSON only:
+{{
+  "commodity": "{component}",
+  "data_source": "AI-Estimated ({_MODEL_LABEL} inference from web context — not official statistics)",
+  "year": "2023-estimated",
+  "exporters": [{{"country": "...", "share": 0.35, "ownership_note": "...", "notes": "..."}}],
+  "importers": [{{"country": "...", "share": 0.40, "notes": "..."}}]
+}}
+
+CONTEXT:
+{context[:4000]}"""
+        try:
+            raw    = self._llm(prompt, model=MODEL_FAST)
+            result = self._parse_json(raw)
+            result["sources_consulted"] = sources[:6]
+            result["data_source"] = f"AI-Estimated ({_MODEL_LABEL} inference from web context — not official statistics)"
+            return result
+        except Exception:
+            return None
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Main Pipeline
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def extract_component(
+        self,
+        component: str,
+        sector: str = "Quantum Computing",
+        segment: str = "cryogenics",
+    ) -> Tuple[Optional[Path], Optional[str]]:
+        """
+        Full extraction pipeline for a single component.
+        Returns (path, failure_reason).  If path is None, failure_reason explains why.
+        Follows: Comtrade → Web+LLM → LLM-only fallback.
+        """
+        print(f"\n{'='*60}")
+        print(f"  EXTRACTING: {component}")
+        print(f"  Sector: {sector}  |  Segment: {segment}")
+        print(f"{'='*60}")
+
+        trade_data:  Optional[Dict] = None
+        all_sources: List[str]      = []
+
+        # ── Priority 1: UN Comtrade ──────────────────────────────────────────
+        hs_code = self._get_hs_code(component)
+        if hs_code:
+            print(f"[*] HS code: {hs_code}")
+            time.sleep(2)
+            trade_data = self._fetch_comtrade(hs_code, component)
+            if trade_data:
+                print(f"[+] Official Comtrade data obtained.")
+
+        # ── Priority 2: Web search + LLM extraction ──────────────────────────
+        queries     = self.generate_search_queries(component, sector)
+        all_results: List[Dict] = []
+        time.sleep(2)
+
+        for q in queries:
+            results = self.search_web(q, max_results=8)
+            all_results.extend(results)
+            all_sources.extend(r["url"] for r in results if r.get("url"))
+            time.sleep(1)
+
+        # Deduplicate sources
+        seen: set = set()
+        unique_sources: List[str] = []
+        for s in all_sources:
+            if s not in seen:
+                seen.add(s)
+                unique_sources.append(s)
+        all_sources = unique_sources
+
+        context_text = "\n".join(r["snippet"] for r in all_results)
+
+        entities: List[Dict] = []
+
+        if all_results:
+            print(f"[+] {len(all_results)} results from {len(all_sources)} sources.")
+            print("[*] Pausing 15s before LLM extraction…")
+            time.sleep(15)
+            entities = self.extract_entities_with_llm(component, all_results, sector)
+        else:
+            print(f"[!] No web results for '{component}'. Will attempt LLM fallback.")
+
+        # ── Priority 2b: Second-pass gap-filling if under minimum ─────────────
+        # If LLM returned fewer than 10 companies despite having web results,
+        # force a second LLM call explicitly asking for MORE companies.
+        if entities and len(entities) < 10:
+            print(f"[!] Only {len(entities)} companies found — running second-pass gap fill…")
+            known_names = [e["name"] for e in entities]
+            gap_prompt = f"""You are a supply-chain intelligence analyst for the European Commission.
+
+A first research pass found only these {len(known_names)} companies that supply "{component}" for quantum computing:
+{json.dumps(known_names, indent=2)}
+
+This is NOT enough. For EU policy purposes we need a COMPLETE picture of the global market.
+
+YOUR TASK: Find at least 15 MORE real companies that supply "{component}" worldwide that are NOT already in the list above.
+- Search globally: China, Japan, South Korea, Russia, Europe, Americas, Middle East, South-East Asia
+- Include state-owned enterprises, research institutions that sell, small niche producers
+- Include upstream raw material suppliers if relevant
+- Do NOT repeat any company already in the list above
+
+For EACH new company:
+- name: exact legal company name
+- country: country of operations/HQ
+- ultimate_owner_country: beneficial owner country (may differ)
+- parent_company: parent company or null
+- role: "Producer" | "Refiner" | "Distributor" | "State-Owned Enterprise" | "Research Institution"
+- quantum_relevance: "direct" | "upstream" | "adjacent"
+- strategic_notes: 1-2 sentences on market position and any ownership flags
+- source_url: "LLMESTIMATED"
+- data_confidence: "medium"
+
+CONTEXT from web research:
+{context_text[:4000]}
+
+Output JSON array only:"""
+            try:
+                time.sleep(8)
+                raw2 = self._llm_quality_only(gap_prompt, max_tokens=4096)
+                extra = self._parse_json(raw2)
+                if isinstance(extra, list):
+                    # Deduplicate by name (case-insensitive)
+                    existing_names_lower = {e["name"].lower() for e in entities}
+                    new_entities = []
+                    for e in extra:
+                        if not isinstance(e, dict):
+                            continue
+                        name = (e.get("name") or "").strip()
+                        if len(name) < 3:
+                            continue
+                        if name.lower() in existing_names_lower:
+                            continue
+                        e.setdefault("ultimate_owner_country", e.get("country", "Unknown"))
+                        e.setdefault("parent_company", None)
+                        e.setdefault("quantum_relevance", "adjacent")
+                        e.setdefault("source_url", "LLMESTIMATED")
+                        e.setdefault("data_confidence", "medium")
+                        new_entities.append(e)
+                        existing_names_lower.add(name.lower())
+                    entities.extend(new_entities)
+                    print(f"[+] Gap fill added {len(new_entities)} companies. Total: {len(entities)}")
+            except Exception as gap_e:
+                print(f"[!] Gap fill failed: {gap_e} — continuing with {len(entities)} companies.")
+
+        # ── Priority 3a: LLM-only supplier knowledge (if web extraction failed) ─
+        if not entities:
+            print(f"[!] Web extraction yielded no companies for '{component}'. Trying LLM knowledge fallback.")
+            time.sleep(10)
+            entities = self._llm_fallback_suppliers(component, sector)
+
+        # ── Hard failure — report loudly ──────────────────────────────────────
+        if not entities:
+            reason = (
+                f"EXTRACTION FAILED: No suppliers found for '{component}' after exhausting "
+                f"all three tiers (Comtrade, web+LLM, LLM-only). This may indicate: "
+                f"(1) component name is too generic or non-standard, "
+                f"(2) component does not exist as a distinct traded good, "
+                f"(3) market is so specialised it has no public data. "
+                f"Queries attempted: {queries[:3]}"
+            )
+            print(f"[!!!] {reason}")
+            return None, reason
+
+        # ── Hard minimum: never save with only 1 supplier ─────────────────────
+        # A single-supplier file breaks HHI scoring (HHI=10000 always) and
+        # gives a false picture. Force another LLM pass if under minimum.
+        if len(entities) < 3:
+            print(f"[!!!] Only {len(entities)} supplier(s) found — this is too few. Forcing LLM knowledge expansion…")
+            additional = self._llm_fallback_suppliers(component, sector)
+            if additional:
+                existing_names_lower = {e.get("name","").lower() for e in entities}
+                for e in additional:
+                    name = (e.get("name") or "").strip()
+                    if name.lower() not in existing_names_lower and len(name) >= 3:
+                        entities.append(e)
+                        existing_names_lower.add(name.lower())
+            print(f"[+] After expansion: {len(entities)} suppliers.")
+
+        # ── Ownership enrichment ──────────────────────────────────────────────
+        entities = self._enrich_ownership(entities)
+
+        # Market share estimation
+        entities = self.estimate_market_shares(component, entities, context_text)
+
+        # ── Trade flows fallback ──────────────────────────────────────────────
+        if not trade_data:
+            print("[*] No Comtrade data — using LLM trade estimation (fallback)…")
+            time.sleep(10)
+            trade_data = self._estimate_trade_flows_llm(component, context_text, all_sources)
+
+        # ── Persist ──────────────────────────────────────────────────────────
+        path = self._save_data(component, sector, segment, entities, trade_data, all_sources)
+        print(f"[+] Saved → {path}")
+        print("[*] Cooling down 5s…\n")
+        time.sleep(5)
+        return path, None
+
+    def batch_extract_from_taxonomy(self, segment: str, sector: str) -> Dict[str, Any]:
+        """
+        Extract all leaf components from a saved taxonomy.
+        Skips components that already have a supplier file.
+
+        EXHAUSTIVENESS ENFORCEMENT (point 14):
+        - Every component in the taxonomy MUST be attempted.
+        - Failures are logged loudly with reasons.
+        - A batch_report.json is written summarising success/failure.
+        - Returns the report dict.
+        """
+        sector_dir = self.data_dir / "sectors" / self._safe_name(sector) / self._safe_name(segment)
+        tax_file   = sector_dir / "taxonomy.json"
+
+        if not tax_file.exists():
+            print(f"[!] Taxonomy not found: {tax_file}")
+            return {"error": f"Taxonomy not found at {tax_file}"}
+
+        with open(tax_file) as f:
+            taxonomy = json.load(f)
+
+        leaves: List[str] = []
+
+        def _collect(node: dict) -> None:
+            if "leaf_id" in node:
+                leaves.append(node["name"])
+            for child in node.get("children", []):
+                _collect(child)
+
+        for top in taxonomy.get("supply_chain", []):
+            _collect(top)
+
+        total = len(leaves)
+        print(f"\n{'#'*60}")
+        print(f"  BATCH EXTRACTION: {total} components in {sector}/{segment}")
+        print(f"{'#'*60}\n")
+
+        report: Dict[str, Any] = {
+            "sector":          sector,
+            "segment":         segment,
+            "total_components": total,
+            "extracted_at":    datetime.datetime.now().isoformat(),
+            "succeeded":       [],
+            "skipped_existing": [],
+            "failed":          [],
+        }
+
+        for i, component in enumerate(leaves, 1):
+            # Check for cancel signal
+            cancel_file = self.data_dir / ".cancel_extraction"
+            if cancel_file.exists():
+                cancel_file.unlink()
+                print("[!] Extraction cancelled by user.")
+                break
+
+            # Check for pause signal — wait until resumed or cancelled
+            pause_file = self.data_dir / ".pause_extraction"
+            if pause_file.exists():
+                print("[~] Extraction paused. Waiting for resume…")
+                while pause_file.exists():
+                    if cancel_file.exists():
+                        cancel_file.unlink()
+                        print("[!] Extraction cancelled while paused.")
+                        return report
+                    time.sleep(3)
+                print("[~] Extraction resumed.")
+
+            print(f"\n[{i}/{total}] {component}")
+            comp_file = sector_dir / "suppliers" / f"{self._safe_name(component)}_suppliers.json"
+
+            if comp_file.exists():
+                print(f"[*] Already extracted — skipping.")
+                report["skipped_existing"].append(component)
+                continue
+
+            try:
+                path, failure_reason = self.extract_component(component, sector, segment)
+                if path:
+                    report["succeeded"].append(component)
+                else:
+                    report["failed"].append({
+                        "component": component,
+                        "reason":    failure_reason,
+                    })
+                    print(f"[!!!] FAILED: {component}\n      Reason: {failure_reason}")
+            except Exception as e:
+                reason = f"Unhandled exception: {str(e)}"
+                report["failed"].append({"component": component, "reason": reason})
+                print(f"[!!!] EXCEPTION for '{component}': {e}")
+                continue
+
+        # Summary
+        n_ok      = len(report["succeeded"])
+        n_skip    = len(report["skipped_existing"])
+        n_fail    = len(report["failed"])
+        n_done    = n_ok + n_skip
+        coverage  = round(n_done / total * 100, 1) if total > 0 else 0
+
+        print(f"\n{'='*60}")
+        print(f"  BATCH COMPLETE — {sector}/{segment}")
+        print(f"  Total:    {total}")
+        print(f"  Success:  {n_ok}")
+        print(f"  Skipped:  {n_skip} (already existed)")
+        print(f"  FAILED:   {n_fail}")
+        print(f"  Coverage: {coverage}%")
+        if report["failed"]:
+            print(f"\n  [!!!] FAILED COMPONENTS (require manual review):")
+            for f in report["failed"]:
+                print(f"        - {f['component']}: {f['reason'][:100]}…")
+        print(f"{'='*60}\n")
+
+        report["coverage_pct"]   = coverage
+        report["n_succeeded"]    = n_ok
+        report["n_failed"]       = n_fail
+        report["n_skipped"]      = n_skip
+
+        # Write report
+        report_path = sector_dir / "batch_report.json"
+        with open(report_path, "w") as f:
+            json.dump(report, f, indent=2)
+        print(f"[+] Batch report saved → {report_path}")
+
+        return report
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Persistence
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _save_data(
+        self,
+        component: str,
+        sector: str,
+        segment: str,
+        entities: List[Dict],
+        trade: Optional[Dict],
+        sources: List[str],
+    ) -> Path:
+        base_dir = self._get_sector_dir(sector, segment)
+
+        supp_path = base_dir / "suppliers" / f"{self._safe_name(component)}_suppliers.json"
+        supp_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(supp_path, "w") as f:
+            json.dump({
+                "component":    component,
+                "sector":       sector,
+                "segment":      segment,
+                "extracted_at": datetime.datetime.now().isoformat(),
+                "model_used":   MODEL_QUALITY,
+                "suppliers":    entities,
+                "sources":      sources,
+            }, f, indent=2)
+
+        if trade:
+            trade_path = base_dir / "trade" / f"{self._safe_name(component)}_trade_flows.json"
+            trade_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(trade_path, "w") as f:
+                json.dump(trade, f, indent=2)
+
+        return supp_path
 
 
+# ─── CLI ──────────────────────────────────────────────────────────────────────
 
 def main():
-
-    parser = argparse.ArgumentParser(description="Supply-Chain Intelligence Extractor")
-    parser.add_argument("--component", type=str, help="Single component to extract")
-    parser.add_argument("--batch", action="store_true", help="Batch process a segment")
-    parser.add_argument("--sector", type=str, default="quantum_computing", help="Sector name")
-    parser.add_argument("--segment", type=str, default="cryogenics", help="Segment name")
-    parser.add_argument("--deep-dive", action="store_true", help="Deep scraping")
-    parser.add_argument("--hs-code", type=str, help="Manual HS code override")
-    parser.add_argument("--groq-key", type=str, help="Groq API key")
-    
+    import argparse
+    parser = argparse.ArgumentParser(description="SupplyTrace — Quantum Supply Chain Extractor")
+    parser.add_argument("--component", type=str, help="Component to extract (e.g. 'Helium-3')")
+    parser.add_argument("--sector",    type=str, default="Quantum Computing")
+    parser.add_argument("--segment",   type=str, default="cryogenics")
+    parser.add_argument("--batch",     action="store_true", help="Batch extract from saved taxonomy")
     args = parser.parse_args()
-    extractor = SupplyChainExtractor(groq_api_key=args.groq_key)
-    
-    if args.batch and args.segment and args.sector:
-        extractor.batch_extract_from_taxonomy(args.segment, args.sector, deep_dive=args.deep_dive)
-    elif args.component and args.sector and args.segment:
-        extractor.extract_component(args.component, args.sector, args.segment, deep_dive=args.deep_dive, hs_code=args.hs_code)
+
+    extractor = SupplyChainExtractor()
+
+    if args.batch:
+        extractor.batch_extract_from_taxonomy(args.segment, args.sector)
+    elif args.component:
+        path, reason = extractor.extract_component(args.component, args.sector, args.segment)
+        if not path:
+            print(f"\n[!!!] EXTRACTION FAILED: {reason}")
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()
