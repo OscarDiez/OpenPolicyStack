@@ -14,6 +14,7 @@ the model is instructed to reflect that honestly.
 import json
 import os
 import time
+from datetime import date
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -98,28 +99,85 @@ def _fetch_news(query: str, max_results: int = 6) -> List[Dict]:
         return []
 
 
-# ─── Core reasoning ───────────────────────────────────────────────────────────
+# ─── Perspective definitions: allies and adversaries ─────────────────────────
+# These determine how the AI reasons about supply chain exposure.
+# Allies = trusted trading partners, low adversarial risk.
+# Adversaries = countries whose control over a supply is a risk to this perspective.
 
-_SYSTEM_PROMPT = """You are a geopolitical supply chain risk analyst. You are brutally honest.
-If a country or region is genuinely exposed to a supply disruption, say so clearly and score it high.
-If a country or region actually BENEFITS from a disruption (e.g. gains leverage, gains new buyers),
-score it lower or negative. Do not soften scores for political reasons.
+PERSPECTIVE_CONTEXT = {
+    "EU": {
+        "description": "The European Union — 27-member trading bloc, heavily dependent on imported energy and critical raw materials.",
+        "adversaries":  ["Russia", "China", "Iran", "Belarus", "North Korea"],
+        "allies":       ["United States", "Canada", "Norway", "Australia", "Japan", "South Korea", "UK", "Switzerland"],
+        "logic": (
+            "From the EU's perspective: if a scenario disrupts supply from Russia or China, EU risk INCREASES sharply. "
+            "If Russia or China is hurt by the scenario (e.g. loses EU buyers, forced to find new markets), "
+            "EU risk may DECREASE because it reduces dependency leverage. "
+            "If the scenario benefits the US or Norway (EU allies), EU risk is stable or improves slightly."
+        ),
+    },
+    "US": {
+        "description": "The United States — dominant global power, strong domestic production base but reliant on China for critical minerals.",
+        "adversaries":  ["Russia", "China", "Iran", "North Korea", "Cuba"],
+        "allies":       ["EU", "Canada", "UK", "Australia", "Japan", "South Korea", "Taiwan", "Israel"],
+        "logic": (
+            "From the US perspective: if a scenario disrupts supply from China or Russia, US risk INCREASES. "
+            "If the scenario weakens China's export leverage (e.g. WTO action, allied reshoring), US risk DECREASES. "
+            "Taiwan is a key ally but also a vulnerability — any Taiwan-related scenario raises US risk significantly. "
+            "Canada and Australia are trusted alternative suppliers."
+        ),
+    },
+    "CHINA": {
+        "description": "China — the world's largest manufacturer, dominant in critical mineral refining, seeking supply security for inputs it does not produce domestically.",
+        "adversaries":  ["United States", "Japan", "South Korea", "Taiwan", "Australia", "UK", "India"],
+        "allies":       ["Russia", "Iran", "Belarus", "Pakistan", "Saudi Arabia", "Gulf states"],
+        "logic": (
+            "From China's perspective: China IS the dominant supplier for most critical minerals — it does not face supply risk for materials it controls. "
+            "China's risk is UPSTREAM: materials it must IMPORT (e.g. iron ore from Australia, helium from the US, niobium from Brazil). "
+            "If Russia is sanctioned by the EU/US, China BENEFITS — it gains leverage as Russia's largest alternative buyer. "
+            "China's risk INCREASES if Western allies coordinate to restrict exports to China, or if Taiwan is destabilised. "
+            "Do NOT score China's risk high for scenarios where China is the dominant supplier — that is the EU/US problem, not China's."
+        ),
+    },
+    "GLOBAL": {
+        "description": "Global perspective — no adversary set, measures systemic supply concentration risk only.",
+        "adversaries":  [],
+        "allies":       [],
+        "logic": (
+            "From a global perspective: risk reflects pure supply concentration and physical disruption risk, "
+            "not geopolitical alignment. A shortage that affects all buyers equally scores high. "
+            "A scenario that merely redistributes trade flows (e.g. Russia sells to China instead of EU) scores low globally."
+        ),
+    },
+}
 
-You will be given:
-- A supply chain scenario (e.g. EU sanctions on Russia)
-- A geopolitical perspective (EU, US, CHINA, GLOBAL)
-- A list of supply chain components with their supplier countries
-- Recent news headlines about this scenario
 
-For each component, output a JSON object with:
-  "delta": float between -0.30 and +0.50 (negative = risk goes DOWN, positive = risk goes UP)
-  "reasoning": 1-2 sentence explanation referencing the specific supplier geography
-  "sources": list of 0-2 news headline titles that support your reasoning (empty list if none apply)
+_SYSTEM_PROMPT = """You are a senior geopolitical supply chain risk analyst. Your job is to assess how a specific scenario changes supply chain risk for a specific geopolitical perspective.
 
-Be precise. A delta of 0.0 means the scenario has no effect on this component.
-A delta of +0.45 means severe exposure. A delta of -0.20 means the perspective
-actually benefits (e.g. China benefits when Russia needs new gas buyers).
+CRITICAL RULES:
+1. You must reason from the PERSPECTIVE given — not generically. Different perspectives face opposite risks from the same event.
+2. If the perspective IS the dominant supplier of a component, their supply risk is LOW (they control it). Score delta near 0 or negative.
+3. If the perspective LOSES a supplier due to the scenario, risk INCREASES (positive delta).
+4. If the scenario forces an adversary to redirect supply toward the perspective (e.g. Russia needs new buyers → ships to China), risk DECREASES (negative delta) for that perspective.
+5. If a scenario weakens an adversary's leverage over the perspective, risk DECREASES.
+6. Use today's date and current geopolitical reality. Do not use outdated assumptions.
+7. Be brutally honest. Do not soften deltas for diplomatic reasons.
+
+Delta scale:
+  +0.40 to +0.50 = catastrophic exposure (supply cut off, no alternatives)
+  +0.25 to +0.39 = severe exposure (major disruption, hard to replace)
+  +0.10 to +0.24 = moderate exposure (disruption but alternatives exist)
+  +0.01 to +0.09 = minor exposure
+   0.00          = no material effect
+  -0.01 to -0.15 = modest benefit (gains leverage or alternative buyers)
+  -0.16 to -0.30 = significant benefit (major supply advantage or reduced adversary leverage)
+
+Output format: a single JSON object where each key is the exact component name and the value is:
+{ "delta": float, "reasoning": "1-2 sentences grounding the score in supplier geography and current events", "sources": ["headline title if applicable"] }
+
+Return ONLY valid JSON. No markdown. No explanation outside the JSON.
 """
+
 
 def _build_user_prompt(
     scenario_label: str,
@@ -128,30 +186,43 @@ def _build_user_prompt(
     components: List[Dict],
     news: List[Dict],
 ) -> str:
+    today = date.today().strftime("%B %d, %Y")
+
+    ctx = PERSPECTIVE_CONTEXT.get(perspective, PERSPECTIVE_CONTEXT["GLOBAL"])
+    adversaries_str = ", ".join(ctx["adversaries"]) or "none defined"
+    allies_str      = ", ".join(ctx["allies"])      or "none defined"
+
     news_block = "\n".join(
-        f"- {n['title']} ({n['url']}): {n['body']}"
+        f"  - [{n['title']}] {n['body']}"
         for n in news
-    ) or "No recent news retrieved."
+    ) or "  No recent news retrieved."
 
     comp_block = "\n".join(
-        f"- {c['name']}: suppliers in {', '.join(c['countries']) or 'unknown'}"
+        f"  - {c['name']}: suppliers in {', '.join(c['countries']) or 'unknown'}"
         for c in components
     )
 
-    return f"""SCENARIO: {scenario_label}
-Description: {scenario_description}
+    return f"""TODAY'S DATE: {today}
+
+SCENARIO: {scenario_label}
+DESCRIPTION: {scenario_description}
 
 PERSPECTIVE: {perspective}
+Who this is: {ctx['description']}
+Adversaries (supply from these = risk): {adversaries_str}
+Allies (supply from these = safe): {allies_str}
+How to reason for this perspective:
+{ctx['logic']}
 
-RECENT NEWS:
+RECENT NEWS (as of {today}):
 {news_block}
 
-COMPONENTS TO SCORE:
+COMPONENTS TO SCORE (name: supplier countries):
 {comp_block}
 
-Return a JSON object where each key is the component name (exactly as given above)
-and the value is {{ "delta": float, "reasoning": "...", "sources": ["headline1", ...] }}.
-Return ONLY valid JSON, no markdown, no explanation outside the JSON.
+For each component above, compute the delta to its risk score caused by this scenario, reasoning strictly from the {perspective} perspective.
+Remember: if {perspective} IS the dominant producer of a component, their risk does not increase — it may decrease.
+Return a JSON object where each key is the component name exactly as listed above.
 """
 
 
@@ -174,10 +245,21 @@ def _call_llm(user_prompt: str) -> Optional[Dict]:
             return None
 
         raw = response.choices[0].message.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
+        # Strip markdown code fences
+        if "```" in raw:
+            parts = raw.split("```")
+            for part in parts:
+                part = part.strip()
+                if part.startswith("json"):
+                    part = part[4:].strip()
+                if part.startswith("{"):
+                    raw = part
+                    break
+        # Find the outermost JSON object
+        start = raw.find("{")
+        end   = raw.rfind("}") + 1
+        if start != -1 and end > start:
+            raw = raw[start:end]
         return json.loads(raw)
     except Exception as e:
         print(f"[ai_scenario] LLM call failed: {e}")
@@ -216,9 +298,10 @@ def get_ai_scenario_deltas(
 
     print(f"[ai_scenario] Computing live deltas for {scenario_key} / {perspective} ...")
 
-    # 1. Fetch news
-    news_query = f"{scenario_label} supply chain commodities 2025 2026"
-    news = _fetch_news(news_query, max_results=6)
+    # 1. Fetch news — use today's year for recency
+    today_year = date.today().year
+    news_query = f"{scenario_label} supply chain trade {today_year}"
+    news = _fetch_news(news_query, max_results=8)
     print(f"[ai_scenario] Fetched {len(news)} news items")
 
     # 2. Build prompt and call LLM
