@@ -226,6 +226,72 @@ Return a JSON object where each key is the component name exactly as listed abov
 """
 
 
+def _extract_json(raw: str) -> Optional[Dict]:
+    """
+    Robustly extract a JSON object from LLM output.
+    Handles: markdown fences, preamble text, trailing commas, unescaped quotes in values.
+    """
+    import re
+
+    # Strip markdown fences
+    if "```" in raw:
+        parts = raw.split("```")
+        for part in parts:
+            part = part.strip()
+            if part.startswith("json"):
+                part = part[4:].strip()
+            if part.startswith("{"):
+                raw = part
+                break
+
+    # Find outermost { }
+    start = raw.find("{")
+    end   = raw.rfind("}") + 1
+    if start == -1 or end <= start:
+        return None
+    raw = raw[start:end]
+
+    # Try direct parse first
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+
+    # Remove trailing commas before } or ]
+    raw = re.sub(r",\s*([}\]])", r"\1", raw)
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+
+    # Last resort: extract each component block individually using regex
+    # Pattern: "ComponentName": { ... }
+    result = {}
+    pattern = re.compile(
+        r'"([^"]+)"\s*:\s*\{([^{}]+)\}',
+        re.DOTALL
+    )
+    for match in pattern.finditer(raw):
+        key  = match.group(1)
+        body = "{" + match.group(2) + "}"
+        try:
+            val = json.loads(body)
+            result[key] = val
+        except Exception:
+            # Try to manually extract delta and reasoning
+            delta_m     = re.search(r'"delta"\s*:\s*(-?[\d.]+)', body)
+            reasoning_m = re.search(r'"reasoning"\s*:\s*"([^"]*)"', body)
+            if delta_m:
+                result[key] = {
+                    "delta":     float(delta_m.group(1)),
+                    "reasoning": reasoning_m.group(1) if reasoning_m else "",
+                    "sources":   [],
+                }
+
+    return result if result else None
+
+
 def _call_llm(user_prompt: str) -> Optional[Dict]:
     messages = [
         {"role": "system", "content": _SYSTEM_PROMPT},
@@ -245,22 +311,7 @@ def _call_llm(user_prompt: str) -> Optional[Dict]:
             return None
 
         raw = response.choices[0].message.content.strip()
-        # Strip markdown code fences
-        if "```" in raw:
-            parts = raw.split("```")
-            for part in parts:
-                part = part.strip()
-                if part.startswith("json"):
-                    part = part[4:].strip()
-                if part.startswith("{"):
-                    raw = part
-                    break
-        # Find the outermost JSON object
-        start = raw.find("{")
-        end   = raw.rfind("}") + 1
-        if start != -1 and end > start:
-            raw = raw[start:end]
-        return json.loads(raw)
+        return _extract_json(raw)
     except Exception as e:
         print(f"[ai_scenario] LLM call failed: {e}")
         return None
