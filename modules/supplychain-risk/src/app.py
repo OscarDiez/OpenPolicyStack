@@ -311,6 +311,10 @@ async def dashboard(
         sector_dir    = _get_sector_data_dir(session)
         eff_region    = region or (session or {}).get("region", "EU")
 
+    # Fall back to session-persisted scenario if URL doesn't specify one
+    if not scenario:
+        scenario = (session or {}).get("scenario", "") or None
+
     has_session   = session is not None or bool(sector and segment)
     is_extracting = (session or {}).get("is_extracting", False)
     is_paused     = (session or {}).get("is_paused", False)
@@ -392,9 +396,11 @@ async def dashboard(
 
 @app.get("/taxonomy-view", response_class=HTMLResponse)
 async def taxonomy_view(
-    request: Request,
-    sector:  Optional[str] = None,
-    segment: Optional[str] = None,
+    request:  Request,
+    sector:   Optional[str] = None,
+    segment:  Optional[str] = None,
+    scenario: Optional[str] = None,
+    region:   Optional[str] = None,
 ):
     if sector and segment:
         sector_dir    = DATA_DIR / "sectors" / _safe_name(sector) / _safe_name(segment)
@@ -404,6 +410,12 @@ async def taxonomy_view(
         sector_dir    = _get_sector_data_dir(session)
         segment_label = (session or {}).get("segment", "Unknown")
         sector        = (session or {}).get("sector", "")
+        if not region:
+            region = (session or {}).get("region", "EU")
+        if not scenario:
+            scenario = (session or {}).get("scenario", "")
+
+    eff_region = region or "EU"
 
     taxonomy = {"supply_chain": []}
     if sector_dir:
@@ -417,12 +429,10 @@ async def taxonomy_view(
     if sector_dir:
         suppliers_dir = sector_dir / "suppliers"
         if suppliers_dir and suppliers_dir.exists():
-            session_r  = _get_active_session()
-            eff_region = (session_r or {}).get("region", "EU")
             for f in suppliers_dir.glob("*_suppliers.json"):
                 name = _normalize_component_name(f.stem.replace("_suppliers", ""))
                 try:
-                    score_val, drivers, conf = score_component(eff_region, name, data_dir=sector_dir)
+                    score_val, drivers, conf = score_component(eff_region, name, scenario=scenario or None, data_dir=sector_dir)
                     scores[name] = {"score": score_val, "conf": conf, "drivers": drivers[:2]}
                 except Exception:
                     pass
@@ -442,12 +452,23 @@ async def taxonomy_view(
     for top in taxonomy.get("supply_chain", []):
         _score_node_recursive(top)
 
+    if scenario == "__custom__":
+        scenario_label = "Custom Scenario (AI)"
+    elif scenario and scenario in SCENARIOS:
+        scenario_label = SCENARIOS[scenario]["label"]
+    else:
+        scenario_label = "Baseline"
+
     return templates.TemplateResponse("taxonomy_view.html", {
-        "request":     request,
-        "segment":     segment_label,
-        "sector":      sector or "",
-        "taxonomy":    taxonomy,
-        "scores_json": json.dumps(scores),
+        "request":        request,
+        "segment":        segment_label,
+        "sector":         sector or "",
+        "taxonomy":       taxonomy,
+        "scores_json":    json.dumps(scores),
+        "scenario":       scenario or "",
+        "scenario_label": scenario_label,
+        "scenarios":      SCENARIOS,
+        "region":         eff_region,
     })
 
 
@@ -1210,6 +1231,70 @@ async def api_node_score(
         "drivers": all_drivers[:3],
         "type": "branch",
     }
+
+
+@app.post("/api/v1/set-scenario")
+async def set_scenario(request: Request) -> Dict[str, Any]:
+    """Persist the active scenario into the session file so it survives navigation."""
+    body     = await request.json()
+    scenario = body.get("scenario", "")
+    session_file = DATA_DIR / "active_session.json"
+    session: Dict = {}
+    if session_file.exists():
+        try:
+            with open(session_file) as f:
+                session = json.load(f)
+        except Exception:
+            pass
+    session["scenario"] = scenario
+    with open(session_file, "w") as f:
+        json.dump(session, f, indent=2)
+    return {"status": "ok"}
+
+
+SAVED_SCENARIOS_FILE = DATA_DIR / "saved_scenarios.json"
+
+
+def _load_saved_scenarios() -> List[Dict]:
+    if SAVED_SCENARIOS_FILE.exists():
+        try:
+            with open(SAVED_SCENARIOS_FILE) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+
+@app.get("/api/v1/saved-scenarios")
+async def get_saved_scenarios() -> List[Dict]:
+    return _load_saved_scenarios()
+
+
+@app.post("/api/v1/saved-scenarios")
+async def save_scenario_description(request: Request) -> Dict[str, Any]:
+    """Save a custom scenario description for future reuse."""
+    body  = await request.json()
+    label = body.get("label", "").strip()
+    desc  = body.get("description", "").strip()
+    if not desc:
+        return {"error": "description is required"}
+    saved = _load_saved_scenarios()
+    # Avoid exact duplicates
+    if not any(s["description"] == desc for s in saved):
+        saved.append({"label": label or desc[:50], "description": desc})
+        with open(SAVED_SCENARIOS_FILE, "w") as f:
+            json.dump(saved, f, indent=2)
+    return {"status": "ok", "total": len(saved)}
+
+
+@app.delete("/api/v1/saved-scenarios/{index}")
+async def delete_saved_scenario(index: int) -> Dict[str, Any]:
+    saved = _load_saved_scenarios()
+    if 0 <= index < len(saved):
+        saved.pop(index)
+        with open(SAVED_SCENARIOS_FILE, "w") as f:
+            json.dump(saved, f, indent=2)
+    return {"status": "ok"}
 
 
 @app.post("/api/v1/custom-scenario")

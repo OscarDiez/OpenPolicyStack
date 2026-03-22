@@ -159,16 +159,16 @@
     <div class="nav-left">
         <a href="/" class="brand">Supply<b>Trace</b></a>
         <a href="/analyses" class="nav-link">Analyses</a>
-        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Dashboard</a>
-        <a href="/taxonomy-view{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link active">Taxonomy Graph</a>
-        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Geopolitical Comparison</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}&region={{ region }}" class="nav-link">Dashboard</a>
+        <a href="/taxonomy-view{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}&region={{ region }}" class="nav-link active">Taxonomy Graph</a>
+        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}&region={{ region }}" class="nav-link">Geopolitical Comparison</a>
     </div>
     <div class="nav-right">
         <span class="mode-badge mode-view" id="mode-badge">View Mode</span>
         <button class="btn btn-ghost" id="edit-btn" onclick="toggleEditMode()">Edit</button>
         <button class="btn btn-success" id="save-btn" style="display:none" onclick="saveTaxonomy()">Save</button>
         <button class="btn btn-ghost" id="cancel-edit-btn" style="display:none" onclick="cancelEdit()">Cancel</button>
-        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost">&larr; Dashboard</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}&region={{ region }}" class="btn btn-ghost">&larr; Dashboard</a>
     </div>
 </nav>
 
@@ -176,6 +176,18 @@
     <div class="toolbar-title">
         {% if sector %}<span>{{ sector }}</span> &mdash; {% endif %}
         {{ segment }} — Component Graph
+    </div>
+    <div style="display:flex;align-items:center;gap:.6rem;">
+        {% if scenario %}
+        <span style="font-size:11px;background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44;border-radius:4px;padding:2px 8px;">⚠ {{ scenario_label }}</span>
+        {% endif %}
+        <select onchange="applyScenario(this.value)" style="background:#161d2e;border:1px solid #1e2d45;color:#e2e8f0;border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer;">
+            <option value="">Baseline</option>
+            {% for key, sc in scenarios.items() %}
+            <option value="{{ key }}" {% if scenario == key %}selected{% endif %}>{{ sc.label }}</option>
+            {% endfor %}
+            <option value="__custom__" {% if scenario == '__custom__' %}selected{% endif %}>✏ Custom (AI)…</option>
+        </select>
     </div>
     <div class="legend">
         <span><span class="leg-dot" style="background:#ef4444"></span>High (&gt;0.55)</span>
@@ -571,6 +583,13 @@ if (({{ taxonomy | tojson }}).supply_chain && ({{ taxonomy | tojson }}).supply_c
 
 // Re-render on window resize
 window.addEventListener('resize', () => renderGraph());
+
+function applyScenario(val) {
+    const url = new URL(window.location.href);
+    if (val) url.searchParams.set('scenario', val);
+    else     url.searchParams.delete('scenario');
+    window.location.href = url.toString();
+}
 </script>
 </body>
 </html>

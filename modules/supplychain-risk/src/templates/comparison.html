@@ -459,10 +459,17 @@
             <div style="font-size:11px;font-weight:700;color:var(--text-2);margin-bottom:5px;">Describe your scenario</div>
             <textarea id="custom-scenario-input" rows="3" placeholder="e.g. The US imposes a full embargo on rare earth exports from China, cutting off 85% of global supply overnight."
                 style="width:100%;background:var(--bg);border:1px solid var(--card-border);color:var(--text);border-radius:4px;padding:6px;font-size:12px;font-family:var(--font);resize:vertical;box-sizing:border-box;"></textarea>
-            <button onclick="runCustomScenario()" style="margin-top:6px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:4px;padding:6px;font-size:12px;cursor:pointer;font-family:var(--font);">
-                ⚡ Run AI Analysis
-            </button>
+            <input id="custom-scenario-label" type="text" placeholder="Short name to save (optional)"
+                style="width:100%;margin-top:4px;background:var(--bg);border:1px solid var(--card-border);color:var(--text);border-radius:4px;padding:4px 6px;font-size:11px;font-family:var(--font);box-sizing:border-box;">
+            <div style="display:flex;gap:4px;margin-top:6px;">
+                <button onclick="runCustomScenario()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:4px;padding:6px;font-size:11px;cursor:pointer;font-family:var(--font);">⚡ Run</button>
+                <button onclick="saveCurrentScenario()" style="background:var(--card);border:1px solid var(--card-border);color:var(--text-2);border-radius:4px;padding:6px 8px;font-size:11px;cursor:pointer;font-family:var(--font);" title="Save for reuse">💾</button>
+            </div>
             <div id="custom-scenario-status" style="font-size:10px;color:var(--text-2);margin-top:4px;"></div>
+            <div style="margin-top:8px;border-top:1px solid var(--card-border);padding-top:6px;">
+                <div style="font-size:10px;font-weight:700;color:var(--text-3);margin-bottom:4px;">SAVED SCENARIOS</div>
+                <div id="saved-scenarios-list"></div>
+            </div>
         </div>
     </div>
 
@@ -755,9 +762,11 @@ function applyScenario(val) {
     const panel = document.getElementById('custom-scenario-panel');
     if (val === '__custom__') {
         if (panel) panel.style.display = 'block';
+        loadSavedScenarios();
         return;
     }
     if (panel) panel.style.display = 'none';
+    fetch('/api/v1/set-scenario', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({scenario: val})});
     const url = new URL(window.location.href);
     if (val) url.searchParams.set('scenario', val);
     else     url.searchParams.delete('scenario');
@@ -766,7 +775,7 @@ function applyScenario(val) {
 
 if ('{{ scenario }}' === '__custom__') {
     const p = document.getElementById('custom-scenario-panel');
-    if (p) p.style.display = 'block';
+    if (p) { p.style.display = 'block'; loadSavedScenarios(); }
 }
 
 async function runCustomScenario() {
@@ -791,6 +800,7 @@ async function runCustomScenario() {
             status.textContent = '❌ ' + data.error;
         } else {
             status.textContent = `✅ ${data.components_scored} components scored — loading…`;
+            fetch('/api/v1/set-scenario', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({scenario: '__custom__'})});
             const nav = new URL(window.location.href);
             nav.searchParams.set('scenario', '__custom__');
             setTimeout(() => { window.location.href = nav.toString(); }, 900);
@@ -798,6 +808,38 @@ async function runCustomScenario() {
     } catch (e) {
         status.textContent = '❌ ' + e.message;
     }
+}
+
+async function loadSavedScenarios() {
+    const res  = await fetch('/api/v1/saved-scenarios');
+    const list = await res.json();
+    const container = document.getElementById('saved-scenarios-list');
+    if (!container) return;
+    if (!list.length) { container.innerHTML = '<div style="font-size:10px;color:var(--text-3)">No saved scenarios yet.</div>'; return; }
+    container.innerHTML = list.map((s, i) => `
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
+            <button onclick="loadScenario(${i})" style="flex:1;text-align:left;background:var(--bg);border:1px solid var(--card-border);color:var(--text-2);border-radius:3px;padding:3px 6px;font-size:10px;cursor:pointer;font-family:var(--font);">${s.label}</button>
+            <button onclick="deleteSavedScenario(${i})" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:12px;" title="Delete">✕</button>
+        </div>`).join('');
+}
+
+async function loadScenario(i) {
+    const res  = await fetch('/api/v1/saved-scenarios');
+    const list = await res.json();
+    if (list[i]) document.getElementById('custom-scenario-input').value = list[i].description;
+}
+
+async function deleteSavedScenario(i) {
+    await fetch(`/api/v1/saved-scenarios/${i}`, {method:'DELETE'});
+    loadSavedScenarios();
+}
+
+async function saveCurrentScenario() {
+    const desc  = document.getElementById('custom-scenario-input').value.trim();
+    const label = document.getElementById('custom-scenario-label').value.trim();
+    if (!desc) return;
+    await fetch('/api/v1/saved-scenarios', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({label, description: desc})});
+    loadSavedScenarios();
 }
 </script>
 </body>
