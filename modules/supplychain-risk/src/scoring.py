@@ -19,6 +19,7 @@ from analytics import (
     get_perspective_comparison,
     get_segment_perspective_comparison,
 )
+from ai_scenario import get_component_ai_delta, _load_cache, _cache_path
 
 # ─── Risk Weights (must sum to 1.0) ───────────────────────────────────────────
 RISK_WEIGHTS: Dict[str, float] = {
@@ -187,6 +188,15 @@ SCENARIOS: Dict[str, Dict] = {
 }
 
 
+CUSTOM_SCENARIO_PLACEHOLDER: Dict = {
+    "label":        "Custom Scenario (AI)",
+    "perspectives": ["EU", "US", "CHINA", "GLOBAL"],
+    "condition":    "always",
+    "delta":        0.0,
+    "description":  "User-defined scenario scored live by AI. Run via the custom scenario input.",
+}
+
+
 def get_scenarios_for_perspective(region: str) -> Dict[str, Dict]:
     """Return only scenarios relevant to the given perspective."""
     r = region.upper()
@@ -254,6 +264,33 @@ def score_component(
                 f"Scenario — {sc['label']}: {sc['description']} "
                 f"Score raised by +{delta:.2f}."
             )
+        # If AI cache exists for this scenario, replace static delta with AI delta
+        if data_dir:
+            cache_file = _cache_path(data_dir, region, scenario)
+            cached = _load_cache(cache_file)
+            if cached:
+                ai_info = get_component_ai_delta(cached, component)
+                if ai_info["delta"] != 0.0:
+                    delta = ai_info["delta"]
+                    drivers = [d for d in drivers if "Scenario —" not in d]
+                    sign = "+" if delta > 0 else ""
+                    drivers.append(
+                        f"AI Scenario — {sc['label']}: {ai_info['reasoning']} "
+                        f"({sign}{delta:.2f})"
+                    )
+
+    elif scenario == "__custom__" and data_dir:
+        # Custom user-defined scenario — load AI cache
+        cache_file = _cache_path(data_dir, region, "__custom__")
+        cached = _load_cache(cache_file)
+        if cached:
+            ai_info = get_component_ai_delta(cached, component)
+            delta = ai_info["delta"]
+            if delta != 0.0:
+                sign = "+" if delta > 0 else ""
+                drivers.append(
+                    f"Custom Scenario: {ai_info['reasoning']} ({sign}{delta:.2f})"
+                )
 
     final_score = round(min(1.0, blended + delta), 3)
 

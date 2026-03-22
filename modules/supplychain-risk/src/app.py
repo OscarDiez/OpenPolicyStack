@@ -37,6 +37,7 @@ from analytics import (
     normalize_component_name,
 )
 from extractor import SupplyChainExtractor
+from ai_scenario import get_ai_scenario_deltas, get_component_ai_delta
 
 # ─── App ──────────────────────────────────────────────────────────────────────
 
@@ -147,7 +148,7 @@ def _get_active_component_names(session: Optional[Dict] = None) -> Optional[set]
         return set()
 
 
-def _build_dashboard_rows(results: list, scenario: Optional[str] = None) -> str:
+def _build_dashboard_rows(results: list, scenario: Optional[str] = None, ai_deltas: Optional[Dict] = None) -> str:
     rows_html = ""
     for res in results:
         score = res["score"]
@@ -160,6 +161,25 @@ def _build_dashboard_rows(results: list, scenario: Optional[str] = None) -> str:
 
         badge_cls  = f"badge-{res['conf']}"
         drivers_li = "".join(f"<li>{d}</li>" for d in res["drivers"][:2])
+
+        # AI scenario delta badge
+        ai_info = get_component_ai_delta(ai_deltas or {}, res["name"])
+        ai_delta = ai_info.get("delta", 0.0)
+        ai_reasoning = ai_info.get("reasoning", "")
+        ai_sources = ai_info.get("sources", [])
+        ai_badge_html = ""
+        if scenario and ai_delta != 0.0:
+            sign = "+" if ai_delta > 0 else ""
+            ai_color = "var(--danger)" if ai_delta > 0.15 else ("var(--warning)" if ai_delta > 0 else "var(--success)")
+            src_text = f" ({ai_sources[0]})" if ai_sources else ""
+            ai_badge_html = (
+                f'<div class="ai-delta-badge" style="border-left:3px solid {ai_color};margin-top:.4rem;padding:.3rem .5rem;'
+                f'background:rgba(0,0,0,.2);border-radius:4px;font-size:11px;" '
+                f'title="{ai_reasoning}{src_text}">'
+                f'<span style="color:{ai_color};font-weight:700">AI Δ {sign}{ai_delta:+.2f}</span> '
+                f'<span style="color:var(--text-2)">{ai_reasoning[:90]}{"…" if len(ai_reasoning)>90 else ""}</span>'
+                f'</div>'
+            )
 
         # Supplier cards
         supp_html = ""
@@ -233,7 +253,7 @@ def _build_dashboard_rows(results: list, scenario: Optional[str] = None) -> str:
                 <div class="risk-bar-bg"><div class="risk-bar" style="width:{score*100:.1f}%;background:{color}"></div></div>
             </td>
             <td><span class="badge {badge_cls}">{res['conf']}</span></td>
-            <td><ul class="drivers-list">{drivers_li}</ul></td>
+            <td><ul class="drivers-list">{drivers_li}</ul>{ai_badge_html}</td>
         </tr>
         <tr class="detail-row" id="details-{res['id']}">
             <td colspan="4">
@@ -323,7 +343,33 @@ async def dashboard(
     critical_count = sum(1 for r in results if r["score"] > 0.55)
 
     # Scenario label for display
-    scenario_label = SCENARIOS[scenario]["label"] if scenario and scenario in SCENARIOS else "Baseline"
+    if scenario == "__custom__":
+        scenario_label = "Custom Scenario (AI)"
+    elif scenario and scenario in SCENARIOS:
+        scenario_label = SCENARIOS[scenario]["label"]
+    else:
+        scenario_label = "Baseline"
+
+    # AI scenario deltas — load from cache if available (non-blocking: skip if not cached)
+    ai_deltas: Dict = {}
+    if scenario and scenario in SCENARIOS and sector_dir:
+        sc = SCENARIOS[scenario]
+        components_for_ai = []
+        for r in results:
+            countries = list({s.get("country", "") for s in r["suppliers"] if s.get("country")})
+            components_for_ai.append({"name": r["name"], "countries": countries})
+        try:
+            ai_deltas = get_ai_scenario_deltas(
+                segment_dir=sector_dir,
+                perspective=eff_region,
+                scenario_key=scenario,
+                scenario_label=sc["label"],
+                scenario_description=sc["description"],
+                components=components_for_ai,
+                force_refresh=False,
+            )
+        except Exception as e:
+            print(f"[dashboard] AI scenario skipped: {e}")
 
     return templates.TemplateResponse("dashboard.html", {
         "request":              request,
@@ -339,7 +385,7 @@ async def dashboard(
         "scenario":             scenario or "",
         "scenario_label":       scenario_label,
         "scenarios":            SCENARIOS,
-        "rows":                 _build_dashboard_rows(results, scenario),
+        "rows":                 _build_dashboard_rows(results, scenario, ai_deltas),
         "coords_json":          json.dumps(COUNTRY_COORDS),
     })
 
@@ -406,10 +452,19 @@ async def taxonomy_view(
 
 
 @app.get("/graph-view", response_class=HTMLResponse)
-async def graph_view(request: Request):
+async def graph_view(
+    request:  Request,
+    scenario: Optional[str] = None,
+    region:   Optional[str] = None,
+    sector:   Optional[str] = None,
+    segment:  Optional[str] = None,
+):
     session    = _get_active_session()
-    region     = (session or {}).get("region", "EU")
-    sector_dir = _get_sector_data_dir(session)
+    eff_region = region or (session or {}).get("region", "EU")
+    if sector and segment:
+        sector_dir = DATA_DIR / "sectors" / _safe_name(sector) / _safe_name(segment)
+    else:
+        sector_dir = _get_sector_data_dir(session)
 
     graph = load_dependency_graph(data_dir=sector_dir)
     deps  = graph.get("dependencies", [])
@@ -420,8 +475,8 @@ async def graph_view(request: Request):
         for f in suppliers_dir.glob("*_suppliers.json"):
             name = _normalize_component_name(f.stem.replace("_suppliers", ""))
             try:
-                score_val, _, _ = score_component(region, name, data_dir=sector_dir)
-                metrics         = get_component_risk_metrics(name, region, data_dir=sector_dir)
+                score_val, _, _ = score_component(eff_region, name, scenario=scenario, data_dir=sector_dir)
+                metrics         = get_component_risk_metrics(name, eff_region, data_dir=sector_dir)
                 scores[name]    = {
                     "score":         score_val,
                     "pillar_scores": metrics.get("pillar_scores", {}),
@@ -431,18 +486,21 @@ async def graph_view(request: Request):
                 pass
 
     return templates.TemplateResponse("graph.html", {
-        "request":    request,
-        "graph_json": json.dumps(deps),
+        "request":     request,
+        "graph_json":  json.dumps(deps),
         "scores_json": json.dumps(scores),
+        "scenario":    scenario or "",
+        "region":      eff_region,
     })
 
 
 @app.get("/comparison", response_class=HTMLResponse)
 async def comparison_view(
-    request: Request,
-    sector:  Optional[str] = None,
-    segment: Optional[str] = None,
+    request:  Request,
+    sector:   Optional[str] = None,
+    segment:  Optional[str] = None,
     scenario: Optional[str] = None,
+    region:   Optional[str] = None,
 ):
     """Geopolitical comparison page: EU vs US vs China side-by-side."""
     if sector and segment:
@@ -454,6 +512,8 @@ async def comparison_view(
         sector_dir    = _get_sector_data_dir(session)
         segment_label = (session or {}).get("segment", "All Components")
         sector_label  = (session or {}).get("sector", "")
+        if not region:
+            region = (session or {}).get("region", "EU")
 
     comparisons = get_segment_perspective_comparison(sector_dir, scenario=scenario) if sector_dir else []
 
@@ -464,6 +524,7 @@ async def comparison_view(
         "comparisons":  comparisons,
         "scenario":     scenario or "",
         "scenarios":    SCENARIOS,
+        "region":       region or "EU",
     })
 
 
@@ -1149,6 +1210,105 @@ async def api_node_score(
         "drivers": all_drivers[:3],
         "type": "branch",
     }
+
+
+@app.post("/api/v1/custom-scenario")
+async def custom_scenario(request: Request) -> Dict[str, Any]:
+    """
+    Run the AI scoring engine on a user-defined scenario description.
+    Creates a temporary scenario key '__custom__' and caches the result.
+    The delta for each component is computed live by the LLM.
+    """
+    body = await request.json()
+    sector      = body.get("sector", "")
+    segment     = body.get("segment", "")
+    region      = body.get("region", "EU")
+    description = body.get("description", "").strip()
+
+    if not description:
+        return {"error": "description is required"}
+    if not (sector and segment):
+        return {"error": "sector and segment are required"}
+
+    sector_dir = DATA_DIR / "sectors" / _safe_name(sector) / _safe_name(segment)
+    if not sector_dir.exists():
+        return {"error": f"Segment not found: {sector_dir}"}
+
+    suppliers_dir = sector_dir / "suppliers"
+    components_for_ai = []
+    for f in sorted(suppliers_dir.glob("*_suppliers.json")):
+        name = _normalize_component_name(f.stem.replace("_suppliers", ""))
+        try:
+            with open(f) as fh:
+                sdata = json.load(fh)
+            countries = list({s.get("country", "") for s in sdata.get("suppliers", []) if s.get("country")})
+            components_for_ai.append({"name": name, "countries": countries})
+        except Exception:
+            pass
+
+    try:
+        deltas = get_ai_scenario_deltas(
+            segment_dir=sector_dir,
+            perspective=region,
+            scenario_key="__custom__",
+            scenario_label=f"Custom: {description[:60]}",
+            scenario_description=description,
+            components=components_for_ai,
+            force_refresh=True,
+        )
+        return {"status": "ok", "components_scored": len(deltas), "scenario_key": "__custom__"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/api/v1/ai-scenario-refresh")
+async def ai_scenario_refresh(request: Request) -> Dict[str, Any]:
+    """
+    Trigger a fresh AI scenario delta computation for a given (sector, segment, perspective, scenario).
+    Results are cached to disk — subsequent dashboard loads will pick them up instantly.
+    Called from the dashboard 'Refresh AI Analysis' button.
+    """
+    body = await request.json()
+    sector   = body.get("sector", "")
+    segment  = body.get("segment", "")
+    region   = body.get("region", "EU")
+    scenario_key = body.get("scenario", "")
+
+    if not (sector and segment and scenario_key):
+        return {"error": "sector, segment, and scenario are required"}
+    if scenario_key not in SCENARIOS:
+        return {"error": f"Unknown scenario: {scenario_key}"}
+
+    sector_dir = DATA_DIR / "sectors" / _safe_name(sector) / _safe_name(segment)
+    if not sector_dir.exists():
+        return {"error": f"Segment directory not found: {sector_dir}"}
+
+    suppliers_dir = sector_dir / "suppliers"
+    components_for_ai = []
+    for f in sorted(suppliers_dir.glob("*_suppliers.json")):
+        name = _normalize_component_name(f.stem.replace("_suppliers", ""))
+        try:
+            with open(f) as fh:
+                sdata = json.load(fh)
+            countries = list({s.get("country", "") for s in sdata.get("suppliers", []) if s.get("country")})
+            components_for_ai.append({"name": name, "countries": countries})
+        except Exception:
+            pass
+
+    sc = SCENARIOS[scenario_key]
+    try:
+        deltas = get_ai_scenario_deltas(
+            segment_dir=sector_dir,
+            perspective=region,
+            scenario_key=scenario_key,
+            scenario_label=sc["label"],
+            scenario_description=sc["description"],
+            components=components_for_ai,
+            force_refresh=True,
+        )
+        return {"status": "ok", "components_scored": len(deltas)}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 if __name__ == "__main__":

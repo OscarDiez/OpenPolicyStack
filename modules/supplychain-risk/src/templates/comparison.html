@@ -410,12 +410,12 @@
     <div class="nav-left">
         <a href="/" class="brand">Supply<b>Trace</b></a>
         <a href="/analyses"   class="nav-link">Analyses</a>
-        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link">Dashboard</a>
-        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="nav-link active">Geopolitical Comparison</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}{%- if region %}&region={{ region }}{%- endif %}" class="nav-link">Dashboard</a>
+        <a href="/comparison{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}{%- if region %}&region={{ region }}{%- endif %}" class="nav-link active">Geopolitical Comparison</a>
     </div>
     <div class="nav-right">
         <a href="/taxonomy-view{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;">Taxonomy Tree</a>
-        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;">&larr; Back to Dashboard</a>
+        <a href="/dashboard{%- if sector %}?sector={{ sector | urlencode }}&segment={{ segment | urlencode }}{%- endif %}{%- if scenario %}&scenario={{ scenario }}{%- endif %}{%- if region %}&region={{ region }}{%- endif %}" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;">&larr; Back to Dashboard</a>
     </div>
 </nav>
 
@@ -452,7 +452,18 @@
             {% for key, sc in scenarios.items() %}
             <option value="{{ key }}" {% if scenario == key %}selected{% endif %}>{{ sc.label }}</option>
             {% endfor %}
+            <option value="__custom__" {% if scenario == '__custom__' %}selected{% endif %}>✏ Custom Scenario (AI)…</option>
         </select>
+        <!-- Custom scenario input panel -->
+        <div id="custom-scenario-panel" style="display:none;margin-top:8px;background:var(--card);border:1px solid var(--card-border);border-radius:6px;padding:10px;max-width:380px;">
+            <div style="font-size:11px;font-weight:700;color:var(--text-2);margin-bottom:5px;">Describe your scenario</div>
+            <textarea id="custom-scenario-input" rows="3" placeholder="e.g. The US imposes a full embargo on rare earth exports from China, cutting off 85% of global supply overnight."
+                style="width:100%;background:var(--bg);border:1px solid var(--card-border);color:var(--text);border-radius:4px;padding:6px;font-size:12px;font-family:var(--font);resize:vertical;box-sizing:border-box;"></textarea>
+            <button onclick="runCustomScenario()" style="margin-top:6px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:4px;padding:6px;font-size:12px;cursor:pointer;font-family:var(--font);">
+                ⚡ Run AI Analysis
+            </button>
+            <div id="custom-scenario-status" style="font-size:10px;color:var(--text-2);margin-top:4px;"></div>
+        </div>
     </div>
 
     {% if comparisons %}
@@ -741,10 +752,52 @@ function filterTable(q) {
 }
 
 function applyScenario(val) {
-    const url   = new URL(window.location.href);
+    const panel = document.getElementById('custom-scenario-panel');
+    if (val === '__custom__') {
+        if (panel) panel.style.display = 'block';
+        return;
+    }
+    if (panel) panel.style.display = 'none';
+    const url = new URL(window.location.href);
     if (val) url.searchParams.set('scenario', val);
     else     url.searchParams.delete('scenario');
     window.location.href = url.toString();
+}
+
+if ('{{ scenario }}' === '__custom__') {
+    const p = document.getElementById('custom-scenario-panel');
+    if (p) p.style.display = 'block';
+}
+
+async function runCustomScenario() {
+    const desc   = document.getElementById('custom-scenario-input').value.trim();
+    const status = document.getElementById('custom-scenario-status');
+    if (!desc) { status.textContent = 'Please describe your scenario first.'; return; }
+
+    const url     = new URL(window.location.href);
+    const sector  = url.searchParams.get('sector')  || '';
+    const segment = url.searchParams.get('segment') || '';
+    const region  = url.searchParams.get('region')  || 'EU';
+
+    status.textContent = '⏳ AI is analysing each component…';
+    try {
+        const res  = await fetch('/api/v1/custom-scenario', {
+            method:  'POST',
+            headers: {'Content-Type': 'application/json'},
+            body:    JSON.stringify({ sector, segment, region, description: desc }),
+        });
+        const data = await res.json();
+        if (data.error) {
+            status.textContent = '❌ ' + data.error;
+        } else {
+            status.textContent = `✅ ${data.components_scored} components scored — loading…`;
+            const nav = new URL(window.location.href);
+            nav.searchParams.set('scenario', '__custom__');
+            setTimeout(() => { window.location.href = nav.toString(); }, 900);
+        }
+    } catch (e) {
+        status.textContent = '❌ ' + e.message;
+    }
 }
 </script>
 </body>
