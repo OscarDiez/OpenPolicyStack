@@ -180,10 +180,10 @@ def fetch_rd_personnel(geo: str = "EU27_2020") -> IndicatorValue:
 def fetch_hightech_employment(geo: str = "EU27_2020") -> IndicatorValue:
     """
     Employment in high-technology sectors (% of total employment).
-    Eurostat dataset: htec_emp_nat2
+    Eurostat dataset: htec_emp_nat
     """
     value = _fetch_eurostat(
-        "htec_emp_nat2",
+        "htec_emp_nat",
         {"geo": geo, "unit": "PC_EMP", "lastTimePeriod": "1"},
         value_key="value",
     )
@@ -194,7 +194,7 @@ def fetch_hightech_employment(geo: str = "EU27_2020") -> IndicatorValue:
             value=value,
             unit="% of total employment",
             source_type=SourceType.EUROSTAT,
-            source_ref="eurostat:htec_emp_nat2",
+            source_ref="eurostat:htec_emp_nat",
             quality_flag=QualityFlag.VERIFIED,
             note=f"High-tech sectors, {geo}, latest available",
         )
@@ -204,7 +204,7 @@ def fetch_hightech_employment(geo: str = "EU27_2020") -> IndicatorValue:
         value=4.8,
         unit="% of total employment",
         source_type=SourceType.EUROSTAT,
-        source_ref="eurostat:htec_emp_nat2",
+        source_ref="eurostat:htec_emp_nat",
         quality_flag=QualityFlag.PROXY,
         note="Eurostat fetch failed; using 2022 published value as proxy",
     )
