@@ -186,7 +186,11 @@ def score_options(blueprint: IABlueprint,
             status          = "alternative",
         ))
 
-    results.sort(key=lambda x: x.weighted_total, reverse=True)
+    results.sort(key=lambda x: (
+    x.weighted_total,
+    sum(cs.score for cs in x.criteria_scores if cs.criterion in ("economic", "social"))
+), reverse=True)
+    
     for i, opt in enumerate(results):
         opt.rank   = i + 1
         opt.status = (
