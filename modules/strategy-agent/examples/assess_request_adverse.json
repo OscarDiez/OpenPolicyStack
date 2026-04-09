@@ -1,0 +1,124 @@
+{
+  "run_id": "quantum-act-002",
+  "scenario_id": "adverse_v1",
+  "blueprint": {
+    "legislation_name": "EU Quantum Act",
+    "problem_statement": "The EU lacks a dedicated regulatory framework for quantum technologies, resulting in fragmented investment, unclear standardisation, and insufficient coordination to compete with US and Chinese quantum programmes.",
+    "baseline_description": "Adverse scenario: EU GERD declining due to fiscal consolidation pressures, high-tech employment contracting, and US CHIPS-equivalent quantum investment accelerating. Urgency for intervention is higher.",
+    "objectives": [
+      {
+        "id": "go-1",
+        "level": "general",
+        "description": "Strengthen EU strategic autonomy in quantum technologies under adverse conditions",
+        "indicators": ["gerd_pct_gdp", "cordis_quantum_projects"]
+      },
+      {
+        "id": "so-1",
+        "level": "specific",
+        "description": "Arrest declining R&D investment trend with targeted quantum stimulus",
+        "indicators": ["gerd_pct_gdp", "cordis_quantum_funding_meur"]
+      },
+      {
+        "id": "so-2",
+        "level": "specific",
+        "description": "Protect high-tech employment base during economic contraction",
+        "indicators": ["hightech_employment_pct", "rd_personnel_pct"]
+      }
+    ],
+    "policy_options": [
+      {
+        "id": "opt-0",
+        "name": "Baseline — no new intervention",
+        "description": "Maintain current trajectory under adverse conditions. No new EU-level quantum regulation.",
+        "status": "baseline"
+      },
+      {
+        "id": "opt-1",
+        "name": "Coordination only — voluntary frameworks",
+        "description": "Soft coordination with voluntary funding alignment under fiscal pressure.",
+        "status": "alternative"
+      },
+      {
+        "id": "opt-2",
+        "name": "Light regulation — standardisation and certification",
+        "description": "Mandatory EU quantum standards and certification with stimulus carve-out for compliant firms.",
+        "status": "alternative"
+      },
+      {
+        "id": "opt-3",
+        "name": "Comprehensive regulation — EU Quantum Agency",
+        "description": "Dedicated EU Quantum Agency with emergency investment powers and mandatory procurement rules.",
+        "status": "alternative"
+      }
+    ],
+    "monitoring_indicators": [
+      "gerd_pct_gdp",
+      "cordis_quantum_projects",
+      "cordis_quantum_funding_meur",
+      "rd_personnel_pct",
+      "hightech_employment_pct"
+    ]
+  },
+  "indicators": [
+    {
+      "indicator_id": "gerd_pct_gdp",
+      "name": "EU GERD as % of GDP",
+      "value": 1.95,
+      "unit": "% of GDP",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:rd_e_gerdtot",
+      "quality_flag": "proxy",
+      "year": 2024,
+      "note": "Adverse scenario: projected decline under fiscal consolidation (proxy estimate)"
+    },
+    {
+      "indicator_id": "rd_personnel_pct",
+      "name": "EU R&D personnel as % of active population",
+      "value": 1.28,
+      "unit": "% active population",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:rd_p_persocc",
+      "quality_flag": "proxy",
+      "year": 2024,
+      "note": "Adverse scenario: contraction in R&D headcount (proxy estimate)"
+    },
+    {
+      "indicator_id": "hightech_employment_pct",
+      "name": "EU high-tech employment as % of total employment",
+      "value": 4.2,
+      "unit": "% of total employment",
+      "source_type": "eurostat",
+      "source_ref": "eurostat:htec_emp_nat2",
+      "quality_flag": "proxy",
+      "year": 2024,
+      "note": "Adverse scenario: high-tech employment contracting (proxy estimate)"
+    },
+    {
+      "indicator_id": "cordis_quantum_projects",
+      "name": "EU-funded quantum research projects (CORDIS)",
+      "value": 280.0,
+      "unit": "projects",
+      "source_type": "cordis",
+      "source_ref": "cordis:search?q=quantum",
+      "quality_flag": "proxy",
+      "year": 2024,
+      "note": "Adverse scenario: fewer new project approvals due to budget pressure"
+    },
+    {
+      "indicator_id": "cordis_quantum_funding_meur",
+      "name": "EU quantum project funding — sample total (M EUR)",
+      "value": 950.0,
+      "unit": "M EUR",
+      "source_type": "cordis",
+      "source_ref": "cordis:search?q=quantum",
+      "quality_flag": "proxy",
+      "year": 2024,
+      "note": "Adverse scenario: reduced EC quantum budget allocation (proxy estimate)"
+    }
+  ],
+  "constraints": {
+    "geo": "EU27_2020",
+    "fetch_live_data": false,
+    "note": "Indicators provided explicitly for adverse scenario — no live fetch"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "run_id": "quantum-act-001",
+  "scenario_id": "baseline_v1",
+  "blueprint": {
+    "legislation_name": "EU Quantum Act",
+    "problem_statement": "The EU lacks a dedicated regulatory framework for quantum technologies, resulting in fragmented investment, unclear standardisation, and insufficient coordination to compete with US and Chinese quantum programmes.",
+    "baseline_description": "Current state: EU Quantum Flagship running, ~320 CORDIS-funded quantum projects, GERD at ~2.22% GDP. No dedicated quantum-specific regulation or certification framework exists.",
+    "objectives": [
+      {
+        "id": "go-1",
+        "level": "general",
+        "description": "Strengthen EU strategic autonomy in quantum technologies",
+        "indicators": ["gerd_pct_gdp", "cordis_quantum_projects"]
+      },
+      {
+        "id": "so-1",
+        "level": "specific",
+        "description": "Increase coordinated EU public investment in quantum R&D",
+        "indicators": ["gerd_pct_gdp", "cordis_quantum_funding_meur"]
+      },
+      {
+        "id": "so-2",
+        "level": "specific",
+        "description": "Establish EU-wide quantum certification and standardisation",
+        "indicators": ["hightech_employment_pct"]
+      },
+      {
+        "id": "so-3",
+        "level": "specific",
+        "description": "Build a skilled quantum workforce across Member States",
+        "indicators": ["rd_personnel_pct", "hightech_employment_pct"]
+      }
+    ],
+    "policy_options": [
+      {
+        "id": "opt-0",
+        "name": "Baseline — no new intervention",
+        "description": "Maintain current trajectory. No new EU-level quantum regulation. Quantum Flagship continues under existing rules.",
+        "status": "baseline"
+      },
+      {
+        "id": "opt-1",
+        "name": "Coordination only — voluntary frameworks",
+        "description": "Soft coordination: voluntary funding alignment, talent mobility schemes, and a non-binding quantum roadmap. No mandatory requirements.",
+        "status": "alternative"
+      },
+      {
+        "id": "opt-2",
+        "name": "Light regulation — standardisation and certification",
+        "description": "Mandatory EU quantum standards (via ETSI/CEN), security certification for quantum communications, and energy-efficiency requirements for quantum hardware.",
+        "status": "alternative"
+      },
+      {
+        "id": "opt-3",
+        "name": "Comprehensive regulation — EU Quantum Agency",
+        "description": "Dedicated EU Quantum Agency, mandatory certification for all quantum systems used in critical infrastructure, EU procurement preference, and binding investment targets.",
+        "status": "alternative"
+      }
+    ],
+    "monitoring_indicators": [
+      "gerd_pct_gdp",
+      "cordis_quantum_projects",
+      "cordis_quantum_funding_meur",
+      "rd_personnel_pct",
+      "hightech_employment_pct"
+    ]
+  },
+  "indicators": [],
+  "constraints": {
+    "geo": "EU27_2020",
+    "fetch_live_data": true,
+    "note": "Empty indicators list triggers live Eurostat + CORDIS fetch"
+  }
+}
