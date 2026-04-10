@@ -1,0 +1,81 @@
+name: openpolicystack-pilot
+
+services:
+  orchestrator:
+    build:
+      context: ./modules/orchestrator
+      dockerfile: Dockerfile
+    image: openpolicystack/orchestrator:dev
+    env_file:
+      - ./modules/orchestrator/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: orchestrator
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      ORCHESTRATOR__SQLITE_PATH: /var/openpolicystack/metadata/orchestrator.db
+      ORCHESTRATOR__INTEGRATION_PILOT_URL: http://integration-pilot:8080
+    ports:
+      - "8100:8080"
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+      - ops-metadata:/var/openpolicystack/metadata
+    networks:
+      - ops-core
+    depends_on:
+      - integration-pilot
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  integration-pilot:
+    build:
+      context: ./modules/integration-pilot
+      dockerfile: Dockerfile
+    image: openpolicystack/integration-pilot:dev
+    env_file:
+      - ./modules/integration-pilot/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: integration-pilot
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+      PILOT_MODULE_VERSION: 0.1.1
+    ports:
+      - "8101:8080"
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  ops-core:
+    driver: bridge
+
+volumes:
+  ops-artifacts:
+  ops-metadata:

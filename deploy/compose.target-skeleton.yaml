@@ -1,0 +1,194 @@
+name: openpolicystack-mvp
+
+services:
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    image: openpolicystack/orchestrator:dev
+    env_file:
+      - ./orchestrator/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: orchestrator
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      ORCHESTRATOR__SQLITE_PATH: /var/openpolicystack/metadata/orchestrator.db
+      ORCHESTRATOR__DATA_LAYER_URL: http://data-layer:8080
+      ORCHESTRATOR__DR_ANTICORRUPTION_URL: http://dr-anticorruption:8080
+      ORCHESTRATOR__MONITOR_URL: http://monitor:8080
+      ORCHESTRATOR__POLICY_SIMULATOR_URL: http://policy-simulator:8080
+      ORCHESTRATOR__STRATEGY_AGENT_URL: http://strategy-agent:8080
+      ORCHESTRATOR__SUPPLYCHAIN_RISK_URL: http://supplychain-risk:8080
+    ports:
+      - "8100:8080"
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+      - ops-metadata:/var/openpolicystack/metadata
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  data-layer:
+    build:
+      context: ./modules/data-layer
+      dockerfile: Dockerfile
+    image: openpolicystack/data-layer:dev
+    env_file:
+      - ./modules/data-layer/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: data-layer
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  dr-anticorruption:
+    build:
+      context: ./modules/dr-anticorruption
+      dockerfile: Dockerfile
+    image: openpolicystack/dr-anticorruption:dev
+    env_file:
+      - ./modules/dr-anticorruption/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: dr-anticorruption
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  monitor:
+    build:
+      context: ./modules/monitor
+      dockerfile: Dockerfile
+    image: openpolicystack/monitor:dev
+    env_file:
+      - ./modules/monitor/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: monitor
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  policy-simulator:
+    build:
+      context: ./modules/policy-simulator
+      dockerfile: Dockerfile
+    image: openpolicystack/policy-simulator:dev
+    env_file:
+      - ./modules/policy-simulator/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: policy-simulator
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  strategy-agent:
+    build:
+      context: ./modules/strategy-agent
+      dockerfile: Dockerfile
+    image: openpolicystack/strategy-agent:dev
+    env_file:
+      - ./modules/strategy-agent/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: strategy-agent
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  supplychain-risk:
+    build:
+      context: ./modules/supplychain-risk
+      dockerfile: Dockerfile
+    image: openpolicystack/supplychain-risk:dev
+    env_file:
+      - ./modules/supplychain-risk/.env
+    environment:
+      OPS_ENV: dev
+      OPS_MODULE_NAME: supplychain-risk
+      OPS_PORT: 8080
+      OPS_LOG_LEVEL: INFO
+      OPS_ARTIFACT_ROOT: /var/openpolicystack/artifacts
+      OPS_ORCHESTRATOR_URL: http://orchestrator:8080
+    volumes:
+      - ops-artifacts:/var/openpolicystack/artifacts
+    networks:
+      - ops-core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  ops-core:
+    driver: bridge
+
+volumes:
+  ops-artifacts:
+  ops-metadata:

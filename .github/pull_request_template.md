@@ -1,10 +1,7 @@
-﻿## What does this PR change?
--
-
-## Which module?
--
+﻿## Summary
+Explain what changed and why.
 
 ## Checklist
-- [ ] README updated (how to run + demo)
-- [ ] Inputs/outputs documented
-- [ ] No credentials / private data
+- [ ] No secrets/credentials committed
+- [ ] Docs updated (if needed)
+- [ ] Tests added/updated (if applicable)
